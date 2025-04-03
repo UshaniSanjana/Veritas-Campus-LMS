@@ -1,113 +1,70 @@
-# Veritas-Campus-Learning-Management-System
-The Learning Management System (LMS) is a web-based application built using the MERN stack
+# Getting Started with Create React App
 
-# Learning Management System (LMS) for Diploma Programs at Veritas International Campus
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Table of Contents
-- [Project Overview](#project-overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+## Available Scripts
 
-## Project Overview
-The **Learning Management System (LMS)** is a web-based platform developed using the **MERN Stack** (MongoDB, Express.js, React.js, Node.js) to streamline course management, student engagement, and performance tracking. It features role-based access for **Admins, Instructors, and Students**, providing a tailored experience for each user type.
+In the project directory, you can run:
 
-## Features
-- **Course Management:** Create, update, delete, and manage courses.
-- **User Authentication:** Secure role-based authentication (Admin, Instructor, Student).
-- **Dashboard:** Interactive dashboards for tracking student progress and course analytics.
-- **Assignments & Quizzes:** Online submission, grading, and auto-evaluation.
-- **Notifications & Alerts:** Real-time updates for deadlines, grades, and announcements.
-- **Audit Trails & Reports:** Log user activities and generate performance reports.
-- **Responsive Design:** Accessible across desktops, tablets, and smartphones.
-- **Security & Scalability:** HTTPS enforcement, encrypted data storage, and support for 100+ concurrent users.
+### `npm start`
 
-## Tech Stack
-- **Frontend:** React.js, Tailwind CSS
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB/MySQL
-- **Authentication:** JWT (JSON Web Tokens), bcrypt for password hashing
-- **Deployment:** 
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## Installation
-### Prerequisites
-Ensure you have the following installed:
-- **Node.js** 
-- **MongoDB** 
-- **Git**
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-### Clone the Repository
-```sh
-git clone https://github.com/your-username/LMS.git
-cd LMS
-```
+### `npm test`
 
-### Install Dependencies
-#### Backend
-```sh
-cd server
-npm install
-```
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-#### Frontend
-```sh
-cd client
-npm install
-```
+### `npm run build`
 
-## Usage
-### Running the Backend
-```sh
-cd server
-npm start
-```
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### Running the Frontend
-```sh
-cd client
-npm start
-```
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-The application will be accessible at `http://localhost:3000/`.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Configuration
-Create a `.env` file in the `server` directory with the following variables:
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-```
+### `npm run eject`
 
-## Project Structure
-```
-LMS/
-├── client/       # React.js frontend
-├── server/       # Express.js backend
-│   ├── models/   # Database models
-│   ├── routes/   # API routes
-│   ├── controllers/ # Business logic
-│   ├── middleware/  # Auth & security layers
-│   ├── config/   # Environment variables & configurations
-│   ├── logs/     # Audit logs
-│   ├── server.js # Main server file
-├── README.md
-├── .gitignore
-├── package.json
-```
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-## Contributing
-Contributions are welcome! To contribute:
-1. Fork the repository.
-2. Create a new branch (`feature-branch`).
-3. Commit your changes.
-4. Open a pull request.
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-## License
-This project is licensed under the **MIT License**.
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
