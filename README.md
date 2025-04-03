@@ -33,13 +33,13 @@ The **Learning Management System (LMS)** is a web-based platform developed using
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB/MySQL
 - **Authentication:** JWT (JSON Web Tokens), bcrypt for password hashing
-- **Deployment:** Cloud-based hosting (e.g., Vercel, AWS, or Azure)
+- **Deployment:** 
 
 ## Installation
 ### Prerequisites
 Ensure you have the following installed:
-- **Node.js** (v16 or later)
-- **MongoDB** (if using locally)
+- **Node.js** 
+- **MongoDB** 
 - **Git**
 
 ### Clone the Repository
