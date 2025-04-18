@@ -41,33 +41,32 @@ Ensure you have the following installed:
 
 ### Clone the Repository
 ```sh
-git clone https://github.com/your-username/LMS.git
-cd LMS
+git clone https://github.com/your-username/LMS.git](https://github.com/Prathviharan/Veritas-Campus-Learning-Management-System.git
 ```
 
 ### Install Dependencies
 #### Backend
 ```sh
-cd server
+cd backend
 npm install
 ```
 
 #### Frontend
 ```sh
-cd client
+cd frontend
 npm install
 ```
 
 ## Usage
 ### Running the Backend
 ```sh
-cd server
+cd backend
 npm start
 ```
 
 ### Running the Frontend
 ```sh
-cd client
+cd frontend
 npm start
 ```
 
@@ -76,8 +75,7 @@ The application will be accessible at `http://localhost:3000/`.
 ## Configuration
 Create a `.env` file in the `server` directory with the following variables:
 ```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
+MONGO_URL=your_mongodb_connection_string
 ```
 
 ## Project Structure
