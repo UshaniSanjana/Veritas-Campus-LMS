@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Routes } from "react-router-dom";
 import Button from './components/Button';
 import Footer from './components/Footer';
-import Navbar from './components/Navbar';
 import Home from "./pages/static/Home";
 import Navbar from "./components/Navbar";
 import WhoWeAre from "./pages/static/WhoWeAre";
