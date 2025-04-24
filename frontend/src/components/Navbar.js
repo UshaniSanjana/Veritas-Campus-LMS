@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <div>
-      <div style={{ height: "30px", backgroundColor: "#4CAF50" }}></div>
+      <div style={{ height: "30px", backgroundColor: "#55B649" }}></div>
       <nav className="navbar   px-4 navbar-expand-sm">
         <div className="navbar-brand">
           <img
