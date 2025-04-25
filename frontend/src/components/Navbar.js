@@ -63,7 +63,7 @@ const Navbar = () => {
             </li>
             <li className="nav-item me-3">
               <Link
-                to="/studentprofile"
+                to=""
                 className="nav-link text-decoration-underline"
               >
                 GET STARTED
