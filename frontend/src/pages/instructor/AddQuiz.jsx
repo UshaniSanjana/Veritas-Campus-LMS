@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 import '../../App.css';
 
@@ -19,6 +19,7 @@ const AddQuiz = () => {
       },
     ],
   });
+  const navigate = useNavigate(); 
 
   const [isPopupVisible, setIsPopupVisible] = useState(false); 
 
@@ -66,7 +67,7 @@ const AddQuiz = () => {
   
     try {
       const res = await axios.post("http://localhost:5000/api/quizzes", quizData);
-      alert("Quiz saved successfully!");
+      
       console.log("Response:", res.data);
   
       // Reset form after successful submission
@@ -85,6 +86,7 @@ const AddQuiz = () => {
           },
         ],
       });
+      navigate("/quizlist");
   
     } catch (err) {
       console.error("Error saving quiz:", err);
