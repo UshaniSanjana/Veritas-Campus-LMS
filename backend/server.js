@@ -1,18 +1,23 @@
 const express = require('express');
-
-//dotenv
+const mongoose = require('mongoose');
 require('dotenv').config();
+const quizRoutes = require('./routes/quizRoutes');
+const cors = require('cors');
 
 const app = express();
-const {mongoose} = require('mongoose');
+app.use(express.json());
+app.use(cors());
 
-//database connection
+// Database Connection
 mongoose.connect(process.env.MONGO_URL)
-    .then(() => console.log('MongoDB Connected'))
-    .catch((err) => console.log("MongoDB Not Connected"))
+  .then(() => console.log('MongoDB Connected'))
+  .catch((err) => console.error('MongoDB Connection Error:', err));
 
-//start the server
+// Routes
+app.use('/api/quizzes', quizRoutes);
+
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server is running on PORT ${PORT}`);
+  console.log(`Server is running on PORT ${PORT}`);
 });
