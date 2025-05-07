@@ -43,6 +43,7 @@ const AddQuiz = () => {
     }
     setQuizData({ ...quizData, questions: updatedQuestions });
   };
+  
 
   const addQuestion = () => {
     setQuizData({

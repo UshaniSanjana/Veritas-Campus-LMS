@@ -1,14 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const QuizList = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [search, setSearch] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState({ id: null, title: '' });
+  const [flashMessage, setFlashMessage] = useState('');
 
-   // Confirmation modal state
-   const [showDeleteModal, setShowDeleteModal] = useState(false);
-   const [deleteTarget, setDeleteTarget] = useState({ id: null, title: '' });
+  const location = useLocation();
+  const navigate = useNavigate();
+
+    // Show flash message when navigated back from update
+useEffect(() => {
+  if (location.state && location.state.updated) {
+    setFlashMessage('Updated Successfully');
+    // clear the updated flag so it won't re-trigger
+    navigate(location.pathname, { replace: true });
+  }
+}, [location, navigate]);
+
+// Auto-clear any flash message after 3 seconds
+useEffect(() => {
+  if (flashMessage) {
+    const timer = setTimeout(() => {
+      setFlashMessage('');
+    }, 3000);
+    return () => clearTimeout(timer);
+  }
+}, [flashMessage]);
   
   // Fetch quizzes from the backend
   useEffect(() => {
@@ -155,6 +176,26 @@ const QuizList = () => {
         </tbody>
       </table>
 
+      {flashMessage && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '20px',
+            backgroundColor: '#198754',
+            color: '#fff',
+            padding: '10px 20px',
+            borderRadius: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.2)' }
+          }
+        >
+          <i className="bi bi-check-circle-fill me-2"></i>
+          {flashMessage}
+        </div>
+      )}
+
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="popup-overlay">
@@ -167,6 +208,8 @@ const QuizList = () => {
           </div>
         </div>
       )}
+
+
       
     </div>
   );

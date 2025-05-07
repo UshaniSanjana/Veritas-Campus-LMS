@@ -9,3 +9,4 @@ router.put('/:id', quizController.updateQuiz);
 router.delete('/:id', quizController.deleteQuiz);
 
 module.exports = router;
+

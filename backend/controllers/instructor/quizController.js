@@ -45,6 +45,7 @@ exports.updateQuiz = async (req, res) => {
   }
 };
 
+
 exports.deleteQuiz = async (req, res) => {
   try {
     const quiz = await Quiz.findByIdAndDelete(req.params.id);

@@ -83,7 +83,7 @@ const UpdateQuiz = () => {
     try {
       await axios.put(`http://localhost:5000/api/quizzes/${id}`, quizData);
       
-      navigate("/quizlist");  // back to list
+      navigate("/quizlist", { state: { updated: true } });  // back to list
     } catch (err) {
       console.error("Update error:", err);
       alert("Failed to update quiz.");
