@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+.active-nav > .nav-link {
+  background-color: #95C436 !important;
+  color: white !important;
+  border-radius: 5px;
+}
