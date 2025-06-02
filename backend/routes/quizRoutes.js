@@ -7,6 +7,7 @@ router.get('/', quizController.getAllQuizzes);
 router.get('/:id', quizController.getQuizById);
 router.put('/:id', quizController.updateQuiz);
 router.delete('/:id', quizController.deleteQuiz);
+router.get('/:id/performance', quizController.getQuizPerformance);
 
 module.exports = router;
 

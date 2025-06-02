@@ -12,7 +12,7 @@ const QuizList = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-    // Show flash message when navigated back from update
+// Show flash message when navigated back from update
 useEffect(() => {
   if (location.state && location.state.updated) {
     setFlashMessage('Updated Successfully');
@@ -61,6 +61,7 @@ useEffect(() => {
       await axios.delete(`http://localhost:5000/api/quizzes/${deleteTarget.id}`);
       setQuizzes(prev => prev.filter(q => q._id !== deleteTarget.id));
       setShowDeleteModal(false);
+      setFlashMessage("Deleted Successfully");
     } catch (err) {
       console.error("Error deleting quiz:", err);
       alert("Failed to delete quiz.");
@@ -132,6 +133,8 @@ useEffect(() => {
                   <td>{displayStatus}</td>
                   <td>{quiz.attendance || 'Not available'}</td>
                   <td>
+                    
+                  <Link to={`/performance/${quiz._id}`}>
                   <button className="btn btn-info me-2"
                           style={{
                             backgroundColor: '#fff',       // white background
@@ -140,6 +143,7 @@ useEffect(() => {
                           }}>
                     <i className="bi bi-eye"></i>
                   </button>
+                  </Link>
 
                   <Link to={`/updatequiz/${quiz._id}`}>
                     <button
@@ -180,7 +184,7 @@ useEffect(() => {
         <div
           style={{
             position: 'fixed',
-            bottom: '20px',
+            bottom: '80px',
             left: '20px',
             backgroundColor: '#198754',
             color: '#fff',

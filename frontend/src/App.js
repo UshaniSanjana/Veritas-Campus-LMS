@@ -23,6 +23,7 @@ import AddQuiz from "./pages/instructor/AddQuiz";
 import QuizList from "./pages/instructor/QuizList";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import UpdateQuiz from "./pages/instructor/UpdateQuiz";
+import QuizPerformance from './pages/instructor/QuizPerformance';
 
 >>>>>>> 24f76d267dfbb8ff8e5749aa2d60bf311f7b5f93
 
@@ -45,6 +46,8 @@ function App() {
         <Route path="/addquiz" element={<AddQuiz />} />
         <Route path="/quizlist" element={<QuizList />} />
         <Route path="/updatequiz/:id" element={<UpdateQuiz />} />
+        <Route path="/performance/:id" element={<QuizPerformance />} />
+
       </Routes>
       
     
