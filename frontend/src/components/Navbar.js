@@ -59,7 +59,7 @@ const Navbar = () => {
 
             <li className="nav-item me-3">
               <Link
-                to="/studentprofile"
+                to=""
                 className="nav-link text-decoration-underline"
               >
                 MY PROFILE
