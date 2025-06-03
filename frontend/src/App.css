@@ -36,14 +36,13 @@
     transform: rotate(360deg);
   }
 }
-<<<<<<< HEAD
+
 
 .active-nav > .nav-link {
   background-color: #95C436 !important;
   color: white !important;
   border-radius: 5px;
 }
-=======
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -69,4 +68,3 @@
 button {
   margin: 5px;
 }
->>>>>>> 24f76d267dfbb8ff8e5749aa2d60bf311f7b5f93
