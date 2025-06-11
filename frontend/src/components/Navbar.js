@@ -42,27 +42,31 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link to="/modulepage" className="nav-link">
+              <Link to="/whoweare" className="nav-link">
+                WHO WE ARE
+              </Link>
+            </li>
+            <li className="nav-item me-3">
+              <Link to="/programmes" className="nav-link">
                 PROGRAMMES
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link to="/mycourses" className="nav-link">
-                MY COURSES
+              <Link to="/news" className="nav-link">
+                NEWS
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link to="/news" className="nav-link">
-                SUPPORT CENTER
+              <Link to="/contactus" className="nav-link">
+                CONTACT US
               </Link>
             </li>
-
             <li className="nav-item me-3">
               <Link
                 to=""
                 className="nav-link text-decoration-underline"
               >
-                MY PROFILE
+                GET STARTED
               </Link>
             </li>
           </ul>
