@@ -1,0 +1,91 @@
+.courses-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.courses-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.courses-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.courses-table th,
+.courses-table td {
+  padding: 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.course-link {
+  color: #078f62;
+  text-decoration: none;
+}
+
+.course-link:hover {
+  text-decoration: underline;
+}
+
+.input-edit {
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-save,
+.btn-cancel {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.btn-edit:hover {
+  color: #007bff;
+}
+
+.btn-delete:hover {
+  color: red;
+}
+
+.btn-save {
+  color: green;
+}
+
+.btn-cancel {
+  color: gray;
+}
+
+ .btn-add-new {
+  background-color: #25d158 ; /* green for positive action */
+  color: #f8f5f9;
+  border: 4px solid green;
+  padding: 20px 40px;
+  
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(141, 71, 71, 0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+ .btn-add-new:hover {
+  background-color: #218838;
+  transform: scale(1.03);
+}
+ .btn-add-new:active {
+  background-color: #1e7e34;
+  transform: scale(1);
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px; /* optional spacing below the button */
+}
