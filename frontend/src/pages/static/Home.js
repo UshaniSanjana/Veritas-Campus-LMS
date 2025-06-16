@@ -1,13 +1,17 @@
 import React from "react";
 import home from "../../assets/WelcomePage.png";
+<<<<<<< HEAD
 //import campusImage from "../../assets/home2.png";
+=======
+>>>>>>> 9bc58abf723385d4aaebc17dd97a476d4c8190fb
 
 const Home = () => {
   return (
-    <div>
+    <>
       <div class="container-fluid p-0">
         <img src={home} class="img-fluid w-100" alt="Home Page"></img>
       </div>
+<<<<<<< HEAD
       <div className="container text-center mt-5">
         <h2
           className="fw-bold fs-2 fs-md-3 fs-sm-4 "
@@ -78,6 +82,9 @@ const Home = () => {
         </div>
       </div>
     </div>
+=======
+    </>
+>>>>>>> 9bc58abf723385d4aaebc17dd97a476d4c8190fb
   );
 };
 

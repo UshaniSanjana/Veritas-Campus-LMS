@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+node_modules/
+uploads/
+=======
 # Ignore node_modules
 node_modules/
 frontend/node_modules/
@@ -10,3 +14,4 @@ backend/node_modules/
 # System files
 .DS_Store
 Thumbs.db
+>>>>>>> 24f76d267dfbb8ff8e5749aa2d60bf311f7b5f93
