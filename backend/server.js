@@ -16,7 +16,7 @@ app.use("/", announcementRoutes);
 
 require("dotenv").config();
 const quizRoutes = require("./routes/quizRoutes");
-const cors = require("cors");
+const quizAnswerRoute = require("./routes/Student/quizAnswersRoute");
 
 // Database Connection
 mongoose
@@ -26,6 +26,7 @@ mongoose
 
 // Routes
 app.use("/api/quizzes", quizRoutes);
+app.use("/api/quizAnswers", quizAnswerRoute);
 
 // Start Server
 

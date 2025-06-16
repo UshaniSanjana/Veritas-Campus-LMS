@@ -6,7 +6,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/static/Home";
 //import Navbar from "./components/Navbar";
 import InstructorNavbar from "./components/instructorNavbar";
-import WhoWeAre from "./pages/static/WhoWeAre";
+//import WhoWeAre from "./pages/static/WhoWeAre";
 import Programmes from "./pages/static/Programmes";
 import News from "./pages/static/News";
 import ContactUs from "./pages/static/ContactUs";
@@ -22,6 +22,11 @@ import QuizList from "./pages/instructor/QuizList";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import UpdateQuiz from "./pages/instructor/UpdateQuiz";
 import QuizPerformance from "./pages/instructor/QuizPerformance";
+import Questions from "./pages/student/quiz/Questions";
+
+import QuizPage from "./pages/student/quiz/QuizPage";
+import ConfirmSubmissionPage from "./pages/student/quiz/ConfirmSubmissionPage";
+import WhoWeAre from "./pages/static/WhoWeAre";
 
 function App() {
   return (
@@ -44,6 +49,9 @@ function App() {
         <Route path="/quizlist" element={<QuizList />} />
         <Route path="/updatequiz/:id" element={<UpdateQuiz />} />
         <Route path="/performance/:id" element={<QuizPerformance />} />
+        <Route path="/quiz/questions" element={<Questions />} />
+        <Route path="/quiz" element={<QuizPage />} />
+        <Route path="/submitQuiz" element={<ConfirmSubmissionPage />} />
       </Routes>
 
       <Footer />

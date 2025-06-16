@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const Quiz = () => {
+const QuizPage = () => {
   const navigate = useNavigate();
   return (
     <div className="container">
@@ -45,4 +45,4 @@ const Quiz = () => {
   );
 };
 
-export default Quiz;
+export default QuizPage;
