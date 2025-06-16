@@ -1,6 +1,6 @@
 import React from "react";
 import home from "../../assets/WelcomePage.png";
-import campusImage from "../../assets/home2.png";
+//import campusImage from "../../assets/home2.png";
 
 const Home = () => {
   return (
@@ -41,7 +41,7 @@ const Home = () => {
           {/*left side image */}
           <div className="col-md-6 d-none d-md-block">
             <img
-              src={campusImage}
+              //src={campusImage}
               alt="Campus Summary"
               className="img-fluid rounded shadow"
               style={{ maxHeight: "500px", objectFit: "cover", width: "100%" }}
