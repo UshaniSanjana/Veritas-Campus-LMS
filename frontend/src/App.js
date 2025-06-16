@@ -43,20 +43,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-function App() {
-  const [courses, setCourses] = useState([
-    {
-      title: "English Basics",
-      instructor: "John Doe",
-      description: "Learn English from scratch.",
-    },
-    {
-      title: "Marketing 101",
-      instructor: "Jane Smith",
-      description: "Introduction to Marketing principles.",
-    },
-  ]);
+import AddAssignment from "./pages/instructor/AddAssignment";
+import AddedAssignment from "./pages/instructor/AddedAssignment";
+import EditAssignment from "./pages/instructor/EditAssignment";
 
+function App() {
   return (
     <div>
       <Navbar />
@@ -69,46 +60,25 @@ function App() {
         <Route path="/programmes" element={<Programmes />} />
         <Route path="/news" element={<News />} />
         <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/supportdesk" element={<SupportDesk />} />
-        <Route path="/successfully-request" element={<SuccessfullyRequest />} />
 
-        {/* Announcements */}
-        <Route path="/addannouncement" element={<AddAnnouncement />} />
-        <Route path="/addedannouncement" element={<AddedAnnouncement />} />
-        <Route
-          path="/updateannouncement/:id"
-          element={<UpdateAnnouncement />}
-        />
-
-        {/* Quizzes */}
         <Route path="/addquiz" element={<AddQuiz />} />
         <Route path="/quizlist" element={<QuizList />} />
         <Route path="/updatequiz/:id" element={<UpdateQuiz />} />
-        <Route path="/performance/:id" element={<QuizPerformance />} />
+        <Route path="/addassignment" element={<AddAssignment />} />
+        <Route
+          path="/instructor/added-assignment"
+          element={<AddedAssignment />}
+        />
+        <Route
+          path="/instructor/edit-assignment/:id"
+          element={<EditAssignment />}
+        />
 
-        {/* Admin Pages */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route
-          path="/admin/courses"
-          element={<Courses courses={courses} setCourses={setCourses} />}
-        />
-        <Route
-          path="/admin/courses/:courseName"
-          element={<CourseDetails courses={courses} />}
-        />
-        <Route
-          path="/admin/courses/edit/:category"
-          element={<EditCourse courses={courses} setCourses={setCourses} />}
-        />
-        <Route
-          path="/admin/courses/add"
-          element={<AddCourse courses={courses} setCourses={setCourses} />}
-        />
-        <Route path="/admin/support" element={<AdminSupportDashboard />} />
-
-        {/* Student Support */}
         <Route path="/support-request" element={<SupportForm />} />
         <Route path="/support-list" element={<SupportList />} />
+        <Route path="/admin/support" element={<AdminSupportDashboard />} />
+        <Route path="/supportdesk" element={<SupportDesk />} />
+        <Route path="/successfully-request" element={<SuccessfullyRequest />} />
       </Routes>
 
       <Button />
