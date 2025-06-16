@@ -36,31 +36,26 @@ const Navbar = () => {
           id="NavbarMenu"
         >
           <ul className="navbar-nav fw-bold fs-6">
+          <li className="nav-item">
+  <Link className="nav-link" to="/admin">Home</Link> {/* Shows Admin Dashboard */}
+</li>
+
             <li className="nav-item me-3">
-              <Link to="/" className="nav-link">
-                HOME
-              </Link>
-            </li>
-            <li className="nav-item me-3">
-              <Link to="/whoweare" className="nav-link">
-                WHO WE ARE
-              </Link>
-            </li>
-            <li className="nav-item me-3">
-              <Link to="/programmes" className="nav-link">
+              <Link to="/modulepage" className="nav-link">
                 PROGRAMMES
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link to="/news" className="nav-link">
-                NEWS
+              <Link to="/mycourses" className="nav-link">
+                MY COURSES
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link to="/contactus" className="nav-link">
-                CONTACT US
+              <Link to="/news" className="nav-link">
+                SUPPORT CENTER
               </Link>
             </li>
+
             <li className="nav-item me-3">
               <Link to="" className="nav-link text-decoration-underline">
                 GET STARTED

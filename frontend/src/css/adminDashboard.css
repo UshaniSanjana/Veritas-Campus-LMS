@@ -1,0 +1,142 @@
+.admin-dashboard {
+  display: flex;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 20px;
+  background-color: #f7f7f7;
+}
+
+.dashboard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.quick-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  flex: 1;
+}
+
+.overview-box {
+  background-color: #a2ffe6;
+  padding: 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  text-align: center;
+  max-width: 200px;
+}
+
+.admin-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.admin-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 0;
+}
+
+.admin-label {
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.popular-section {
+  height: auto;
+  width: fit-content;
+  background-color: #34da3a;
+}
+
+.popular-section div {
+  height: 50px;
+  width: auto;
+  align-items: center;
+  text-align: center;
+  padding: 25px;
+  background-color: #34da3a;
+}
+
+.popular-section ul li {
+  list-style: none;
+  color: black;
+  width: fit-content;
+  height: fit-content;
+  background-color: white;
+  letter-spacing: 10px;
+  padding: 20px;
+  font-weight: 700;
+}
+
+.popular-section p {
+  margin: 0;
+  padding: 0;
+}
+
+.popular-section h3,
+.course-progress h3 {
+  width: 100%;
+  height: 15%;
+  background-color: #06a060;
+  padding: 10px;
+}
+
+.course-progress {
+  height: auto;
+  width: auto;
+  background-color: #34da3a;
+}
+
+.popular-section li > .popular-section p {
+  flex: 1 1 48%;
+  box-sizing: border-box;
+}
+
+.popular-section,
+.recent-activities,
+.course-progress {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.popular-section ul,
+.recent-activities ul {
+  padding-left: 20px;
+}
+
+.course-progress img {
+  height: 75%;
+  width: 75%;
+}
+
+.popular-progress-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.popular-progress-row > .popular-section,
+.popular-progress-row > .course-progress {
+  flex: 1 1 48%;
+  box-sizing: border-box;
+}
+
+.recent-activities {
+  width: auto;
+  height: auto;
+  background-color: #aee3a8;
+}
+
+.recent-activities h3 {
+  color: white;
+}
