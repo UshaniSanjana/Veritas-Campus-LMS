@@ -1,38 +1,59 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 
-// Import components and pages
-import Footer from './components/Footer';
-import Home from './pages/static/Home';
-import SignIn from './pages/auth/SignIn';  // Import SignIn page
-import SignUp from './pages/auth/SignUp';  // Import SignUp page
-import InstructorNavbar from './components/instructorNavbar'; // Instructor Navbar
+import InstructorNavbar from "./components/instructorNavbar";
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import Button from "./components/Button";
+import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Static Pages
-import WhoWeAre from './pages/static/WhoWeAre';
-import Programmes from './pages/static/Programmes';
-import News from './pages/static/News';
-import ContactUs from './pages/static/ContactUs';
+import Home from "./pages/static/Home";
+import WhoWeAre from "./pages/static/WhoWeAre";
+import Programmes from "./pages/static/Programmes";
+import News from "./pages/static/News";
+import ContactUs from "./pages/static/ContactUs";
+import SupportDesk from "./pages/static/SupportDesk";
+import SuccessfullyRequest from "./pages/static/SuccessfullyRequest";
 
-// Announcement Routes
-import AddAnnouncement from './components/AddAnnouncement';
-import AddedAnnouncement from './components/AddedAnnouncement';
-import UpdateAnnouncement from './components/UpdateAnnouncement';
+// Admin Pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import Courses from "./pages/admin/CoursesPage";
+import CourseDetails from "./pages/admin/CourseDetails";
+import EditCourse from "./pages/admin/EditCourse";
+import AddCourse from "./pages/admin/AddCourse";
+import AdminSupportDashboard from "./pages/admin/AdminSupportDashboard";
 
-// Quiz Routes
-import AddQuiz from './pages/instructor/AddQuiz';
-import QuizList from './pages/instructor/QuizList';
-import UpdateQuiz from './pages/instructor/UpdateQuiz';
-import QuizPerformance from './pages/instructor/QuizPerformance';
+// Student Pages
+import SupportForm from "./pages/student/SupportForm";
+import SupportList from "./pages/student/SupportList";
+import ModulePage from "./pages/student/ModulePage";
 
-// Student Dashboard
-import StudentDashboard from './pages/student/Dashboard'; // Import Student Dashboard
+// Instructor Features
+import AddAnnouncement from "./components/AddAnnouncement";
+import AddedAnnouncement from "./components/AddedAnnouncement";
+import UpdateAnnouncement from "./components/UpdateAnnouncement";
+import AddQuiz from "./pages/instructor/AddQuiz";
+import QuizList from "./pages/instructor/QuizList";
+import UpdateQuiz from "./pages/instructor/UpdateQuiz";
+import QuizPerformance from "./pages/instructor/QuizPerformance";
+
+// Bootstrap
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+import AddAssignment from "./pages/instructor/AddAssignment";
+import AddedAssignment from "./pages/instructor/AddedAssignment";
+import EditAssignment from "./pages/instructor/EditAssignment";
 
 function App() {
   return (
     <div>
-      {/* Navbar for Instructor */}
-      <InstructorNavbar /> {/* The Instructor Navbar will appear on all pages */}
+      <Navbar />
+      <ScrollToTop />
+
       <Routes>
         {/* Static Pages */}
         <Route path="/" element={<Home />} />
@@ -41,26 +62,30 @@ function App() {
         <Route path="/news" element={<News />} />
         <Route path="/contactus" element={<ContactUs />} />
 
-        {/* SignUp and SignIn Routes */}
-        <Route path="/signup" element={<SignUp />} /> {/* Add SignUp route */}
-        <Route path="/signin" element={<SignIn />} />  {/* SignIn route */}
-
-        {/* Announcement Routes */}
-        <Route path="/addannouncement" element={<AddAnnouncement />} />
-        <Route path="/addedannouncement" element={<AddedAnnouncement />} />
-        <Route path="/updateannouncement/:id" element={<UpdateAnnouncement />} />
-
-        {/* Quiz Routes */}
         <Route path="/addquiz" element={<AddQuiz />} />
         <Route path="/quizlist" element={<QuizList />} />
         <Route path="/updatequiz/:id" element={<UpdateQuiz />} />
-        <Route path="/performance/:id" element={<QuizPerformance />} />
+        <Route path="/addassignment" element={<AddAssignment />} />
+        <Route
+          path="/instructor/added-assignment"
+          element={<AddedAssignment />}
+        />
+        <Route
+          path="/instructor/edit-assignment/:id"
+          element={<EditAssignment />}
+        />
 
-        {/* Student Dashboard */}
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
+        <Route path="/support-request" element={<SupportForm />} />
+        <Route path="/support-list" element={<SupportList />} />
+        <Route path="/admin/support" element={<AdminSupportDashboard />} />
+        <Route path="/supportdesk" element={<SupportDesk />} />
+        <Route path="/successfully-request" element={<SuccessfullyRequest />} />
+
+        <Route path="/student/courses/:courseId/modules/:moduleId" element={<ModulePage />} />
+
       </Routes>
 
-      {/* Footer that will be displayed on all pages */}
+      <Button />
       <Footer />
     </div>
   );
