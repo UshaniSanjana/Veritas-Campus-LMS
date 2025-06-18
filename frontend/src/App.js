@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import './index.css';
 
 import InstructorNavbar from "./components/instructorNavbar";
 import Navbar from "./components/Navbar";
@@ -24,6 +25,13 @@ import CourseDetails from "./pages/admin/CourseDetails";
 import EditCourse from "./pages/admin/EditCourse";
 import AddCourse from "./pages/admin/AddCourse";
 import AdminSupportDashboard from "./pages/admin/AdminSupportDashboard";
+import CreateAnnouncement from "./pages/admin/CreateAnnouncement";
+import SendNotification from "./pages/admin/SendNotification";
+import Settings from "./pages/admin/Settings";
+import ViewAnnouncements from "./pages/admin/ViewAnnouncements";
+import Layout from "./pages/admin/Layout";
+import Layout_Announcement from "./pages/admin/Layout_Announcement";
+
 
 // Student Pages
 import SupportForm from "./pages/student/SupportForm";
@@ -73,6 +81,17 @@ function App() {
           path="/instructor/edit-assignment/:id"
           element={<EditAssignment />}
         />
+
+        <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/" element={<Layout_Announcement />}>
+          <Route path="/admin/create-announcement" element={<CreateAnnouncement />} />
+          <Route path="/admin/send-notification" element={<SendNotification />} />
+          <Route path="/admin/settings" element={<Settings />} />
+          <Route path="/admin/announcements" element={<ViewAnnouncements />} />
+        </Route>
+
+
+        
 
         <Route path="/support-request" element={<SupportForm />} />
         <Route path="/support-list" element={<SupportList />} />

@@ -36,10 +36,28 @@ const Sidebar = () => {
             <li>View all Student</li>
           </ul>
         </li>
-        <li><FaBullhorn /> Announcement</li>
+
+        <li>
+          <NavLink
+            to="/admin/announcements"
+            className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}
+          >
+          <FaBullhorn /> Announcement
+          </NavLink>
+        </li>
+        
+        
         <li><FaCertificate /> Exams & certification</li>
         <li><FaLifeRing /> Support</li>
-        <li><FaCog /> Settings</li>
+        <li>
+          <NavLink
+            to="/admin/settings"
+            className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}
+          >
+          <FaCog /> Settings
+          </NavLink>
+        </li>
+
       </ul>
     </div>
   );
