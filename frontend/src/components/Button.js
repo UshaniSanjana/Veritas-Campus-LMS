@@ -15,9 +15,8 @@ const Button = ({ text, onClick }) => {
         borderRadius: "6px"
       }}
       onClick={onClick}
-      type="button" // Important to avoid form auto-submit onClick
     >
-      {text}
+      Sample Button 
     </button>
   );
 };
