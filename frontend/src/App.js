@@ -7,6 +7,22 @@ import WhoWeAre from "./pages/static/WhoWeAre";
 import Programmes from "./pages/static/Programmes";
 import News from "./pages/static/News";
 import ContactUs from "./pages/static/ContactUs";
+import SupportDesk from "./pages/static/SupportDesk";
+import SuccessfullyRequest from "./pages/static/SuccessfullyRequest";
+
+// Admin Pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import Courses from "./pages/admin/CoursesPage";
+import CourseDetails from "./pages/admin/CourseDetails";
+import EditCourse from "./pages/admin/EditCourse";
+import AddCourse from "./pages/admin/AddCourse";
+import AdminSupportDashboard from "./pages/admin/AdminSupportDashboard";
+import SignIn from "./pages/student/SignIn";
+
+// Student Pages
+import SupportForm from "./pages/student/SupportForm";
+import SupportList from "./pages/student/SupportList";
+import ModulePage from "./pages/student/ModulePage";
 
 // Instructor Features
 
@@ -33,7 +49,7 @@ function App() {
       {/* <ScrollToTop /> */}
 
       <Routes>
-        {/* Static Routes */}
+        {/* Static Pagess */}
         <Route path="/" element={<Home />} />
         <Route path="/whoweare" element={<WhoWeAre />} />
         <Route path="/programmes" element={<Programmes />} />

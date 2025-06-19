@@ -25,15 +25,18 @@ const SupportList = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [filter, setFilter] = useState("all"); // 'all', 'pending', 'replied'
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const fetchSupportRequests = async () => {
+  const [searchTerm, setSearchTerm] = useState("");  const fetchSupportRequests = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/student/support");
+      console.log("Fetching support requests with isAdmin=false");
+      const res = await axios.get("http://localhost:5000/api/student/support", {
+        params: { isAdmin: false }
+      });
+      console.log("Support requests fetched:", res.data);
       setSupportRequests(res.data);
       setError("");
     } catch (error) {
+      console.error("Error fetching support requests:", error);
       setError("Failed to fetch support requests. Please try again later.");
     } finally {
       setLoading(false);
@@ -42,17 +45,32 @@ const SupportList = () => {
 
   useEffect(() => {
     fetchSupportRequests();
-  }, []);
-  const handleDelete = async (id) => {
+  }, []);  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this request?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/student/support/${id}`);
+        console.log("Deleting request with ID:", id);
+        
+        // Make sure we're sending the isAdmin parameter correctly
+        const response = await axios.delete(`http://localhost:5000/api/student/support/${id}`, {
+          params: { isAdmin: false }
+        });
+        
+        console.log("Delete response:", response);
         setSuccess("Support request deleted successfully!");
         // Clear success message after 3 seconds
         setTimeout(() => setSuccess(""), 3000);
         fetchSupportRequests();
       } catch (error) {
-        setError("Failed to delete request.");
+        console.error("Delete error:", error);
+        console.error("Error response:", error.response);
+        setError(
+          error.response?.data?.message || 
+          error.response?.data?.error || 
+          error.message || 
+          "Failed to delete request."
+        );
+        // Clear error message after 5 seconds
+        setTimeout(() => setError(""), 5000);
       }
     }
   };
@@ -452,8 +470,7 @@ const SupportList = () => {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             <i className="bi bi-x-circle me-2"></i>
             Close
-          </Button>
-          {selectedRequest && (
+          </Button>          {selectedRequest && (
             <Button
               variant="danger"
               onClick={() => {

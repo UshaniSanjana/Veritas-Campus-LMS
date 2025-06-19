@@ -4,6 +4,8 @@ const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/Student/authRoutes");
+const supportRoutes = require("./routes/Student/supportRoute");
+
 const quizRoutes = require("./routes/quizRoutes");
 
 const studentSupportRoutes = require("./routes/student/supportRoute");
@@ -18,12 +20,13 @@ dotenv.config();
 const app = express();
 
 // Middleware
-
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/student/support", supportRoutes);
 app.use("/api/auth", authRoutes);
 
 // Database Connection
