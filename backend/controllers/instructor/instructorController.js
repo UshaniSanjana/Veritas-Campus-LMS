@@ -1,5 +1,5 @@
 const Module = require("../../models/moduleModel");
-const Assignment = require("../../models/assignmentModel"); // Assuming an Assignment model exists
+// const Assignment = require("../../models/assignmentModel"); // Assuming an Assignment model exists
 const mongoose = require("mongoose");
 
 // Helper function to validate ObjectId

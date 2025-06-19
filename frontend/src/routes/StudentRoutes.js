@@ -14,10 +14,11 @@ import ModulePage from "../pages/student/ModulePage";
 import Quiz from "../pages/student/quiz/Quiz";
 import Questions from "../pages/student/quiz/Questions";
 import ConfirmSubmissionPage from "../pages/student/quiz/ConfirmSubmissionPage";
+import Dashboard from "../pages/student/Dashboard";
+import ProgrammesList from "../pages/student/Program";
 
 const StudentRoutes = () => (
   <>
-  
     <Route path="/support-request" element={<SupportForm />} />
     <Route path="/support-list" element={<SupportList />} />
     <Route path="/supportdesk" element={<SupportDesk />} />
@@ -26,12 +27,14 @@ const StudentRoutes = () => (
     <Route path="/studentProfile" element={<StudentProfile />} />
     <Route path="/enrolledcourses" element={<EnrolledCourses />} />
     <Route path="/editProfile" element={<EditProfile />} />
-    <Route path="/changepassowrd" element={<ChangePassword />} />
+    <Route path="/changepassword" element={<ChangePassword />} />
     <Route path="/progress" element={<Progress />} />
     <Route path="/modulepage" element={<ModulePage />} />
     <Route path="/quiz" element={<Quiz />} />
     <Route path="/quiz/questions" element={<Questions />} />
     <Route path="/submitQuiz" element={<ConfirmSubmissionPage />} />
+    <Route path="/student/dashboard" element={<Dashboard />} />
+    <Route path="/programme" element={<ProgrammesList />} />
   </>
 );
 

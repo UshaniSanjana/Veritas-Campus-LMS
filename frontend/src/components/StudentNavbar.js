@@ -37,14 +37,13 @@ const Navbar = () => {
         >
           <ul className="navbar-nav fw-bold fs-6">
             <li className="nav-item">
-              <Link className="nav-link" to="/">
+              <Link className="nav-link" to="/student/dashboard">
                 HOME
               </Link>
-              {""}
             </li>
 
             <li className="nav-item me-3">
-              <Link to="/modulepage" className="nav-link">
+              <Link to="/quiz" className="nav-link">
                 PROGRAMMES
               </Link>
             </li>

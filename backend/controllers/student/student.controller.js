@@ -1,4 +1,6 @@
-const Student = require("../../models/student.model");
+const Student = require("../../models/Student/student.model");
+const User = require("../../models/Student/User"); // Ensure correct import
+const bcrypt = require("bcrypt");
 
 const addStudent = async (req, res) => {
   try {
@@ -73,33 +75,34 @@ const editStudent = async (req, res) => {
   }
 };
 
-const changepassowrd = async (req, res) => {
+const changepassword = async (req, res) => {
   try {
     const id = req.params.id;
     const { newPassword, currentPassword, confirmPassword } = req.body;
 
-    const student = await Student.findById(id);
-
-    if (!student) {
-      return res.status(400).json({ message: "Student not found!" });
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(400).json({ message: "User not found!" });
     }
 
-    if (currentPassword !== student.password) {
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
       return res.status(400).json({ message: "Incorrect current password!" });
     }
 
     if (newPassword !== confirmPassword) {
-      return res.status(400).json({ message: "Unmatched confirm password!" });
+      return res
+        .status(400)
+        .json({ message: "Confirm password does not match!" });
     }
 
-    student.password = newPassword;
-    const updatedStudent = await student.save();
+    user.password = newPassword; // This will be hashed by the pre-save hook
+    await user.save();
 
-    return res
-      .status(200)
-      .json({ message: "Password changed!", updatedStudent });
+    return res.status(200).json({ message: "Password updated successfully!" });
   } catch (err) {
-    return res.status(500).json({ message: "error" });
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -107,5 +110,5 @@ module.exports = {
   addStudent,
   editStudent,
   getStudent,
-  changepassowrd,
+  changepassword,
 };

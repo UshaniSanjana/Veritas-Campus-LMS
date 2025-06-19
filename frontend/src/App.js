@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Footer from "./components/Footer";
 
@@ -17,12 +18,10 @@ import CourseDetails from "./pages/admin/CourseDetails";
 import EditCourse from "./pages/admin/EditCourse";
 import AddCourse from "./pages/admin/AddCourse";
 import AdminSupportDashboard from "./pages/admin/AdminSupportDashboard";
-import SignIn from "./pages/student/SignIn";
 
 // Student Pages
 import SupportForm from "./pages/student/SupportForm";
 import SupportList from "./pages/student/SupportList";
-import ModulePage from "./pages/student/ModulePage";
 
 // Instructor Features
 
@@ -49,7 +48,7 @@ function App() {
       {/* <ScrollToTop /> */}
 
       <Routes>
-        {/* Static Pagess */}
+        {/* Static Pages */}
         <Route path="/" element={<Home />} />
         <Route path="/whoweare" element={<WhoWeAre />} />
         <Route path="/programmes" element={<Programmes />} />
