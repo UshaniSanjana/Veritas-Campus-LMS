@@ -26,11 +26,12 @@ const SupportList = () => {
   const [success, setSuccess] = useState("");
   const [filter, setFilter] = useState("all"); // 'all', 'pending', 'replied'
   const [searchTerm, setSearchTerm] = useState("");
-
   const fetchSupportRequests = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/student/support");
+      const res = await axios.get("http://localhost:5000/api/student/support", {
+        params: { isAdmin: false }
+      });
       setSupportRequests(res.data);
       setError("");
     } catch (error) {

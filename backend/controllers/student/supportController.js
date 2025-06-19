@@ -24,7 +24,16 @@ const createSupportRequest = async (req, res) => {
 
 const getAllSupportRequests = async (req, res) => {
     try {
-        const supports = await Support.find();
+        // Check if the request is coming from the admin dashboard
+        const isAdmin = req.query.isAdmin === 'true';
+        
+        let query = {};
+        if (!isAdmin) {
+            // For student view, only show requests that haven't been deleted by the user
+            query.isDeletedByUser = false;
+        }
+        
+        const supports = await Support.find(query);
         res.status(200).json(supports);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching support requests', error: error.message });
@@ -79,10 +88,29 @@ const updateSupportRequest = async (req, res) => {
 
 const deleteSupportRequest = async (req, res) => {
     try {
-        const support = await Support.findByIdAndDelete(req.params.id);
+        const support = await Support.findById(req.params.id);
+        
         if (!support) {
             return res.status(404).json({ message: 'Support request not found' });
         }
+        
+        // Check if the request is coming from the admin dashboard
+        const isAdmin = req.query.isAdmin === 'true';
+        
+        // If it's from admin, only allow deletion of 'replied' requests
+        if (isAdmin && support.status !== 'replied') {
+            return res.status(403).json({ message: 'Only replied requests can be deleted by admin' });
+        }
+        
+        // For students, we mark as deleted by user
+        if (!isAdmin) {
+            support.isDeletedByUser = true;
+            await support.save();
+        } else {
+            // For admin, actually delete the record for 'replied' requests
+            await Support.findByIdAndDelete(req.params.id);
+        }
+        
         res.status(200).json({ message: 'Support request deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting support request', error: error.message });

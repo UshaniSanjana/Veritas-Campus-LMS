@@ -18,11 +18,12 @@ const AdminSupportDashboard = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [filter, setFilter] = useState('all'); // 'all', 'pending', 'replied'
-
   const fetchSupportRequests = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/student/support');
+      const res = await axios.get('http://localhost:5000/api/student/support', {
+        params: { isAdmin: true }
+      });
       setSupportRequests(res.data);
       setError('');
     } catch (error) {
@@ -47,7 +48,6 @@ const AdminSupportDashboard = () => {
     setReplyMessage('');
     setError('');
   };
-
   const handleSubmitReply = async (e) => {
     e.preventDefault();
     
@@ -86,6 +86,27 @@ const AdminSupportDashboard = () => {
       setError('Failed to send reply. Please try again.');
     } finally {
       setSubmitting(false);
+    }
+  };
+  const handleDelete = async (id) => {
+    // Find the request to check its status
+    const requestToDelete = supportRequests.find(req => req._id === id);
+    
+    // Only allow deletion if the request status is 'replied'
+    if (!requestToDelete || requestToDelete.status !== 'replied') {
+      setError("Only replied requests can be deleted.");
+      return;
+    }    
+    if (window.confirm("Are you sure you want to delete this replied request?")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/student/support/${id}?isAdmin=true`);
+        setSuccessMessage("Support request deleted successfully!");
+        // Clear success message after 3 seconds
+        setTimeout(() => setSuccessMessage(''), 3000);
+        fetchSupportRequests();
+      } catch (error) {
+        setError(error.response?.data?.message || "Failed to delete request.");
+      }
     }
   };
 
@@ -188,16 +209,25 @@ const AdminSupportDashboard = () => {
                         </small>
                       </p>
                     </div>
-                  )}
-                </Card.Body>
+                  )}                </Card.Body>
                 <Card.Footer>
-                  <div className="d-grid">
+                  <div className="card-actions d-flex">
                     <Button 
-                      variant={request.status === 'pending' ? 'primary' : 'outline-primary'}
+                      className="submit-btn me-2 flex-grow-1"
                       onClick={() => handleReplyClick(request)}
                     >
                       {request.status === 'pending' ? 'Reply' : 'Edit Reply'}
                     </Button>
+                    {request.status === 'replied' && (
+                      <Button 
+                        variant="danger" 
+                        size="sm"
+                        onClick={() => handleDelete(request._id)}
+                        className="delete-btn"
+                      >
+                        <i className="bi bi-trash-fill"></i>
+                      </Button>
+                    )}
                   </div>
                 </Card.Footer>
               </Card>
@@ -247,16 +277,13 @@ const AdminSupportDashboard = () => {
                     />
                   </Form.Group>
                   
-                  <div className="d-flex justify-content-end">
-                    <Button variant="secondary" onClick={handleCloseModal} className="me-2">
+                  <div className="d-flex justify-content-end">                    <Button variant="secondary" onClick={handleCloseModal} className="me-2">
                       Cancel
                     </Button>
                     <Button 
                       type="submit" 
-                      variant="primary"
+                      className="submit-btn"
                       disabled={submitting}
-                      style={{ backgroundColor: '#8BC34A', borderColor: '#8BC34A' }}
-                      className="submit-button"
                     >
                       {submitting ? (
                         <>

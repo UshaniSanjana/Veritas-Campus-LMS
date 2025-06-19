@@ -46,12 +46,11 @@ function SupportDesk() {
         assistance, or simply want to connect with student services, we're here
         to help. Submit a request, and our support team will get back to you as
         soon as possible.
-      </p>
-      <div className="support-desk-buttons">
-        <Button variant="primary" onClick={handleSupportClick}>
+      </p>      <div className="support-desk-buttons">
+        <Button className="submit-btn" onClick={handleSupportClick}>
           Submit a Support Request
         </Button>
-        <Button variant="secondary" onClick={handleViewRequestsClick}>
+        <Button className="submit-btn" onClick={handleViewRequestsClick}>
           View Requests
         </Button>
       </div>
