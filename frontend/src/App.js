@@ -63,7 +63,7 @@ function App() {
       {/* Global Navbar */}
       <Navbar />
       {/* Instructor Navbar */}
-      
+
       <ScrollToTop />
 
       <Routes>
@@ -102,13 +102,22 @@ function App() {
 
         {/* Instructor - Assignment */}
         <Route path="/addassignment" element={<AddAssignment />} />
-        <Route path="/instructor/added-assignment" element={<AddedAssignment />} />
-        <Route path="/instructor/edit-assignment/:id" element={<EditAssignment />} />
+        <Route
+          path="/instructor/added-assignment"
+          element={<AddedAssignment />}
+        />
+        <Route
+          path="/instructor/edit-assignment/:id"
+          element={<EditAssignment />}
+        />
 
         {/* Instructor - Announcement */}
         <Route path="/addannouncement" element={<AddAnnouncement />} />
         <Route path="/addedannouncement" element={<AddedAnnouncement />} />
-        <Route path="/updateannouncement/:id" element={<UpdateAnnouncement />} />
+        <Route
+          path="/updateannouncement/:id"
+          element={<UpdateAnnouncement />}
+        />
       </Routes>
 
       <Footer />
