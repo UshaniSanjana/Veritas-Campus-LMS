@@ -24,6 +24,7 @@ import CourseDetails from "./pages/admin/CourseDetails";
 import EditCourse from "./pages/admin/EditCourse";
 import AddCourse from "./pages/admin/AddCourse";
 import AdminSupportDashboard from "./pages/admin/AdminSupportDashboard";
+import SignIn from "./pages/student/SignIn";
 
 // Student Pages
 import SupportForm from "./pages/student/SupportForm";
@@ -55,7 +56,7 @@ function App() {
       <ScrollToTop />
 
       <Routes>
-        {/* Static Pages */}
+        {/* Static Pagess */}
         <Route path="/" element={<Home />} />
         <Route path="/whoweare" element={<WhoWeAre />} />
         <Route path="/programmes" element={<Programmes />} />
@@ -80,12 +81,9 @@ function App() {
         <Route path="/admin/support" element={<AdminSupportDashboard />} />
         <Route path="/supportdesk" element={<SupportDesk />} />
         <Route path="/successfully-request" element={<SuccessfullyRequest />} />
-
-        <Route path="/student/courses/:courseId/modules/:moduleId" element={<ModulePage />} />
-
       </Routes>
 
-      <Button />
+      
       <Footer />
     </div>
   );

@@ -4,6 +4,7 @@ const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/Student/authRoutes");
+const supportRoutes = require("./routes/Student/supportRoute");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/student/support', supportRoutes);
 
 // Database Connection
 dotenv.config();

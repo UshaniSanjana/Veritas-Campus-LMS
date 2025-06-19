@@ -29,6 +29,10 @@ const supportSchema = new mongoose.Schema({
         enum: ['pending', 'replied'],
         default: 'pending'
     },
+    isDeletedByUser: {
+        type: Boolean,
+        default: false
+    },
     adminReply: {
         message: {
             type: String,
