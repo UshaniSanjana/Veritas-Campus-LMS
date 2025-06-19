@@ -29,6 +29,7 @@ import SignIn from "./pages/student/SignIn";
 // Student Pages
 import SupportForm from "./pages/student/SupportForm";
 import SupportList from "./pages/student/SupportList";
+import ModulePage from "./pages/student/ModulePage";
 
 // Instructor Features
 import AddAnnouncement from "./components/AddAnnouncement";
@@ -80,8 +81,6 @@ function App() {
         <Route path="/admin/support" element={<AdminSupportDashboard />} />
         <Route path="/supportdesk" element={<SupportDesk />} />
         <Route path="/successfully-request" element={<SuccessfullyRequest />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/admindashboard" element={<AdminDashboard/>} />
       </Routes>
 
       
