@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCreateAnnouncement } from "../../Services/announcementService";
 import AnnouncementForm from "../../components/AnnouncementForm";
+import { Navigate, useNavigate } from "react-router-dom"; 
 
 export default function CreateAnnouncement() {
   const [formData, setFormData] = useState({
@@ -11,9 +12,11 @@ export default function CreateAnnouncement() {
     sendTo: "",
   });
 
+  const navigate = useNavigate();
   const { createAnnouncement, loading, error, response } = useCreateAnnouncement();
 
-  const handleSubmit = async (formData) => {
+const handleSubmit = async (formData) => {
+  try {
     const result = await createAnnouncement(formData);
     if (result) {
       setFormData({
@@ -23,9 +26,15 @@ export default function CreateAnnouncement() {
         message: "",
         sendTo: "",
       });
+      navigate("/admin/announcements");
     }
     return result;
-  };
+  } catch (error) {
+    console.error("Announcement creation failed:", error);
+    
+
+  }
+};
 
   return (
     <div className="p-6">

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import {
   useGetAnnouncements,
   useDeleteAnnouncement,
@@ -33,7 +34,7 @@ export default function ViewAnnouncements() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">View All Announcements</h1>
+      <h1 className="text-2xl font-bold mb-4">All Announcements</h1>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
@@ -84,12 +85,12 @@ export default function ViewAnnouncements() {
                 <td className="px-6 py-4">{announcement.sendTo}</td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex gap-4">
-                    <a
-                      href={`/edit-announcement/${announcement._id}`}
-                      className="font-medium text-blue-600 hover:underline"
+                    <Link
+                    to={`/edit-announcement/${announcement._id}`}
+                    className="font-medium text-blue-600 hover:underline"
                     >
-                      Edit
-                    </a>
+                    Edit
+                    </Link>
                     <a
                       href="#"
                       className="font-medium text-red-600 hover:underline"

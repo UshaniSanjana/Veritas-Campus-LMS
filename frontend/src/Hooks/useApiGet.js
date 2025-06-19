@@ -7,6 +7,7 @@ const useApiGet = (url, initialData = null) => {
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
+    if (!url) return; 
     setLoading(true);
     try {
       const response = await axiosInstance.get(url);
@@ -14,6 +15,7 @@ const useApiGet = (url, initialData = null) => {
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || err.message);
+      setData(null);
     } finally {
       setLoading(false);
     }

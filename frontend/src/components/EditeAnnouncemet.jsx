@@ -38,7 +38,8 @@ export default function EditAnnouncement() {
 
   // Populate form when data is loaded
   useEffect(() => {
-    if (announcementData && announcementData.data) {
+    console.log("Announcement data:", announcementData); // Debug log
+    if (announcementData?.data) {
       setFormData({
         title: announcementData.data.title || "",
         doneBy: announcementData.data.doneBy || "",
@@ -62,7 +63,7 @@ export default function EditAnnouncement() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await updateAnnouncement(id, formData);
-    navigate("/view-announcements");
+    navigate("/admin/announcements");
     // Optionally, redirect or show a message after update
   };
 
@@ -187,7 +188,7 @@ export default function EditAnnouncement() {
               disabled={updateLoading}
               className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
             >
-              {updateLoading ? "Updating..." : "Update Announcement"}
+              {updateLoading ? "Updating..." : "Update"}
             </button>
           </div>
         </div>

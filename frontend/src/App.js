@@ -31,6 +31,8 @@ import Settings from "./pages/admin/Settings";
 import ViewAnnouncements from "./pages/admin/ViewAnnouncements";
 import Layout from "./pages/admin/Layout";
 import Layout_Announcement from "./pages/admin/Layout_Announcement";
+import EditAnnouncement from "./components/EditeAnnouncemet";
+import EditNotification from "./components/EditNotification"
 
 
 // Student Pages
@@ -83,13 +85,16 @@ function App() {
         />
 
         <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/" element={<Layout_Announcement />}>
-          <Route path="/admin/create-announcement" element={<CreateAnnouncement />} />
-          <Route path="/admin/send-notification" element={<SendNotification />} />
-          <Route path="/admin/settings" element={<Settings />} />
-          <Route path="/admin/announcements" element={<ViewAnnouncements />} />
+        <Route path="/admin" element={<Layout_Announcement />}>
+        <Route path="create-announcement" element={<CreateAnnouncement />} />
+        <Route path="send-notification" element={<SendNotification />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="announcements" element={<ViewAnnouncements />} />
         </Route>
-
+        <Route path="" element={<Layout_Announcement />}>
+        <Route path="/edit-announcement/:id" element={<EditAnnouncement />} />
+        <Route path="/edit-notification/:id" element={<EditNotification />} />
+        </Route>
 
         
 

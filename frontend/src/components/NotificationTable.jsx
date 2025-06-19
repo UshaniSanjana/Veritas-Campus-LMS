@@ -13,7 +13,7 @@ export default function NotificationTable({
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">View All Announcements</h1>
+      <h1 className="text-2xl font-bold mb-4">All Notifications</h1>
 
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
@@ -47,7 +47,7 @@ export default function NotificationTable({
                   scope="row"
                   class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
                 >
-                  {noti.title}
+                  {noti.title || 'N/A'}
                 </th>
                 <td className="px-6 py-4">
                   {noti.createdAt

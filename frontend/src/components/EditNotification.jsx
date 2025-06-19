@@ -49,7 +49,7 @@ export default function EditNotification() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await updateNotification(id, formData);
-    navigate("/send-notification");
+    navigate("/admin/send-notification");
   };
 
   return (
