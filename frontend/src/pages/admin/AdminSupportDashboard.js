@@ -87,8 +87,7 @@ const AdminSupportDashboard = () => {
     } finally {
       setSubmitting(false);
     }
-  };
-  const handleDelete = async (id) => {
+  };  const handleDelete = async (id) => {
     // Find the request to check its status
     const requestToDelete = supportRequests.find(req => req._id === id);
     
@@ -99,13 +98,22 @@ const AdminSupportDashboard = () => {
     }    
     if (window.confirm("Are you sure you want to delete this replied request?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/student/support/${id}?isAdmin=true`);
+        console.log("Admin deleting request with ID:", id);
+        
+        // Use params object for consistent query parameter handling
+        await axios.delete(`http://localhost:5000/api/student/support/${id}`, {
+          params: { isAdmin: true }
+        });
+        
         setSuccessMessage("Support request deleted successfully!");
         // Clear success message after 3 seconds
         setTimeout(() => setSuccessMessage(''), 3000);
         fetchSupportRequests();
       } catch (error) {
+        console.error("Admin delete error:", error);
         setError(error.response?.data?.message || "Failed to delete request.");
+        // Clear error after 5 seconds
+        setTimeout(() => setError(''), 5000);
       }
     }
   };
