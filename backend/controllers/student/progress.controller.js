@@ -5,15 +5,21 @@ const calculateProgress = async (courseId, studentId) => {
   const course = await Course.findById(courseId);
   const progress = await UserProgress.findOne({ courseId, studentId });
 
-  const totalLectures = course.lectures.length;
-  const totalTutorials = course.tutorials.length;
-  const totalQuizes = course.quizes.length;
-  const totalAssignments = course.assignments.length;
+  if (!course) {
+    throw new Error("Course not found");
+  }
 
-  const completedLectures = progress.completedLectures.length;
-  const completedTutorials = progress.completedTutorials.length;
-  const attemptedQuizes = progress.attemptedQuizes.length;
-  const completedAssignments = progress.completedAssignments.length;
+  // Handle cases where progress document might not exist yet for a new student/course
+  const completedLectures = progress ? progress.completedLectures.length : 0;
+  const completedTutorials = progress ? progress.completedTutorials.length : 0;
+  const attemptedQuizes = progress ? progress.attemptedQuizes.length : 0;
+  const completedAssignments = progress ? progress.completedAssignments.length : 0;
+
+  // FIXED: Added null/undefined checks for course.lectures, etc.
+  const totalLectures = course.lectures ? course.lectures.length : 0;
+  const totalTutorials = course.tutorials ? course.tutorials.length : 0;
+  const totalQuizes = course.quizes ? course.quizes.length : 0;
+  const totalAssignments = course.assignments ? course.assignments.length : 0;
 
   const totalItems =
     totalLectures + totalTutorials + totalQuizes + totalAssignments;
@@ -35,10 +41,12 @@ const getProgress = async (req, res) => {
     const { courseId, studentId } = req.params;
 
     const percentage = await calculateProgress(courseId, studentId);
+    const progressDetail = await UserProgress.findOne({ courseId, studentId }); // FIXED: Fetch the full document
 
-    return res.status(200).json({ percentage });
+    return res.status(200).json({ percentage, progressDetail }); // FIXED: Return both
   } catch (err) {
-    return res.status(500).json({ message: "Error getting percentage!" });
+    console.error("Error getting progress:", err);
+    return res.status(500).json({ message: "Error getting progress!", error: err.message });
   }
 };
 
@@ -54,13 +62,11 @@ const markLectureComplete = async (req, res) => {
 
     return res.status(200).json({ progress });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ message: "Error marking lecture as complete" });
+    return res.status(500).json({ message: "Error marking lecture as complete" });
   }
 };
 
-const markTutorialeComplete = async (req, res) => {
+const markTutorialComplete = async (req, res) => { // FIXED: Renamed from markTutorialeComplete
   try {
     const { courseId, studentId, tutorialId } = req.body;
 
@@ -106,16 +112,14 @@ const markAssignmentComplete = async (req, res) => {
 
     return res.status(200).json({ progress });
   } catch (err) {
-    return res
-      .status(500)
-      .json({ message: "Error marking assignment as complete" });
+    return res.status(500).json({ message: "Error marking assignment as complete" });
   }
 };
 
 module.exports = {
   getProgress,
-  markAssignmentComplete,
   markLectureComplete,
+  markTutorialComplete, // FIXED: Export the corrected name
   markQuizAttempt,
-  markTutorialeComplete,
+  markAssignmentComplete,
 };

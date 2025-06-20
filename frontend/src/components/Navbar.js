@@ -36,10 +36,11 @@ const Navbar = () => {
           id="NavbarMenu"
         >
           <ul className="navbar-nav fw-bold fs-6">
-          <li className="nav-item">
-  <Link className="nav-link" to="/admin">Home</Link> {/* Shows Admin Dashboard */}
-</li>
-
+            <li className="nav-item me-3">
+              <Link to="/" className="nav-link">
+                HOME
+              </Link>
+            </li>
             <li className="nav-item me-3">
               <Link to="/modulepage" className="nav-link">
                 PROGRAMMES
@@ -58,7 +59,7 @@ const Navbar = () => {
 
             <li className="nav-item me-3">
               <Link to="" className="nav-link text-decoration-underline">
-                GET STARTED
+                MY PROFILE
               </Link>
             </li>
           </ul>
