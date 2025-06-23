@@ -24,6 +24,12 @@ import Courses from './pages/admin/CoursesPage';
 import CourseDetails from './pages/admin/CourseDetails';
 import EditCourse from './pages/admin/EditCourse';
 import AddCourse from './pages/admin/AddCourse';
+import AddInstructor from './pages/admin/AddInstructor';
+import ManageInstrutors from './pages/admin/ManageInstrutors';
+import EditInsructor from './pages/admin/EditInsructor';
+import QuizExam from './pages/admin/QuizExam';
+import Quizes from './pages/admin/Quizes';
+import Exams from './pages/admin/Exams';
 
 // Instructor Features
 import AddAnnouncement from './components/AddAnnouncement';
@@ -71,6 +77,14 @@ function App() {
         <Route path="/admin/courses/:courseName" element={<CourseDetails courses={courses} />} />
         <Route path="/admin/courses/edit/:category" element={<EditCourse courses={courses} setCourses={setCourses} />} />
         <Route path="/admin/courses/add" element={<AddCourse courses={courses} setCourses={setCourses} />} />
+
+        <Route path="/addinstructor" element={<AddInstructor />} />
+        <Route path="/allinstrutors" element={<ManageInstrutors />} />
+        <Route path="/editinstructor/:id" element={<EditInsructor />} />
+        <Route path="/quizexam" element={<QuizExam />} />
+        <Route path="/quizes" element={<Quizes />} />
+        <Route path="/exams" element={<Exams />} />
+
       </Routes>
 
       <Button />
