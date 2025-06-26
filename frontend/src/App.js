@@ -56,12 +56,14 @@ import UpdateAnnouncement from "./components/UpdateAnnouncement";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import StudentRoutes from "./routes/StudentRoutes";
+import StudentNavbar from "./components/StudentNavbar";
 
 function App() {
   return (
     <div>
       {/* Global Navbar */}
-      <Navbar />
+      <StudentNavbar />
       {/* Instructor Navbar */}
 
       <ScrollToTop />
@@ -118,6 +120,7 @@ function App() {
           path="/updateannouncement/:id"
           element={<UpdateAnnouncement />}
         />
+        {StudentRoutes()}
       </Routes>
 
       <Footer />

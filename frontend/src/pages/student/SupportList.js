@@ -25,40 +25,272 @@ const SupportList = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [filter, setFilter] = useState("all"); // 'all', 'pending', 'replied'
-  const [searchTerm, setSearchTerm] = useState("");  const fetchSupportRequests = async () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  // Debug function to check authentication
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert("No authentication token found in localStorage");
+        return;
+      }
+      
+      const response = await axios.get(
+        "http://localhost:5000/api/student/support/debug-auth", 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      console.log("Auth debug response:", response.data);
+      alert("Authentication check successful. See console for details.");
+    } catch (error) {
+      console.error("Auth debug error:", error);
+      alert(`Authentication check failed: ${error.message}`);
+    }
+  };  const fetchSupportRequests = async () => {
     try {
       setLoading(true);
       console.log("Fetching support requests with isAdmin=false");
-      const res = await axios.get("http://localhost:5000/api/student/support", {
-        params: { isAdmin: false }
-      });
-      console.log("Support requests fetched:", res.data);
-      setSupportRequests(res.data);
+      
+      // Get auth token from localStorage
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        console.log("No authentication token available - user needs to sign in");
+        setError("Please sign in to view your support requests");
+        setLoading(false);
+        return;
+      }
+      
+      let requestConfig = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        timeout: 10000 // 10 second timeout
+      };
+      
+      console.log("Using authentication token");
+      
+      let res;
+      try {
+        // Try the new simplified authenticated API endpoint for user's own requests
+        res = await axios.get("http://localhost:5000/api/student/support/user", requestConfig);
+        console.log("Support requests fetched from /user endpoint:", res.data);
+      } catch (userEndpointError) {
+        console.log("User endpoint failed, trying fixed endpoint:", userEndpointError.message);
+        // Fallback to the fixed endpoint
+        res = await axios.get("http://localhost:5000/api/student/support/fixed", requestConfig);
+        console.log("Support requests fetched from /fixed endpoint:", res.data);
+      }
+      
+      // Ensure we always set an array, even if the response is null or undefined
+      setSupportRequests(Array.isArray(res.data) ? res.data : []);
       setError("");
+      
     } catch (error) {
       console.error("Error fetching support requests:", error);
-      setError("Failed to fetch support requests. Please try again later.");
+      
+      if (error.response) {
+        // Server responded with an error status
+        const status = error.response.status;
+        const errorData = error.response.data;
+        
+        if (status === 401) {
+          // Authentication failed
+          console.log("Authentication failed - token may be invalid");
+          setError("Your session has expired. Please sign in again.");
+          localStorage.removeItem('token'); // Clear invalid token
+          localStorage.removeItem('userRole'); // Clear user role as well
+        } else if (status === 403) {
+          setError("You don't have permission to view support requests.");
+        } else if (status === 404) {
+          // No support requests found, this is not an error
+          console.log("No support requests found");
+          setSupportRequests([]);
+          setError("");
+        } else if (status === 500) {
+          console.error("Server error details:", errorData);
+          setError("Server error occurred. Please try again later or contact support.");
+        } else {
+          setError(`Error ${status}: ${errorData.message || 'Failed to fetch support requests'}`);
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        console.error("No response received:", error.request);
+        setError("Unable to connect to the server. Please check your connection and try again.");
+      } else {
+        // Something else happened
+        console.error("Request setup error:", error.message);
+        setError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Try the fixed endpoint
+  const fetchSupportRequestsFixed = async () => {
+    try {
+      setLoading(true);
+      console.log("Fetching support requests using fixed endpoint...");
+      
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        console.log("No authentication token available");
+        setError("Please sign in to view your support requests");
+        setLoading(false);
+        return;
+      }
+      
+      let requestConfig = {
+        params: { isAdmin: false },
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        timeout: 10000
+      };
+      
+      // Try the fixed endpoint
+      const res = await axios.get("http://localhost:5000/api/student/support/fixed", requestConfig);
+      console.log("Fixed support requests fetched:", res.data);
+      
+      setSupportRequests(Array.isArray(res.data) ? res.data : []);
+      setError("");
+      setSuccess("Successfully loaded support requests using fixed method!");
+      setTimeout(() => setSuccess(""), 3000);
+      
+    } catch (error) {
+      console.error("Error fetching fixed support requests:", error);
+      setError(`Fixed method failed: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Debug database contents
+  const debugDatabase = async () => {
+    try {
+      console.log("Debugging database...");
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert("No token found. Please sign in first.");
+        return;
+      }
+      
+      const response = await axios.get(
+        "http://localhost:5000/api/student/support/debug-db",
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      console.log("Database debug info:", response.data);
+      alert(`Database debug successful! Check console for details.\nTotal requests: ${response.data.totalSupportRequests}\nUser requests: ${response.data.userRequestsById} (by ID) / ${response.data.userRequestsByIdString} (by ID string)`);
+    } catch (error) {
+      console.error("Database debug failed:", error);
+      alert(`Database debug failed: ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+  // Test connection function to debug the issue
+  const testConnection = async () => {
+    try {
+      console.log("Testing connection...");
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        alert("No token found. Please sign in first.");
+        return;
+      }
+      
+      const response = await axios.get(
+        "http://localhost:5000/api/student/support/test-connection",
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      console.log("Connection test successful:", response.data);
+      alert(`Connection test successful! User ID: ${response.data.user?.id}, Total requests in DB: ${response.data.totalSupportRequests}`);
+    } catch (error) {
+      console.error("Connection test failed:", error);
+      alert(`Connection test failed: ${error.response?.data?.message || error.message}`);
+    }
+  };
+
+  // Alternative fetch method using public endpoint for debugging
+  const fetchSupportRequestsPublic = async () => {
+    try {
+      setLoading(true);
+      console.log("Fetching support requests using public endpoint...");
+      
+      const res = await axios.get("http://localhost:5000/api/student/support/public");
+      console.log("Public support requests fetched:", res.data);
+      
+      // Filter by current user if we have user info
+      const currentUserId = localStorage.getItem('userId'); // Assuming userId is stored separately
+      let filteredRequests = res.data;
+      
+      if (currentUserId) {
+        filteredRequests = res.data.filter(request => request.studentID === currentUserId);
+      }
+      
+      setSupportRequests(Array.isArray(filteredRequests) ? filteredRequests : []);
+      setError("");
+      
+    } catch (error) {
+      console.error("Error fetching public support requests:", error);
+      setError("Failed to fetch support requests using fallback method.");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+    
     fetchSupportRequests();
   }, []);  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this request?")) {
       try {
         console.log("Deleting request with ID:", id);
         
-        // Make sure we're sending the isAdmin parameter correctly
-        const response = await axios.delete(`http://localhost:5000/api/student/support/${id}`, {
-          params: { isAdmin: false }
-        });
+        // Get auth token from localStorage
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+          setError("You must be signed in to delete support requests");
+          return;
+        }
+        
+        let requestConfig = {
+          params: { isAdmin: false },
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        };
+        
+        // Make the delete request
+        const response = await axios.delete(`http://localhost:5000/api/student/support/${id}`, requestConfig);
         
         console.log("Delete response:", response);
         setSuccess("Support request deleted successfully!");
         // Clear success message after 3 seconds
         setTimeout(() => setSuccess(""), 3000);
+        // Refresh the support requests list
+        fetchSupportRequests();
         fetchSupportRequests();
       } catch (error) {
         console.error("Delete error:", error);
@@ -163,6 +395,10 @@ const SupportList = () => {
 
             <Col lg={5} md={6} sm={12}>
               <div className="filter-buttons text-center text-md-start mt-3 mt-md-0">
+                {/* Debug Buttons */}
+                
+                
+                {/* Filter Buttons */}
                 <Button
                   variant={filter === "all" ? "primary" : "outline-primary"}
                   onClick={() => setFilter("all")}
