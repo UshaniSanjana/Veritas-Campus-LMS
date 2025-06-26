@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { signIn } from '../../utils/authService';
-import Notification from '../../components/Notification';
-import './Auth.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { signIn } from "../../utils/authService";
+import Notification from "../../components/Notification";
+import "./Auth.css";
 
 function SignIn() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ function SignIn() {
     if (location.state?.successMessage) {
       setNotification({
         message: location.state.successMessage,
-        type: 'success'
+        type: "success",
       });
       navigate(location.pathname, { replace: true, state: {} });
     }
@@ -34,28 +34,28 @@ function SignIn() {
 
     try {
       const { token, role } = await signIn(formData);
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('userRole', role);
-      
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("userRole", role);
+
       setNotification({
-        message: 'Login successful! Redirecting...',
-        type: 'success'
+        message: "Login successful! Redirecting...",
+        type: "success",
       });
-      
+
       setTimeout(() => {
-        if (role === 'student') {
-          navigate('/student/dashboard');
-        } else if (role === 'instructor') {
-          navigate('/instructor/dashboard');
+        if (role === "student") {
+          navigate("/student/dashboard");
+        } else if (role === "instructor") {
+          navigate("/instructor/dashboard");
         } else {
-          navigate('/admin/dashboard');
+          navigate("/admin/dashboard");
         }
       }, 1500);
     } catch (err) {
       setNotification({
-        message: err.message || 'Login failed. Please try again.',
-        type: 'error'
+        message: err.message || "Login failed. Please try again.",
+        type: "error",
       });
     } finally {
       setLoading(false);
@@ -71,10 +71,10 @@ function SignIn() {
           onClose={() => setNotification(null)}
         />
       )}
-      
+
       <div className="auth-form-container">
         <h2 className="auth-heading">Sign In</h2>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="auth-input-group">
             <input
@@ -87,7 +87,7 @@ function SignIn() {
               required
             />
           </div>
-          
+
           <div className="auth-input-group">
             <input
               type="password"
@@ -99,15 +99,11 @@ function SignIn() {
               required
             />
           </div>
-          
-          <button 
-            type="submit" 
-            className="auth-button"
-            disabled={loading}
-          >
-            {loading ? 'Signing In...' : 'Sign In'}
+
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? "Signing In..." : "Sign In"}
           </button>
-          
+
           <p className="auth-switch">
             Don't have an account? <a href="/signup">Sign Up</a>
           </p>

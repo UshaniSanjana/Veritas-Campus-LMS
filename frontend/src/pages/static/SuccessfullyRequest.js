@@ -10,6 +10,13 @@ function SuccessfullyRequest() {
   const { studentName, requestId } = location.state || {};
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+    
     // If someone tries to access this page directly without submitting a form,
     // redirect them to the support form
     if (!studentName || !requestId) {

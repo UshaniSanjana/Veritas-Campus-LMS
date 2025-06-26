@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
@@ -8,7 +8,6 @@ import "./SupportFormResponsive.css";
 
 const SupportForm = () => {
   const [formData, setFormData] = useState({
-    studentID: "",
     studentName: "",
     email: "",
     contactNumber: "",
@@ -19,6 +18,15 @@ const SupportForm = () => {
   const [error, setError] = useState("");
   const errorRef = useRef(null);
   const navigate = useNavigate();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,18 +44,12 @@ const SupportForm = () => {
     multiple: false,
   });
   const validateForm = () => {
-    const { studentID, studentName, email, contactNumber, issue } = formData;
+    const { studentName, email, contactNumber, issue } = formData;
 
-    const specialCharRegex = /^[a-zA-Z0-9]+$/;
     const nameRegex = /^[a-zA-Z\s]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.(com|lk)$/;
     const contactRegex = /^\d{10}$/;
 
-    if (!specialCharRegex.test(studentID)) {
-      setError("Student ID must not contain special characters.");
-      scrollToError();
-      return false;
-    }
     if (!nameRegex.test(studentName)) {
       setError("Student Name must not contain special characters.");
       scrollToError();
@@ -99,9 +101,24 @@ const SupportForm = () => {
     }
 
     try {
+      // Get auth token from localStorage
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setError("You must be logged in to submit a support request");
+        setIsSubmitting(false);
+        scrollToError();
+        return;
+      }
+      
       const response = await axios.post(
         "http://localhost:5000/api/student/support",
-        data
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
 
       // Simulate real-world network delay for better UX
@@ -165,23 +182,6 @@ const SupportForm = () => {
             <div className="col-md-6 mb-3">
               <div className="form-floating">
                 <input
-                  id="studentID"
-                  name="studentID"
-                  className="form-control input-field"
-                  placeholder=" "
-                  onChange={handleChange}
-                  value={formData.studentID}
-                  disabled={isSubmitting}
-                  required
-                />
-                <label htmlFor="studentID" className="floating-label">
-                  Student ID <span className="required-field">*</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6 mb-3">
-              <div className="form-floating">
-                <input
                   id="studentName"
                   name="studentName"
                   className="form-control input-field"
@@ -195,9 +195,7 @@ const SupportForm = () => {
                   Student Name <span className="required-field">*</span>
                 </label>
               </div>
-            </div>{" "}
-          </div>{" "}
-          <div className="row">
+            </div>
             <div className="col-md-6 mb-3">
               <div className="form-floating">
                 <input
@@ -215,7 +213,9 @@ const SupportForm = () => {
                   Email <span className="required-field">*</span>
                 </label>
               </div>
-            </div>
+            </div>{" "}
+          </div>{" "}
+          <div className="row">
             <div className="col-md-6 mb-3">
               <div className="form-floating">
                 <input
