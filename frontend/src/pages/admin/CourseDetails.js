@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import '../../css/course.css'; // Make sure this path matches your structure
+import '../../css/course.css';
 
 const CourseDetailsPage = () => {
   const { id } = useParams();
@@ -11,7 +11,7 @@ const CourseDetailsPage = () => {
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/adminCourseStates/details/${id}`);
+        const response = await axios.get(`http://localhost:5000/api/adminCourseStats/details/${id}`);
         setCourseData(response.data);
       } catch (error) {
         console.error('Error fetching course details:', error);
@@ -33,54 +33,71 @@ const CourseDetailsPage = () => {
     <div className="course-details-container">
       <h2>{course.title}</h2>
 
+      <div className="section">
+        <h5>Instructors:</h5>
+        <ul>
+          {Array.isArray(course.instructor) && course.instructor.length > 0 ? (
+            course.instructor.map((inst, i) => <li key={i}>{inst}</li>)
+          ) : (
+            <li>No instructors listed</li>
+          )}
+        </ul>
+      </div>
+
       <div className="course-details-layout">
-        {/* Row 1: Lecture Materials & Exams */}
         <div className="coursed-row">
-          <div className="coursed-column">
-            <h5>Lecture Materials</h5>
-            {materials.length ? (
+          <div className="coursed-column section">
+            <h5>Lecture Materials:</h5>
+            {materials?.length > 0 ? (
               <ul>
-                {materials.map((m) => (
-                  <li key={m._id}>{m.title}</li>
+                {materials.map((material) => (
+                  <li key={material._id}>{material.title}</li>
                 ))}
               </ul>
-            ) : <p>No materials available.</p>}
+            ) : (
+              <p>No materials available.</p>
+            )}
           </div>
 
-          <div className="coursed-column">
-            <h5>Exams</h5>
-            {exams.length ? (
+          <div className="coursed-column section">
+            <h5>Assignments:</h5>
+            {assignments?.length > 0 ? (
               <ul>
-                {exams.map((e) => (
-                  <li key={e._id}>{e.title}</li>
+                {assignments.map((assignment) => (
+                  <li key={assignment._id}>{assignment.title}</li>
                 ))}
               </ul>
-            ) : <p>No exams available.</p>}
+            ) : (
+              <p>No assignments available.</p>
+            )}
           </div>
         </div>
 
-        {/* Row 2: Assignments & Quizzes */}
         <div className="coursed-row">
-          <div className="coursed-column">
-            <h5>Assignments</h5>
-            {assignments.length ? (
+          <div className="coursed-column section">
+            <h5>Quizzes:</h5>
+            {quizzes?.length > 0 ? (
               <ul>
-                {assignments.map((a) => (
-                  <li key={a._id}>{a.title}</li>
+                {quizzes.map((quiz) => (
+                  <li key={quiz._id}>{quiz.title}</li>
                 ))}
               </ul>
-            ) : <p>No assignments available.</p>}
+            ) : (
+              <p>No quizzes available.</p>
+            )}
           </div>
 
-          <div className="coursed-column">
-            <h5>Quizzes</h5>
-            {quizzes.length ? (
+          <div className="coursed-column section">
+            <h5>Exams:</h5>
+            {exams?.length > 0 ? (
               <ul>
-                {quizzes.map((q) => (
-                  <li key={q._id}>{q.title}</li>
+                {exams.map((exam) => (
+                  <li key={exam._id}>{exam.title}</li>
                 ))}
               </ul>
-            ) : <p>No quizzes available.</p>}
+            ) : (
+              <p>No exams available.</p>
+            )}
           </div>
         </div>
       </div>
