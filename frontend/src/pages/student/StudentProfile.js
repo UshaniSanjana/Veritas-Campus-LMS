@@ -159,7 +159,7 @@ const StudentProfile = () => {
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <div className="container border border-dark mt-5 px-3">
-          <h3 className="mb-4 mt-4">Enrolled Courses</h3>
+          <h3 className="mb-4 mt-4">Enrolled Modules</h3>
           <div className="d-flex flex-column mb-4 ms-4">
             {courses.length > 0 ? (
               courses.map((course, index) => (
@@ -169,7 +169,7 @@ const StudentProfile = () => {
                 </div>
               ))
             ) : (
-              <h6>No enrolled courses</h6>
+              <h6>No enrolled modules</h6>
             )}
           </div>
         </div>

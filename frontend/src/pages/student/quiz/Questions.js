@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Questions = () => {
+  const moduleId = "6858160cf306555894fa56ad";
   const [availableToday, setAvailableToday] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quizes, setQuizes] = useState([]);
@@ -14,7 +15,9 @@ const Questions = () => {
   useEffect(() => {
     const fetchQuizes = async () => {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/quizzes/");
+      const res = await axios.get(
+        `http://localhost:5000/api/quizzes/module/${moduleId}`
+      );
       console.log(res.data);
 
       const quizdata = res.data;
