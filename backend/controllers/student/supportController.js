@@ -40,21 +40,21 @@ const getAllSupportRequests = async (req, res) => {
         const isAdmin = req.query.isAdmin === 'true';
         console.log("Get all requests, isAdmin:", isAdmin);
         
-        // Validate user authentication for non-admin requests
-        if (!isAdmin && (!req.user || !req.user.id)) {
-            console.error("No user found in request despite protect middleware");
-            return res.status(401).json({ message: 'Authentication required' });
-        }
-        
         let query = {};
         
         if (!isAdmin) {
+            // Validate user authentication for non-admin requests
+            if (!req.user || !req.user.id) {
+                console.error("No user found in request despite protect middleware");
+                return res.status(401).json({ message: 'Authentication required' });
+            }
+            
             // For regular users, show only their own requests that aren't deleted
             const userIdString = req.user.id.toString();
             query = { studentID: userIdString };
             console.log("User authenticated with ID:", userIdString, "filtering by student ID");
         } else {
-            // For admin view, show all requests
+            // For admin view, show all requests (no user authentication required for admin)
             console.log("Admin view: showing all requests");
             query = {};
         }
@@ -68,6 +68,16 @@ const getAllSupportRequests = async (req, res) => {
         // Filter out deleted requests in JavaScript
         supports = supports.filter(support => !support.isDeletedByUser);
         console.log("Found support requests after filtering:", supports.length);
+        
+        // For admin requests, provide additional metadata
+        if (isAdmin) {
+            console.log("Admin request - providing detailed response");
+            const totalRequests = supports.length;
+            const pendingRequests = supports.filter(req => req.status === 'pending').length;
+            const repliedRequests = supports.filter(req => req.status === 'replied').length;
+            
+            console.log(`Admin stats: Total: ${totalRequests}, Pending: ${pendingRequests}, Replied: ${repliedRequests}`);
+        }
         
         res.status(200).json(supports);
     } catch (error) {
@@ -209,6 +219,7 @@ const deleteSupportRequest = async (req, res) => {
     try {
         console.log("Delete request params:", req.params);
         console.log("Delete request query:", req.query);
+        console.log("Delete request user:", req.user);
         
         const supportId = req.params.id;
         console.log("Looking for support request with ID:", supportId);
@@ -221,12 +232,18 @@ const deleteSupportRequest = async (req, res) => {
         }
         
         // Check if the request is coming from the admin dashboard
-        const isAdmin = req.query.isAdmin === 'true';
+        const isAdmin = req.query.isAdmin === 'true' || req.path.includes('/admin');
         console.log("Is admin request:", isAdmin);
         
-        // For non-admin users, verify ownership
-        if (!isAdmin && support.studentID !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied - You can only delete your own requests' });
+        // For non-admin users, verify ownership and authentication
+        if (!isAdmin) {
+            if (!req.user || !req.user.id) {
+                return res.status(401).json({ message: 'Authentication required' });
+            }
+            
+            if (support.studentID !== req.user.id) {
+                return res.status(403).json({ message: 'Access denied - You can only delete your own requests' });
+            }
         }
         
         // If it's from admin, only allow deletion of 'replied' requests
@@ -251,13 +268,16 @@ const deleteSupportRequest = async (req, res) => {
             console.log("Support request permanently deleted");
         }
         
-        res.status(200).json({ message: 'Support request deleted successfully' });
+        res.status(200).json({ 
+            message: 'Support request deleted successfully',
+            success: true
+        });
     } catch (error) {
         console.error("Delete error in controller:", error);
         res.status(500).json({ 
             message: 'Error deleting support request', 
             error: error.message,
-            stack: error.stack
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 };
@@ -265,36 +285,59 @@ const deleteSupportRequest = async (req, res) => {
 // New function to handle admin replies
 const replyToSupportRequest = async (req, res) => {
     try {
+        console.log('Reply request received for ID:', req.params.id);
+        console.log('Request body:', req.body);
+        
         const { message, adminName } = req.body;
         
         if (!message || !adminName) {
-            return res.status(400).json({ message: 'Reply message and admin name are required' });
+            console.log('Missing required fields:', { message: !!message, adminName: !!adminName });
+            return res.status(400).json({ 
+                message: 'Reply message and admin name are required',
+                received: { message: !!message, adminName: !!adminName }
+            });
         }
         
-        const support = await Support.findById(req.params.id);
+        const supportId = req.params.id;
+        console.log('Looking for support request with ID:', supportId);
+        
+        const support = await Support.findById(supportId);
         
         if (!support) {
+            console.log('Support request not found with ID:', supportId);
             return res.status(404).json({ message: 'Support request not found' });
         }
         
+        console.log('Found support request:', {
+            id: support._id,
+            studentName: support.studentName,
+            currentStatus: support.status
+        });
+        
         // Update the support request with admin reply
         support.adminReply = {
-            message,
+            message: message.trim(),
             repliedAt: new Date(),
-            adminName
+            adminName: adminName.trim()
         };
         support.status = 'replied';
         
+        console.log('Updating support request with reply...');
         await support.save();
+        
+        console.log('Support request updated successfully');
         
         res.status(200).json({ 
             message: 'Reply sent successfully', 
-            data: support 
+            data: support,
+            success: true
         });
     } catch (error) {
+        console.error('Error in replyToSupportRequest:', error);
         res.status(500).json({ 
             message: 'Error sending reply', 
-            error: error.message 
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 };
@@ -331,6 +374,37 @@ const getUserSupportRequests = async (req, res) => {
     }
 };
 
+// Dedicated function for admin to get all support requests (no authentication required)
+const getAllSupportRequestsForAdmin = async (req, res) => {
+    try {
+        console.log("getAllSupportRequestsForAdmin called");
+        console.log("Admin accessing all support requests");
+        
+        // Get all support requests without any user filtering
+        let supports = await Support.find({}).sort({ createdAt: -1 });
+        console.log("Found total support requests:", supports.length);
+        
+        // Filter out deleted requests in JavaScript
+        supports = supports.filter(support => !support.isDeletedByUser);
+        console.log("Found support requests after filtering deleted ones:", supports.length);
+        
+        // Provide statistics
+        const totalRequests = supports.length;
+        const pendingRequests = supports.filter(req => req.status === 'pending').length;
+        const repliedRequests = supports.filter(req => req.status === 'replied').length;
+        
+        console.log(`Admin request stats: Total: ${totalRequests}, Pending: ${pendingRequests}, Replied: ${repliedRequests}`);
+        
+        res.status(200).json(supports);
+    } catch (error) {
+        console.error("Error in getAllSupportRequestsForAdmin:", error);
+        res.status(500).json({ 
+            message: 'Error fetching support requests for admin', 
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     createSupportRequest,
     getAllSupportRequests,
@@ -339,5 +413,6 @@ module.exports = {
     updateSupportRequest,
     deleteSupportRequest,
     replyToSupportRequest,
-    getUserSupportRequests
+    getUserSupportRequests,
+    getAllSupportRequestsForAdmin
 };

@@ -4,6 +4,7 @@ const {
     createSupportRequest,
     getAllSupportRequests,
     getAllSupportRequestsFixed,
+    getAllSupportRequestsForAdmin,
     getUserSupportRequests,
     getSupportRequestById,
     updateSupportRequest,
@@ -164,9 +165,12 @@ router.post('/', protect, upload.single('photo'), createSupportRequest);
 router.get('/', protect, getAllSupportRequests);
 router.get('/fixed', protect, getAllSupportRequestsFixed); // Alternative endpoint with better error handling
 router.get('/user', protect, getUserSupportRequests); // Simple endpoint for user's own requests
+router.get('/admin', getAllSupportRequestsForAdmin); // Dedicated admin endpoint (no auth required)
 router.get('/:id', protect, getSupportRequestById);
 router.put('/:id', protect, upload.single('photo'), updateSupportRequest);
 router.delete('/:id', protect, deleteSupportRequest);
-router.post('/:id/reply', protect, replyToSupportRequest);
+router.delete('/:id/admin', deleteSupportRequest); // Admin delete endpoint (no auth required)
+router.post('/:id/reply', replyToSupportRequest); // Admin reply endpoint (no auth required)
+router.post('/:id/admin-reply', replyToSupportRequest); // Alternative admin reply endpoint
 
 module.exports = router;
