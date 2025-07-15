@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 const Enrollment = require("../models/enrollment.model");
-const Student = require("../models/student.model");
+const Student = require("../models/Student/student.model");
 const Instructor = require("../models/Instructors");
 const PasswordChange = require("../models/UserChanges");
-const Course = require("../models/Courses");
+const Course = require("../models/courses.model");
 const Assignment = require("../models/assignmentmodel");
 const AssignmentSubmission = require("../models/AssignmentSubmission");
 const Exam = require("../models/Exam");
@@ -14,7 +14,7 @@ const Material = require("../models/Material");
 const Quiz = require("../models/Quiz");
 const StudentSupport = require("../models/Student/supportModel");
 const Lecture = require("../models/Lecture");
-const QuizeSubmition = require("../models/QuizAnswer.model");
+const QuizeSubmition = require("../models/Student/QuizAnswer.model");
 
 // Existing dashboard route
 router.get("/dash", async (req, res) => {
