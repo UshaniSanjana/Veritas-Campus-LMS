@@ -22,7 +22,7 @@ const userProgressSchema = new mongoose.Schema(
         ref: "Tutorial",
       },
     ],
-    completedQuizes: [
+    attemptedQuizzes: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Quiz",

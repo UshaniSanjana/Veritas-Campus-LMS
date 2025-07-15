@@ -39,31 +39,28 @@ const AddCourse = () => {
       alert('Please fill in all fields.');
       return;
     }
-
     if (newCourse.instructor.some(inst => !inst.trim())) {
-      alert('Please complete all instructor fields or remove empty ones.');
+      alert('Please fill all instructor fields or remove empty ones.');
       return;
     }
 
     const sanitized = {
       title: newCourse.title.trim(),
       description: newCourse.description.trim(),
-      instructor: newCourse.instructor.map(name => name.trim()),
+      instructor: newCourse.instructor.map(i => i.trim()),
     };
 
     try {
-      await axios.post('http://localhost:5000/api/adminCourseStates/stats', sanitized);
+      await axios.post('http://localhost:5000/api/adminCourseStats/stats', sanitized);
       alert('Course added successfully!');
       navigate('/admin/courses');
     } catch (error) {
-      console.error('Error adding course:', error);
+      console.error('Error adding course:', error.response || error.message);
       alert('Failed to add course.');
     }
   };
 
-  const handleCancel = () => {
-    navigate('/admin/courses');
-  };
+  const handleCancel = () => navigate('/admin/courses');
 
   return (
     <div className="add-course-page">
@@ -71,19 +68,13 @@ const AddCourse = () => {
       <form onSubmit={handleSubmit}>
         <label>
           Title:
-          <input
-            type="text"
-            name="title"
-            value={newCourse.title}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" name="title" value={newCourse.title} onChange={handleChange} required />
         </label>
 
         <label>
           Instructors:
           {newCourse.instructor.map((inst, index) => (
-            <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px' }}>
+            <div key={index} className="instructor-field">
               <input
                 type="text"
                 value={inst}
@@ -92,22 +83,20 @@ const AddCourse = () => {
                 required
               />
               {newCourse.instructor.length > 1 && (
-                <button type="button" onClick={() => handleRemoveInstructor(index)} className='btn-cancel'>Remove</button>
+                <button type="button" onClick={() => handleRemoveInstructor(index)} className="remove-btn">
+                  Remove
+                </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={handleAddInstructor} className="btn-cancel">Add Instructor</button>
+          <button type="button" onClick={handleAddInstructor} className="btn-save">
+            + Add Instructor
+          </button>
         </label>
 
         <label>
           Description:
-          <textarea
-            name="description"
-            rows="4"
-            value={newCourse.description}
-            onChange={handleChange}
-            required
-          />
+          <textarea name="description" value={newCourse.description} onChange={handleChange} required />
         </label>
 
         <div className="form-buttons">
