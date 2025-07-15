@@ -42,27 +42,6 @@ const {
 } = require("../controllers/student/getCourseModules");
 const { getModuleQuizzes } = require("../controllers/student/getModuleQuizzes");
 
-const Course = require("../models/courses.model");
-
-router.get("/courses", async (req, res) => {
-  try {
-    const courses = await Course.find({});
-    res.json(courses);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching courses", error: err.message });
-  }
-});
-
-router.get("/debug/courses/:courseId", async (req, res) => {
-  try {
-    const course = await Course.findById(req.params.courseId).populate('modules');
-    res.json(course);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching course details", error: err.message });
-  }
-});
-
-
 router.get("/progress/:courseId/:studentId", getProgress);
 router.post("/progress/lecture", markLectureComplete);
 router.post("/progress/tutorial", markTutorialComplete);
