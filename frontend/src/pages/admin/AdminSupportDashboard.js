@@ -29,107 +29,130 @@ const AdminSupportDashboard = () => {
   const fetchSupportRequests = async () => {
     try {
       setLoading(true);
-<<<<<<< HEAD
-      setError('');
-      
-      console.log('Admin fetching all support requests...');
-      
+      setError("");
+
+      console.log("Admin fetching all support requests...");
+
       // Try multiple endpoints to ensure we get all support requests
       let supportRequests = [];
-      
+
       try {
         // Primary endpoint - dedicated admin endpoint (no auth required)
-        const res = await axios.get('http://localhost:5000/api/student/support/admin', {
-          params: { isAdmin: true },
-          timeout: 10000
-        });
-        
+        const res = await axios.get(
+          "http://localhost:5000/api/student/support/admin",
+          {
+            params: { isAdmin: true },
+            timeout: 10000,
+          }
+        );
+
         if (Array.isArray(res.data)) {
           supportRequests = res.data;
-          console.log('Fetched support requests via admin endpoint:', supportRequests.length);
+          console.log(
+            "Fetched support requests via admin endpoint:",
+            supportRequests.length
+          );
         } else {
-          console.warn('Admin endpoint returned non-array data:', res.data);
+          console.warn("Admin endpoint returned non-array data:", res.data);
         }
       } catch (adminError) {
-        console.warn('Admin endpoint failed:', adminError.message);
-        
+        console.warn("Admin endpoint failed:", adminError.message);
+
         // Fallback to the primary endpoint with auth
         try {
-          const res = await axios.get('http://localhost:5000/api/student/support', {
-            params: { isAdmin: true },
-            timeout: 10000
-          });
-          
+          const res = await axios.get(
+            "http://localhost:5000/api/student/support",
+            {
+              params: { isAdmin: true },
+              timeout: 10000,
+            }
+          );
+
           if (Array.isArray(res.data)) {
             supportRequests = res.data;
-            console.log('Fetched support requests via primary endpoint:', supportRequests.length);
+            console.log(
+              "Fetched support requests via primary endpoint:",
+              supportRequests.length
+            );
           } else {
-            console.warn('Primary endpoint returned non-array data:', res.data);
+            console.warn("Primary endpoint returned non-array data:", res.data);
           }
         } catch (primaryError) {
-          console.warn('Primary endpoint also failed:', primaryError.message);
-          
+          console.warn("Primary endpoint also failed:", primaryError.message);
+
           // Try the fixed endpoint
           try {
-            const res = await axios.get('http://localhost:5000/api/student/support/fixed', {
-              params: { isAdmin: true },
-              timeout: 10000
-            });
-            
+            const res = await axios.get(
+              "http://localhost:5000/api/student/support/fixed",
+              {
+                params: { isAdmin: true },
+                timeout: 10000,
+              }
+            );
+
             if (Array.isArray(res.data)) {
               supportRequests = res.data;
-              console.log('Fetched support requests via fixed endpoint:', supportRequests.length);
+              console.log(
+                "Fetched support requests via fixed endpoint:",
+                supportRequests.length
+              );
             }
           } catch (fallbackError) {
-            console.warn('Fixed endpoint also failed:', fallbackError.message);
-            
+            console.warn("Fixed endpoint also failed:", fallbackError.message);
+
             // Last resort - try public endpoint (for debugging)
             try {
-              const res = await axios.get('http://localhost:5000/api/student/support/public', {
-                timeout: 10000
-              });
-              
+              const res = await axios.get(
+                "http://localhost:5000/api/student/support/public",
+                {
+                  timeout: 10000,
+                }
+              );
+
               if (Array.isArray(res.data)) {
                 supportRequests = res.data;
-                console.log('Fetched support requests via public endpoint:', supportRequests.length);
+                console.log(
+                  "Fetched support requests via public endpoint:",
+                  supportRequests.length
+                );
               }
             } catch (publicError) {
-              console.error('All endpoints failed:', publicError.message);
-              throw new Error('Unable to fetch support requests from any endpoint');
+              console.error("All endpoints failed:", publicError.message);
+              throw new Error(
+                "Unable to fetch support requests from any endpoint"
+              );
             }
           }
         }
       }
-      
+
       // Filter out any requests that are marked as deleted by user
-      const filteredRequests = supportRequests.filter(request => !request.isDeletedByUser);
-      console.log('Support requests after filtering deleted ones:', filteredRequests.length);
-      
+      const filteredRequests = supportRequests.filter(
+        (request) => !request.isDeletedByUser
+      );
+      console.log(
+        "Support requests after filtering deleted ones:",
+        filteredRequests.length
+      );
+
       setSupportRequests(filteredRequests);
-      
+
       if (filteredRequests.length === 0) {
-        console.log('No support requests found');
+        console.log("No support requests found");
       } else {
-        console.log('Successfully loaded support requests:', filteredRequests.map(req => ({
-          id: req._id,
-          student: req.studentName,
-          status: req.status
-        })));
+        console.log(
+          "Successfully loaded support requests:",
+          filteredRequests.map((req) => ({
+            id: req._id,
+            student: req.studentName,
+            status: req.status,
+          }))
+        );
       }
-      
     } catch (error) {
-      console.error('Error fetching support requests:', error);
+      console.error("Error fetching support requests:", error);
       setError(`Failed to fetch support requests: ${error.message}`);
       setSupportRequests([]);
-=======
-      const res = await axios.get("http://localhost:5000/api/student/support", {
-        params: { isAdmin: true },
-      });
-      setSupportRequests(res.data);
-      setError("");
-    } catch (error) {
-      setError("Failed to fetch support requests. Please try again later.");
->>>>>>> a9e19eda20948ebce288afcb5498814a7ec522bb
     } finally {
       setLoading(false);
     }
@@ -140,42 +163,29 @@ const AdminSupportDashboard = () => {
   }, []);
 
   const handleReplyClick = (request) => {
-    console.log('Opening reply modal for request:', request);
+    console.log("Opening reply modal for request:", request);
     setSelectedRequest(request);
-<<<<<<< HEAD
-    setReplyMessage(request.adminReply?.message || '');
-    setAdminName(request.adminReply?.adminName || ''); // Pre-fill admin name if editing
-    setError(''); // Clear any previous errors
-=======
     setReplyMessage(request.adminReply?.message || "");
->>>>>>> a9e19eda20948ebce288afcb5498814a7ec522bb
+    setAdminName(request.adminReply?.adminName || ""); // Pre-fill admin name if editing
+    setError(""); // Clear any previous errors
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
-<<<<<<< HEAD
     setSelectedRequest(null);
-    setReplyMessage('');
-    setAdminName('');
-    setError('');
+    setReplyMessage("");
+    setAdminName("");
+    setError("");
     setSubmitting(false);
   };
   const handleSubmitReply = async (e) => {
     e.preventDefault();
-    
-    console.log('Submitting reply for request:', selectedRequest?._id);
-    console.log('Reply message:', replyMessage);
-    console.log('Admin name:', adminName);
-    
-=======
-    setReplyMessage("");
-    setError("");
-  };
-  const handleSubmitReply = async (e) => {
-    e.preventDefault();
 
->>>>>>> a9e19eda20948ebce288afcb5498814a7ec522bb
+    console.log("Submitting reply for request:", selectedRequest?._id);
+    console.log("Reply message:", replyMessage);
+    console.log("Admin name:", adminName);
+
     if (!replyMessage.trim()) {
       setError("Reply message cannot be empty.");
       return;
@@ -187,69 +197,75 @@ const AdminSupportDashboard = () => {
     }
 
     if (!selectedRequest || !selectedRequest._id) {
-      setError('No request selected.');
+      setError("No request selected.");
       return;
     }
 
     try {
       setSubmitting(true);
-      setError(''); // Clear any previous errors
-      
-      console.log('Sending reply to:', `http://localhost:5000/api/student/support/${selectedRequest._id}/reply`);
-      
+      setError(""); // Clear any previous errors
+
+      console.log(
+        "Sending reply to:",
+        `http://localhost:5000/api/student/support/${selectedRequest._id}/reply`
+      );
+
       const response = await axios.post(
         `http://localhost:5000/api/student/support/${selectedRequest._id}/reply`,
         {
-<<<<<<< HEAD
           message: replyMessage.trim(),
-          adminName: adminName.trim()
+          adminName: adminName.trim(),
         },
         {
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          timeout: 10000
+          timeout: 10000,
         }
       );
 
-      console.log('Reply response:', response.data);
+      console.log("Reply response:", response.data);
 
       // Check if the response contains the updated request data
       if (response.data && response.data.data) {
         // Update the list with the updated request
-        setSupportRequests(prevRequests => 
-          prevRequests.map(req => 
+        setSupportRequests((prevRequests) =>
+          prevRequests.map((req) =>
             req._id === selectedRequest._id ? response.data.data : req
           )
         );
-        
-        setSuccessMessage('Reply sent successfully!');
-        setTimeout(() => setSuccessMessage(''), 3000);
-        
+
+        setSuccessMessage("Reply sent successfully!");
+        setTimeout(() => setSuccessMessage(""), 3000);
+
         handleCloseModal();
-        
+
         // Refresh the support requests to ensure we have the latest data
         setTimeout(() => {
           fetchSupportRequests();
         }, 1000);
       } else {
-        console.warn('Unexpected response format:', response.data);
-        setError('Reply may have been sent but response format was unexpected. Please refresh the page.');
+        console.warn("Unexpected response format:", response.data);
+        setError(
+          "Reply may have been sent but response format was unexpected. Please refresh the page."
+        );
       }
-      
     } catch (error) {
-      console.error('Error sending reply:', error);
-      console.error('Error response:', error.response?.data);
-      
+      console.error("Error sending reply:", error);
+      console.error("Error response:", error.response?.data);
+
       if (error.response) {
         // Server responded with an error status
-        const errorMessage = error.response.data?.message || 
-                           error.response.data?.error || 
-                           `Server error: ${error.response.status}`;
+        const errorMessage =
+          error.response.data?.message ||
+          error.response.data?.error ||
+          `Server error: ${error.response.status}`;
         setError(errorMessage);
       } else if (error.request) {
         // Request was made but no response received
-        setError('No response from server. Please check if the backend is running.');
+        setError(
+          "No response from server. Please check if the backend is running."
+        );
       } else {
         // Something else happened
         setError(`Error: ${error.message}`);
@@ -257,107 +273,90 @@ const AdminSupportDashboard = () => {
     } finally {
       setSubmitting(false);
     }
-  };  const handleDelete = async (id) => {
+  };
+  const handleDelete = async (id) => {
     console.log("Delete request for ID:", id);
-    
+
     // Find the request to check its status
-    const requestToDelete = supportRequests.find(req => req._id === id);
-    
+    const requestToDelete = supportRequests.find((req) => req._id === id);
+
     if (!requestToDelete) {
       setError("Support request not found.");
       return;
     }
-    
+
     console.log("Request to delete:", {
       id: requestToDelete._id,
       status: requestToDelete.status,
-      studentName: requestToDelete.studentName
+      studentName: requestToDelete.studentName,
     });
-    
-    // Only allow deletion if the request status is 'replied'
-    if (requestToDelete.status !== 'replied') {
-=======
-          message: replyMessage,
-          adminName: adminName,
-        }
-      );
-
-      // Update the list with the updated request
-      setSupportRequests(
-        supportRequests.map((req) =>
-          req._id === selectedRequest._id ? response.data.data : req
-        )
-      );
-
-      setSuccessMessage("Reply sent successfully!");
-      setTimeout(() => setSuccessMessage(""), 3000); // Clear success message after 3 seconds
-
-      handleCloseModal();
-    } catch (error) {
-      setError("Failed to send reply. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-  const handleDelete = async (id) => {
-    // Find the request to check its status
-    const requestToDelete = supportRequests.find((req) => req._id === id);
 
     // Only allow deletion if the request status is 'replied'
-    if (!requestToDelete || requestToDelete.status !== "replied") {
->>>>>>> a9e19eda20948ebce288afcb5498814a7ec522bb
+    if (requestToDelete.status !== "replied") {
       setError("Only replied requests can be deleted.");
-      setTimeout(() => setError(''), 5000);
+      setTimeout(() => setError(""), 5000);
       return;
-<<<<<<< HEAD
-    }    
-    
-    if (window.confirm(`Are you sure you want to delete this replied request from ${requestToDelete.studentName}?`)) {
+    }
+
+    if (
+      window.confirm(
+        `Are you sure you want to delete this replied request from ${requestToDelete.studentName}?`
+      )
+    ) {
       try {
         console.log("Admin deleting request with ID:", id);
-        setError(''); // Clear any previous errors
-        
+        setError(""); // Clear any previous errors
+
         // Try multiple endpoints for better reliability
         let deleteSuccess = false;
         let lastError = null;
-        
+
         // First, try the admin-specific delete endpoint
         try {
           console.log("Trying admin delete endpoint...");
-          await axios.delete(`http://localhost:5000/api/student/support/${id}/admin`, {
-            params: { isAdmin: true },
-            timeout: 10000
-          });
+          await axios.delete(
+            `http://localhost:5000/api/student/support/${id}/admin`,
+            {
+              params: { isAdmin: true },
+              timeout: 10000,
+            }
+          );
           deleteSuccess = true;
           console.log("Admin delete endpoint succeeded");
         } catch (adminError) {
           console.warn("Admin delete endpoint failed:", adminError.message);
           lastError = adminError;
-          
+
           // Fallback to regular delete endpoint with admin flag
           try {
             console.log("Trying regular delete endpoint with admin flag...");
-            await axios.delete(`http://localhost:5000/api/student/support/${id}`, {
-              params: { isAdmin: true },
-              timeout: 10000
-            });
+            await axios.delete(
+              `http://localhost:5000/api/student/support/${id}`,
+              {
+                params: { isAdmin: true },
+                timeout: 10000,
+              }
+            );
             deleteSuccess = true;
             console.log("Regular delete endpoint with admin flag succeeded");
           } catch (regularError) {
-            console.warn("Regular delete endpoint also failed:", regularError.message);
+            console.warn(
+              "Regular delete endpoint also failed:",
+              regularError.message
+            );
             lastError = regularError;
           }
         }
-        
+
         if (deleteSuccess) {
           setSuccessMessage("Support request deleted successfully!");
-          setTimeout(() => setSuccessMessage(''), 3000);
-          
+          setTimeout(() => setSuccessMessage(""), 3000);
+
           // Remove the deleted request from the local state immediately
-          setSupportRequests(prevRequests => 
-            prevRequests.filter(req => req._id !== id)
+          setSupportRequests((prevRequests) =>
+            prevRequests.filter((req) => req._id !== id)
           );
-          
+
           // Also refresh the data to ensure consistency
           setTimeout(() => {
             fetchSupportRequests();
@@ -365,48 +364,26 @@ const AdminSupportDashboard = () => {
         } else {
           throw lastError || new Error("All delete endpoints failed");
         }
-        
       } catch (error) {
         console.error("Admin delete error:", error);
         console.error("Error response:", error.response?.data);
-        
+
         let errorMessage = "Failed to delete request.";
-        
+
         if (error.response) {
-          errorMessage = error.response.data?.message || 
-                        error.response.data?.error || 
-                        `Server error: ${error.response.status}`;
+          errorMessage =
+            error.response.data?.message ||
+            error.response.data?.error ||
+            `Server error: ${error.response.status}`;
         } else if (error.request) {
-          errorMessage = "No response from server. Please check if the backend is running.";
+          errorMessage =
+            "No response from server. Please check if the backend is running.";
         } else {
           errorMessage = error.message || "Unknown error occurred.";
         }
-        
+
         setError(errorMessage);
-        setTimeout(() => setError(''), 5000);
-=======
-    }
-    if (
-      window.confirm("Are you sure you want to delete this replied request?")
-    ) {
-      try {
-        console.log("Admin deleting request with ID:", id);
-
-        // Use params object for consistent query parameter handling
-        await axios.delete(`http://localhost:5000/api/student/support/${id}`, {
-          params: { isAdmin: true },
-        });
-
-        setSuccessMessage("Support request deleted successfully!");
-        // Clear success message after 3 seconds
-        setTimeout(() => setSuccessMessage(""), 3000);
-        fetchSupportRequests();
-      } catch (error) {
-        console.error("Admin delete error:", error);
-        setError(error.response?.data?.message || "Failed to delete request.");
-        // Clear error after 5 seconds
         setTimeout(() => setError(""), 5000);
->>>>>>> a9e19eda20948ebce288afcb5498814a7ec522bb
       }
     }
   };
@@ -442,66 +419,75 @@ const AdminSupportDashboard = () => {
   // Test function to verify reply endpoint
   const testReplyEndpoint = async () => {
     if (supportRequests.length === 0) {
-      alert('No support requests available to test');
+      alert("No support requests available to test");
       return;
     }
-    
+
     const testRequest = supportRequests[0];
     try {
       const response = await axios.post(
         `http://localhost:5000/api/student/support/${testRequest._id}/reply`,
         {
-          message: 'Test reply from admin dashboard',
-          adminName: 'Test Admin'
+          message: "Test reply from admin dashboard",
+          adminName: "Test Admin",
         }
       );
-      
-      console.log('Test reply successful:', response.data);
-      alert('Test reply sent successfully! Check console for details.');
+
+      console.log("Test reply successful:", response.data);
+      alert("Test reply sent successfully! Check console for details.");
       fetchSupportRequests();
     } catch (error) {
-      console.error('Test reply failed:', error);
-      alert(`Test reply failed: ${error.response?.data?.message || error.message}`);
+      console.error("Test reply failed:", error);
+      alert(
+        `Test reply failed: ${error.response?.data?.message || error.message}`
+      );
     }
   };
 
   // Test function to verify delete endpoint
   const testDeleteEndpoint = async () => {
-    const repliedRequests = supportRequests.filter(req => req.status === 'replied');
-    
+    const repliedRequests = supportRequests.filter(
+      (req) => req.status === "replied"
+    );
+
     if (repliedRequests.length === 0) {
-      alert('No replied support requests available to test delete');
+      alert("No replied support requests available to test delete");
       return;
     }
-    
+
     const testRequest = repliedRequests[0];
-    
-    if (!window.confirm(`Test delete functionality on request from ${testRequest.studentName}? This will permanently delete the request.`)) {
+
+    if (
+      !window.confirm(
+        `Test delete functionality on request from ${testRequest.studentName}? This will permanently delete the request.`
+      )
+    ) {
       return;
     }
-    
+
     try {
       // Test admin delete endpoint
       const response = await axios.delete(
         `http://localhost:5000/api/student/support/${testRequest._id}/admin`,
         {
-          params: { isAdmin: true }
+          params: { isAdmin: true },
         }
       );
-      
-      console.log('Test delete successful:', response.data);
-      alert('Test delete successful! Check console for details.');
+
+      console.log("Test delete successful:", response.data);
+      alert("Test delete successful! Check console for details.");
       fetchSupportRequests();
     } catch (error) {
-      console.error('Test delete failed:', error);
-      alert(`Test delete failed: ${error.response?.data?.message || error.message}`);
+      console.error("Test delete failed:", error);
+      alert(
+        `Test delete failed: ${error.response?.data?.message || error.message}`
+      );
     }
   };
 
   return (
     <Container className="my-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
-<<<<<<< HEAD
         <div>
           <h2>Admin Support Dashboard</h2>
           <p className="text-muted">
@@ -509,55 +495,32 @@ const AdminSupportDashboard = () => {
           </p>
         </div>
         <div className="admin-actions">
-          
-          
-          
           <div className="filter-buttons">
-            <Button 
-              variant={filter === 'all' ? 'primary' : 'outline-primary'} 
-              onClick={() => setFilter('all')}
+            <Button
+              variant={filter === "all" ? "primary" : "outline-primary"}
+              onClick={() => setFilter("all")}
               className="me-2"
             >
               All ({supportRequests.length})
             </Button>
-            <Button 
-              variant={filter === 'pending' ? 'warning' : 'outline-warning'} 
-              onClick={() => setFilter('pending')}
+            <Button
+              variant={filter === "pending" ? "warning" : "outline-warning"}
+              onClick={() => setFilter("pending")}
               className="me-2"
             >
-              Pending ({supportRequests.filter(req => req.status === 'pending').length})
+              Pending (
+              {supportRequests.filter((req) => req.status === "pending").length}
+              )
             </Button>
-            <Button 
-              variant={filter === 'replied' ? 'success' : 'outline-success'} 
-              onClick={() => setFilter('replied')}
+            <Button
+              variant={filter === "replied" ? "success" : "outline-success"}
+              onClick={() => setFilter("replied")}
             >
-              Replied ({supportRequests.filter(req => req.status === 'replied').length})
+              Replied (
+              {supportRequests.filter((req) => req.status === "replied").length}
+              )
             </Button>
           </div>
-=======
-        <h2>Admin Support Dashboard</h2>
-        <div className="filter-buttons">
-          <Button
-            variant={filter === "all" ? "primary" : "outline-primary"}
-            onClick={() => setFilter("all")}
-            className="me-2"
-          >
-            All
-          </Button>
-          <Button
-            variant={filter === "pending" ? "warning" : "outline-warning"}
-            onClick={() => setFilter("pending")}
-            className="me-2"
-          >
-            Pending
-          </Button>
-          <Button
-            variant={filter === "replied" ? "success" : "outline-success"}
-            onClick={() => setFilter("replied")}
-          >
-            Replied
-          </Button>
->>>>>>> a9e19eda20948ebce288afcb5498814a7ec522bb
         </div>
       </div>
 
@@ -585,18 +548,21 @@ const AdminSupportDashboard = () => {
         <div className="text-center py-5">
           <i className="bi bi-inbox display-1 text-muted"></i>
           <h3>No Support Requests Found</h3>
-          {filter === 'all' ? (
+          {filter === "all" ? (
             <div>
-              <p className="lead">No student support requests have been submitted yet.</p>
+              <p className="lead">
+                No student support requests have been submitted yet.
+              </p>
               <p className="text-muted">
-                Students can submit requests via the Support Desk or Support Request form.
+                Students can submit requests via the Support Desk or Support
+                Request form.
               </p>
             </div>
           ) : (
             <p className="lead">No {filter} support requests found.</p>
           )}
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={fetchSupportRequests}
             className="mt-3"
           >
