@@ -11,7 +11,7 @@ const generateToken = (payload) => {
 
 exports.signUp = async (req, res) => {
   try {
-    const { email, name, password } = req.body;
+    const { email, name, password, role } = req.body;
 
     // Check if user exists
     const userExists = await User.findOne({ email });
@@ -24,7 +24,7 @@ exports.signUp = async (req, res) => {
       email,
       name,
       password,
-      role: "student", // Default role
+      role,
     });
 
     // Generate token
