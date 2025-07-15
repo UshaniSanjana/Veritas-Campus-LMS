@@ -1,130 +1,125 @@
 const Course = require("../../models/courses.model");
+const Module = require("../../models/moduleModel");
 const UserProgress = require("../../models/userProgress.model");
 
-const calculateProgress = async (courseId, studentId) => {
-  const course = await Course.findById(courseId).populate("modules");
-  const progress = await UserProgress.findOne({ courseId, studentId });
+const calculateProgress = async (moduleId, studentId) => {
+  const module = await Module.findById(moduleId);
+  const progress = await UserProgress.findOne({ moduleId, studentId });
 
-  if (!course) {
-    throw new Error("Course not found");
+  if (!module) {
+    throw new Error("Module not found");
   }
 
-  let totalLectures = 0;
-  let totalTutorials = 0;
-  let totalQuizzes = 0;
-  let totalAssignments = 0;
+  // Handle cases where progress document might not exist yet for a new student/course
+  const completedLectures = progress ? progress.completedLectures.length : 0;
+  const completedTutorials = progress ? progress.completedTutorials.length : 0;
+  //const attemptedQuizes = progress ? progress.attemptedQuizes.length : 0;
+  const completedAssignments = progress
+    ? progress.completedAssignments.length
+    : 0;
 
-  for (const mod of course.modules) {
-    totalLectures += mod.lecturematerials?.length || 0;
-    totalTutorials += mod.tutorials?.length || 0;
-    totalQuizzes += mod.quizzes?.length || 0;
-    totalAssignments += mod.assignments?.length || 0;
-  }
+  // FIXED: Added null/undefined checks for course.lectures, etc.
+  const totalLectures = module.lectures ? module.lectures.length : 0;
+  const totalTutorials = module.tutorials ? module.tutorials.length : 0;
+  //const totalQuizes = module.quizes ? module.quizes.length : 0;
+  const totalAssignments = module.assignments ? module.assignments.length : 0;
 
-  const completedLectures = progress?.completedLectures?.length || 0;
-  const completedTutorials = progress?.completedTutorials?.length || 0;
-  const attemptedQuizzes = progress?.attemptedQuizzes?.length || 0;
-  const completedAssignments = progress?.completedAssignments?.length || 0;
+  const totalItems = totalLectures + totalTutorials + totalAssignments;
 
-  const totalItems = totalLectures + totalTutorials + totalQuizzes + totalAssignments;
-  const completedItems = completedLectures + completedTutorials + attemptedQuizzes + completedAssignments;
+  const completedItems = completedLectures + completedTutorials;
 
-  const percentage = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+  const percentage =
+    totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
 
   return percentage;
 };
 
 const getProgress = async (req, res) => {
   try {
-    const { courseId, studentId } = req.params;
+    const { moduleId, studentId } = req.params;
 
-    const percentage = await calculateProgress(courseId, studentId);
-    const progressDetail = await UserProgress.findOne({ courseId, studentId }); // FIXED: Fetch the full document
+    const percentage = await calculateProgress(moduleId, studentId);
+    const progressDetail = await UserProgress.findOne({ moduleId, studentId }); // FIXED: Fetch the full document
 
     return res.status(200).json({ percentage, progressDetail }); // FIXED: Return both
   } catch (err) {
     console.error("Error getting progress:", err);
-    return res.status(500).json({ message: "Error getting progress!", error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Error getting progress!", error: err.message });
   }
 };
 
 const markLectureComplete = async (req, res) => {
   try {
-    const { courseId, studentId, lectureId, completed } = req.body;
-
-    const update = completed
-      ? { $addToSet: { completedLectures: lectureId } }
-      : { $pull: { completedLectures: lectureId } };
+    const { moduleId, studentId, lectureId } = req.body;
 
     const progress = await UserProgress.findOneAndUpdate(
-      { courseId, studentId },
-      update,
+      { moduleId, studentId },
+      { $addToSet: { completedLectures: lectureId } },
       { new: true, upsert: true }
     );
 
     return res.status(200).json({ progress });
   } catch (err) {
-    return res.status(500).json({ message: "Error marking lecture as complete" });
+    return res
+      .status(500)
+      .json({ message: "Error marking lecture as complete" });
   }
 };
 
 const markTutorialComplete = async (req, res) => {
   try {
-    const { courseId, studentId, tutorialId, completed } = req.body;
-
-    const update = completed
-      ? { $addToSet: { completedTutorials: tutorialId } }
-      : { $pull: { completedTutorials: tutorialId } };
+    const { moduleId, studentId, tutorialId } = req.body;
 
     const progress = await UserProgress.findOneAndUpdate(
-      { courseId, studentId },
-      update,
+      { moduleId, studentId },
+      { $addToSet: { completedTutorials: tutorialId } },
       { new: true, upsert: true }
     );
 
     return res.status(200).json({ progress });
   } catch (err) {
-    return res.status(500).json({ message: "Error marking tutorial progress", error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Error marking tutorial progress", error: err.message });
   }
 };
 
 const markQuizAttempt = async (req, res) => {
   try {
-    const { courseId, studentId, quizId, completed } = req.body;
-
-    const update = completed
-      ? { $addToSet: { attemptedQuizzes: quizId } }
-      : { $pull: { attemptedQuizzes: quizId } };
+    const { moduleId, studentId, quizId } = req.body;
 
     const progress = await UserProgress.findOneAndUpdate(
-      { courseId, studentId },
-      update,
+      { moduleId, studentId },
+      { $addToSet: { attemptedQuizes: quizId } },
       { new: true, upsert: true }
     );
 
     return res.status(200).json({ progress });
   } catch (err) {
-    return res.status(500).json({ message: "Error updating quiz progress", error: err.message });
+    return res
+      .status(500)
+      .json({ message: "Error updating quiz progress", error: err.message });
   }
 };
 
 const markAssignmentComplete = async (req, res) => {
   try {
-    const { courseId, studentId, assignmentId, completed } = req.body;
-
-    const update = completed
-      ? { $addToSet: { completedAssignments: assignmentId } }
-      : { $pull: { completedAssignments: assignmentId } };
+    const { moduleId, studentId, assignmentId } = req.body;
 
     const progress = await UserProgress.findOneAndUpdate(
-      { courseId, studentId },
-      update,
+      { moduleId, studentId },
+      { $addToSet: { completedAssignments: assignmentId } },
       { new: true, upsert: true }
     );
 
     return res.status(200).json({ progress });
   } catch (err) {
-    return res.status(500).json({ message: "Error updating assignment progress", error: err.message });
+    return res.status(500).json({
+      message: "Error updating assignment progress",
+      error: err.message,
+    });
   }
 };
 

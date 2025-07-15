@@ -34,27 +34,13 @@ const {
 const {
   createStudent,
 } = require("../controllers/admin/createStudent.controller");
-
-const Course = require("../models/courses.model");
-
-router.get("/courses", async (req, res) => {
-  try {
-    const courses = await Course.find({});
-    res.json(courses);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching courses", error: err.message });
-  }
-});
-
-router.get("/debug/courses/:courseId", async (req, res) => {
-  try {
-    const course = await Course.findById(req.params.courseId).populate('modules');
-    res.json(course);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching course details", error: err.message });
-  }
-});
-
+const {
+  getCourseModules,
+  getCourseDetails,
+  moduleEnrollment,
+  GetEnrolledmodules,
+} = require("../controllers/student/getCourseModules");
+const { getModuleQuizzes } = require("../controllers/student/getModuleQuizzes");
 
 router.get("/progress/:courseId/:studentId", getProgress);
 router.post("/progress/lecture", markLectureComplete);
@@ -86,5 +72,10 @@ router.get("/me", protect, async (req, res) => {
 
 router.get("/student/profile/:id", getStudentProfile);
 router.post("/addStudent", upload.single("image"), createStudent);
+router.get("/courses/:id/modules", getCourseModules);
+router.post("/course", getCourseDetails);
+router.post("/enroll/:moduleId", moduleEnrollment);
+router.get("/enrolled/:studentId", GetEnrolledmodules);
+router.get("/quizzes/module/:id", getModuleQuizzes);
 
 module.exports = router;

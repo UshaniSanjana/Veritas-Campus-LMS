@@ -2,7 +2,7 @@ import React from "react";
 import logo from "../assets/veritas.jpg";
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const StudentNavbar = () => {
   return (
     <div>
       <div style={{ height: "30px", backgroundColor: "#55B649" }}></div>
@@ -74,4 +74,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default StudentNavbar;
