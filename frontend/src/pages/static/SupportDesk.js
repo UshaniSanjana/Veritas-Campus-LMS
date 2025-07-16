@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "./SupportDesk.css"; // Import the CSS
@@ -8,6 +8,15 @@ function SupportDesk() {
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }, []);
 
   const handleSupportClick = () => {
     navigate("/support-request");

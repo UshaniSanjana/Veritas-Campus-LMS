@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const Progress = () => {
-  const courseId = "6825fa37c2faef1f37a2a4ec";
+  const moduleId = "6825fa37c2faef1f37a2a4ec";
   const studentId = "68187117c8e50295c68bba3e";
   const [course, setCourse] = useState({});
   const [progress, setProgress] = useState(0);
@@ -11,7 +11,7 @@ const Progress = () => {
     const fetchCourse = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/course/${courseId}`
+          `http://localhost:5000/api/course/${moduleId}`
         );
         setCourse(res.data);
       } catch (err) {
@@ -20,13 +20,13 @@ const Progress = () => {
     };
 
     fetchCourse();
-  }, [courseId]);
+  }, [moduleId]);
 
   useEffect(() => {
     const getProgress = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/progress/${studentId}/${courseId}`
+          `http://localhost:5000/api/progress/${studentId}/${moduleId}`
         );
         setProgress(res.data || 25);
       } catch (err) {
@@ -35,7 +35,7 @@ const Progress = () => {
       }
     };
     getProgress();
-  }, [courseId]);
+  }, [moduleId]);
 
   return (
     <div>
@@ -73,7 +73,7 @@ const Progress = () => {
           <div className="mt-4">
             <p>Lectures completed: </p>
             <p>Tutorials completed: </p>
-            <p>Quizes attempted: </p>
+            {/* <p>Quizes attempted: </p> */}
             <p>Assignments submitted: </p>
           </div>
         </div>

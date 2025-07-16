@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signIn } from "../../utils/authService";
 import Notification from "../../components/Notification";
+import { decodeToken } from "../../utils/decodeToken";
 import "./Auth.css";
 
 function SignIn() {
@@ -37,6 +38,11 @@ function SignIn() {
 
       localStorage.setItem("token", token);
       localStorage.setItem("userRole", role);
+
+      const decoded = decodeToken(token);
+      if (role === "student" && decoded.studentId) {
+        localStorage.setItem("studentId", decoded.studentId);
+      }
 
       setNotification({
         message: "Login successful! Redirecting...",

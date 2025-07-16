@@ -1,16 +1,17 @@
 const User = require("../../models/Student/User");
+const Student = require("../../models/Student/student.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+const generateToken = (payload) => {
+  return jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
 
 exports.signUp = async (req, res) => {
   try {
-    const { email, name, password } = req.body;
+    const { email, name, password, role } = req.body;
 
     // Check if user exists
     const userExists = await User.findOne({ email });
@@ -23,7 +24,7 @@ exports.signUp = async (req, res) => {
       email,
       name,
       password,
-      role: "student", // Default role
+      role,
     });
 
     // Generate token
@@ -61,8 +62,20 @@ exports.signIn = async (req, res) => {
     user.lastSignIn = new Date();
     await user.save();
 
+    let studentId = null;
+    if (user.role === "student") {
+      const student = await Student.findOne({ userId: user._id });
+      if (student) {
+        studentId = student._id;
+      }
+    }
+
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken({
+      id: user._id,
+      role: user.role,
+      ...(studentId && { studentId }),
+    });
 
     res.status(200).json({
       _id: user._id,

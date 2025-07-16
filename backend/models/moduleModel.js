@@ -21,10 +21,11 @@ const moduleSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   week: { type: Number, required: true },
-  lectureMaterials: [contentSchema],
-  quizzes: [contentSchema],
-  assignments: [contentSchema],
-  announcements: [contentSchema],
+  lecturematerials: [{ type: mongoose.Schema.Types.ObjectId, ref: "LectureMaterial" }],
+  tutorials: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tutorial" }],
+  quizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quiz" }],
+  assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Assignment" }],
+  recordings: [String] 
 });
 
 const Module = mongoose.model("Module", moduleSchema);

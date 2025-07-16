@@ -8,7 +8,6 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Button from "./components/Button";
 import Footer from "./components/Footer";
-import ScrollToTop from "./components/ScrollToTop";
 
 // Static Pages
 import Home from "./pages/static/Home";
@@ -30,6 +29,7 @@ import CourseDetails from "./pages/admin/CourseDetails";
 import EditCourse from "./pages/admin/EditCourse";
 import AddCourse from "./pages/admin/AddCourse";
 import AdminSupportDashboard from "./pages/admin/AdminSupportDashboard";
+
 import CreateAnnouncement from "./pages/admin/CreateAnnouncement";
 import SendNotification from "./pages/admin/SendNotification";
 import Settings from "./pages/admin/Settings";
@@ -38,6 +38,11 @@ import Layout from "./pages/admin/Layout";
 import Layout_Announcement from "./pages/admin/Layout_Announcement";
 import EditAnnouncement from "./components/EditeAnnouncemet";
 import EditNotification from "./components/EditNotification"
+
+
+import SingleViewSupport from "./pages/admin/SingleViewSupport";
+import AdminReportPage from "./pages/admin/AdminReportPage";
+import AdminSupport from "./pages/admin/AdminSupport";
 
 
 // Student Pages
@@ -67,17 +72,18 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import StudentRoutes from "./routes/StudentRoutes";
+
 function App() {
   return (
     <div>
-      {/* Global Navbar */}
       <Navbar />
-      {/* Instructor Navbar */}
-
-      <ScrollToTop />
 
       <Routes>
-        {/* Static Pages */}
+        {/* Authentication */}
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        {/* Static Pagess */}
         <Route path="/" element={<Home />} />
         <Route path="/whoweare" element={<WhoWeAre />} />
         <Route path="/programmes" element={<Programmes />} />
@@ -122,6 +128,7 @@ function App() {
         />
 
 
+
         <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin" element={<Layout_Announcement />}>
         <Route path="create-announcement" element={<CreateAnnouncement />} />
@@ -136,11 +143,24 @@ function App() {
 
         
 
+
+
         <Route path="/support-request" element={<SupportForm />} />
         <Route path="/support-list" element={<SupportList />} />
         <Route path="/admin/support" element={<AdminSupportDashboard />} />
         <Route path="/supportdesk" element={<SupportDesk />} />
         <Route path="/successfully-request" element={<SuccessfullyRequest />} />
+
+        <Route
+          path="/admin/singleViewSupport/:id"
+          element={<SingleViewSupport />}
+        />
+        <Route path="/admin/adminReportPage" element={<AdminReportPage />} />
+        <Route path="/admin/courses" element={<Courses />} />
+        <Route path="/admin/courses/:id" element={<CourseDetails />} />
+        <Route path="/admin/courses/edit/:id" element={<EditCourse />} />
+        <Route path="/admin/courses/add" element={<AddCourse />} />
+        <Route path="/admin/adminSupport" element={<AdminSupport />} />
 
         {/* Instructor - Announcement */}
         <Route path="/addannouncement" element={<AddAnnouncement />} />
@@ -149,6 +169,8 @@ function App() {
           path="/updateannouncement/:id"
           element={<UpdateAnnouncement />}
         />
+
+        {StudentRoutes()}
 
       </Routes>
 

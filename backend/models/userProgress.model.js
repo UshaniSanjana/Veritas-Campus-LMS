@@ -6,9 +6,9 @@ const userProgressSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    courseId: {
+    moduleId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
+      ref: "Module",
     },
     completedLectures: [
       {
@@ -22,7 +22,7 @@ const userProgressSchema = new mongoose.Schema(
         ref: "Tutorial",
       },
     ],
-    completedQuizes: [
+    attemptedQuizzes: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Quiz",

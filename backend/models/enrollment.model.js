@@ -7,16 +7,16 @@ const enrollmentSchema = new mongoose.Schema(
       ref: "Student",
       required: true, // Ensure studentId is provided
     },
-    courseId: {
+    moduleId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
+      ref: "Module",
       required: true, // Ensure courseId is provided
     },
   },
   { timestamps: true }
 );
 
-enrollmentSchema.index({ studentId: 1, courseId: 1 }, { unique: true }); // Prevent duplicate enrollments
+enrollmentSchema.index({ studentId: 1, moduleId: 1 }, { unique: true }); // Prevent duplicate enrollments
 
 const Enrollment = mongoose.model("Enrollment", enrollmentSchema);
 
