@@ -84,7 +84,7 @@ const StudentProfile = () => {
   const confirmLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userRole");
-    navigate("/signin");
+    navigate("/");
   };
 
   if (loading) {
