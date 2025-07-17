@@ -43,28 +43,28 @@ const StudentNavbar = () => {
             </li>
 
             <li className="nav-item me-3">
-              <Link to="/quiz" className="nav-link">
+              <Link to="/student/programme" className="nav-link">
                 PROGRAMMES
               </Link>
             </li>
 
             <li className="nav-item me-3">
-              <Link to="/mycourses" className="nav-link">
+              <Link to="/student/mycourses" className="nav-link">
                 MY COURSES
               </Link>
             </li>
             <li className="nav-item me-3">
-              <Link to="/supportdesk" className="nav-link">
+              <Link to="/student/supportdesk" className="nav-link">
                 SUPPORT CENTER
               </Link>
             </li>
 
             <li className="nav-item me-3">
               <Link
-                to="/studentProfile"
+                to="/student/studentProfile"
                 className="nav-link text-decoration-underline"
               >
-                GET STARTED
+                My Profile
               </Link>
             </li>
           </ul>

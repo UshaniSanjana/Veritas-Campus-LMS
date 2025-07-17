@@ -9,7 +9,7 @@ const notificationRouter = require("./routes/notification.router");
 const announcementRouter = require("./routes/announcement.router");
 const studentSupportRoutes = require("./routes/student/supportRoute");
 
-// const supportRoutes = require("./routes/Student/supportRoute");
+//const supportRoutes = require("./routes/Student/supportRoute");
 const adminSupportRoutes = require("./routes/adminsupportroutes");
 const adminReportRoutes = require("./routes/adminReportRoute");
 const courseStatsRoutes = require("./routes/adminCourseStats");
@@ -61,7 +61,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // to serv
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // to serve uploaded images
 
 app.use("/api/auth", authRoutes);
-app.use("/api/student/support", supportRoutes);
+//app.use("/api/student/support", supportRoutes);
 app.use("/api/adminsupport", adminSupportRoutes);
 app.use("/api/adminReport", adminReportRoutes);
 app.use("/api/adminCourseStats", courseStatsRoutes);
@@ -83,4 +83,4 @@ app.use("/api/quizAnswers", quizAnswersRoute);
 app.use("/api", studentRoutes);
 app.use("/api/instructor", instructorRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/student/support", supportRoutes);
+//app.use("/api/student/support", supportRoutes);

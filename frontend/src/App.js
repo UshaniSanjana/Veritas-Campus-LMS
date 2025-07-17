@@ -1,12 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import './index.css';
+import "./index.css";
 
-// Components
-import Navbar from "./components/Navbar";
-
-import Sidebar from "./components/Sidebar";
-import Button from "./components/Button";
 import Footer from "./components/Footer";
 
 // Static Pages
@@ -34,22 +29,18 @@ import CreateAnnouncement from "./pages/admin/CreateAnnouncement";
 import SendNotification from "./pages/admin/SendNotification";
 import Settings from "./pages/admin/Settings";
 import ViewAnnouncements from "./pages/admin/ViewAnnouncements";
-import Layout from "./pages/admin/Layout";
 import Layout_Announcement from "./pages/admin/Layout_Announcement";
 import EditAnnouncement from "./components/EditeAnnouncemet";
-import EditNotification from "./components/EditNotification"
-
+import EditNotification from "./components/EditNotification";
 
 import SingleViewSupport from "./pages/admin/SingleViewSupport";
 import AdminReportPage from "./pages/admin/AdminReportPage";
 import AdminSupport from "./pages/admin/AdminSupport";
 
-
 // Student Pages
 import SupportForm from "./pages/student/SupportForm";
 import SupportList from "./pages/student/SupportList";
 import ModulePage from "./pages/student/ModulePage";
-import StudentDashboard from "./pages/student/Dashboard";
 
 // Instructor Pages - Quiz
 import AddQuiz from "./pages/instructor/AddQuiz";
@@ -72,106 +63,112 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-import StudentRoutes from "./routes/StudentRoutes";
+import StudentLayout from "./layouts/StudentLayout";
+import StudentProfile from "./pages/student/StudentProfile";
+import EnrolledCourses from "./pages/student/EnrolledCourses";
+import EditProfile from "./pages/student/EditProfile";
+import ChangePassword from "./pages/student/ChangePassword";
+import Progress from "./pages/student/Progress";
+
+import Questions from "./pages/student/quiz/Questions";
+import ConfirmSubmissionPage from "./pages/student/quiz/ConfirmSubmissionPage";
+import Dashboard from "./pages/student/Dashboard";
+import ProgrammesList from "./pages/student/Program";
+import Quiz from "./pages/student/quiz/Quiz";
+import PublicLayout from "./layouts/PublicLayout";
+import InstructorLayout from "./layouts/InstructorLayout";
+import AdminLayout from "./layouts/AdminLayout";
 
 function App() {
   return (
     <div>
-      <Navbar />
-
       <Routes>
-        {/* Authentication */}
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        {/* Static Pagess */}
-        <Route path="/" element={<Home />} />
-        <Route path="/whoweare" element={<WhoWeAre />} />
-        <Route path="/programmes" element={<Programmes />} />
-        <Route path="/news" element={<News />} />
-        <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/supportdesk" element={<SupportDesk />} />
-        <Route path="/successfully-request" element={<SuccessfullyRequest />} />
+        <Route element={<PublicLayout />}>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/whoweare" element={<WhoWeAre />} />
+          <Route path="/programmes" element={<Programmes />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/contactus" element={<ContactUs />} />
+          <Route path="/supportdesk" element={<SupportDesk />} />
+          <Route
+            path="/successfully-request"
+            element={<SuccessfullyRequest />}
+          />
+        </Route>
 
-        {/* Authentication */}
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-
-        {/* Admin Pages */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/courses" element={<Courses />} />
-        <Route path="/admin/course/:id" element={<CourseDetails />} />
-        <Route path="/admin/edit-course/:id" element={<EditCourse />} />
-        <Route path="/admin/add-course" element={<AddCourse />} />
-        <Route path="/admin/support" element={<AdminSupportDashboard />} />
-
-        {/* Student Pages */}
-        <Route path="/support-request" element={<SupportForm />} />
-        <Route path="/support-list" element={<SupportList />} />
-        <Route path="/student/modules" element={<ModulePage />} />
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-
-        {/* Instructor - Quiz */}
-        <Route path="/addquiz" element={<AddQuiz />} />
-        <Route path="/quizlist" element={<QuizList />} />
-        <Route path="/updatequiz/:id" element={<UpdateQuiz />} />
-        <Route path="/performance/:id" element={<QuizPerformance />} />
-
-        {/* Instructor - Assignment */}
-        <Route path="/addassignment" element={<AddAssignment />} />
-        <Route
-          path="/instructor/added-assignment"
-          element={<AddedAssignment />}
-        />
-        <Route
-          path="/instructor/edit-assignment/:id"
-          element={<EditAssignment />}
-        />
-
-
-
-        <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin" element={<Layout_Announcement />}>
-        <Route path="create-announcement" element={<CreateAnnouncement />} />
-        <Route path="send-notification" element={<SendNotification />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="announcements" element={<ViewAnnouncements />} />
+          <Route path="create-announcement" element={<CreateAnnouncement />} />
+          <Route path="send-notification" element={<SendNotification />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="announcements" element={<ViewAnnouncements />} />
         </Route>
         <Route path="" element={<Layout_Announcement />}>
-        <Route path="/edit-announcement/:id" element={<EditAnnouncement />} />
-        <Route path="/edit-notification/:id" element={<EditNotification />} />
+          <Route path="/edit-announcement/:id" element={<EditAnnouncement />} />
+          <Route path="/edit-notification/:id" element={<EditNotification />} />
         </Route>
 
-        
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="admin-dashboard" element={<AdminDashboard />} />
+          <Route path="singleViewSupport/:id" element={<SingleViewSupport />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="courses" element={<Courses />} />
+          <Route path="course/:id" element={<CourseDetails />} />
+          <Route path="edit-course/:id" element={<EditCourse />} />
+          <Route path="add-course" element={<AddCourse />} />
+          <Route path="support" element={<AdminSupportDashboard />} />
+          <Route path="adminReportPage" element={<AdminReportPage />} />
+          <Route path="courses" element={<Courses />} />
+          <Route path="support" element={<AdminSupportDashboard />} />
+          <Route path="courses/:id" element={<CourseDetails />} />
+          <Route path="courses/edit/:id" element={<EditCourse />} />
+          <Route path="courses/add" element={<AddCourse />} />
+          <Route path="adminSupport" element={<AdminSupport />} />
+        </Route>
 
+        <Route path="/instructor" element={<InstructorLayout />}>
+          <Route path="addannouncement" element={<AddAnnouncement />} />
+          <Route path="addedannouncement" element={<AddedAnnouncement />} />
+          <Route
+            path="updateannouncement/:id"
+            element={<UpdateAnnouncement />}
+          />
+          <Route path="addquiz" element={<AddQuiz />} />
+          <Route path="quizlist" element={<QuizList />} />
+          <Route path="updatequiz/:id" element={<UpdateQuiz />} />
+          <Route path="performance/:id" element={<QuizPerformance />} />
 
+          {/* Instructor - Assignment */}
+          <Route path="addassignment" element={<AddAssignment />} />
+          <Route path="added-assignment" element={<AddedAssignment />} />
+          <Route path="edit-assignment/:id" element={<EditAssignment />} />
+        </Route>
 
-        <Route path="/support-request" element={<SupportForm />} />
-        <Route path="/support-list" element={<SupportList />} />
-        <Route path="/admin/support" element={<AdminSupportDashboard />} />
-        <Route path="/supportdesk" element={<SupportDesk />} />
-        <Route path="/successfully-request" element={<SuccessfullyRequest />} />
-
-        <Route
-          path="/admin/singleViewSupport/:id"
-          element={<SingleViewSupport />}
-        />
-        <Route path="/admin/adminReportPage" element={<AdminReportPage />} />
-        <Route path="/admin/courses" element={<Courses />} />
-        <Route path="/admin/courses/:id" element={<CourseDetails />} />
-        <Route path="/admin/courses/edit/:id" element={<EditCourse />} />
-        <Route path="/admin/courses/add" element={<AddCourse />} />
-        <Route path="/admin/adminSupport" element={<AdminSupport />} />
-
-        {/* Instructor - Announcement */}
-        <Route path="/addannouncement" element={<AddAnnouncement />} />
-        <Route path="/addedannouncement" element={<AddedAnnouncement />} />
-        <Route
-          path="/updateannouncement/:id"
-          element={<UpdateAnnouncement />}
-        />
-
-        {StudentRoutes()}
-
+        <Route path="/student" element={<StudentLayout />}>
+          <Route path="support-request" element={<SupportForm />} />
+          <Route path="support-list" element={<SupportList />} />
+          <Route path="supportdesk" element={<SupportDesk />} />
+          <Route
+            path="successfully-request"
+            element={<SuccessfullyRequest />}
+          />
+          <Route path="mycourses" element={<Courses />} />
+          <Route path="studentProfile" element={<StudentProfile />} />
+          <Route path="enrolledcourses" element={<EnrolledCourses />} />
+          <Route path="editProfile" element={<EditProfile />} />
+          <Route path="changepassword" element={<ChangePassword />} />
+          <Route path="progress" element={<Progress />} />
+          <Route path="modulepage" element={<ModulePage />} />
+          <Route path="quiz" element={<Quiz />} />
+          <Route path="quiz/questions" element={<Questions />} />
+          <Route path="submitQuiz" element={<ConfirmSubmissionPage />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="programme" element={<ProgrammesList />} />
+          <Route path="support-request" element={<SupportForm />} />
+          <Route path="support-list" element={<SupportList />} />
+          <Route path="modules" element={<ModulePage />} />
+        </Route>
       </Routes>
 
       <Footer />
