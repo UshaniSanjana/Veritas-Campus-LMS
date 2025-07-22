@@ -64,7 +64,15 @@ const Sidebar = () => {
         
         
         <li><FaCertificate /> Exams & certification</li>
-        <li><FaLifeRing /> Support</li>
+        <li>
+          <FaLifeRing />
+          <NavLink
+            to="/admin/support"
+            className={({ isActive }) => isActive ? 'active-link' : 'inactive-link'}
+          >
+            Support
+          </NavLink>
+        </li>
         <li>
           <NavLink
             to="/admin/settings"
@@ -77,16 +85,6 @@ const Sidebar = () => {
 
         <li><FaBullhorn /> Announcement</li>
         <li><FaCertificate /> Exams & certification</li>
-
-        <li>
-          <FaLifeRing />
-          <NavLink
-            to="/admin/adminSupport"
-            className={({ isActive }) => isActive ? 'active-link' : 'inactive-link'}
-          >
-            Support
-          </NavLink>
-        </li>
 
         <li><FaCog /> Settings</li>
 

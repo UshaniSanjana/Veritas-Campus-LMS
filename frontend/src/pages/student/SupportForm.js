@@ -19,13 +19,19 @@ const SupportForm = () => {
   const errorRef = useRef(null);
   const navigate = useNavigate();
 
-  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo({
       top: 0,
       left: 0,
       behavior: 'smooth'
     });
+    
+    // Check for token when component mounts
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError("You must be logged in to submit a support request");
+      scrollToError();
+    }
   }, []);
 
   const handleChange = (e) => {
@@ -125,17 +131,41 @@ const SupportForm = () => {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       if (response.data) {
-        navigate("/successfully-request", {
-          state: {
-            studentName: formData.studentName,
-            requestId: response.data.data._id,
-          },
-        });
+        // Use try-catch to handle any navigation errors
+        try {
+          navigate("/student/successfully-request", {
+            state: {
+              studentName: formData.studentName,
+              requestId: response.data.data._id,
+            },
+          });
+        } catch (navError) {
+          console.error("Navigation error:", navError);
+          // Fallback to public route if student route fails
+          navigate("/successfully-request", {
+            state: {
+              studentName: formData.studentName,
+              requestId: response.data.data._id,
+            },
+          });
+        }
       }
     } catch (error) {
-      setError(
-        error.response?.data?.message || "Error submitting support request"
-      );
+      console.error("Error submitting support request:", error);
+      
+      // Provide more specific error messages based on error type
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setError(error.response.data?.message || `Server error: ${error.response.status}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        setError("No response from server. Please check your internet connection.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError(`Error: ${error.message}`);
+      }
+      
       scrollToError();
       setIsSubmitting(false);
     }

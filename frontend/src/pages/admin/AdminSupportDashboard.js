@@ -13,7 +13,7 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
-// import './AdminSupportDashboard.css';
+import './AdminSupportDashboard.css'; // Uncomment this line to use the CSS
 
 const AdminSupportDashboard = () => {
   const [supportRequests, setSupportRequests] = useState([]);

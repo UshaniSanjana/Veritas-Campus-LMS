@@ -119,8 +119,6 @@ function App() {
           <Route path="add-course" element={<AddCourse />} />
           <Route path="support" element={<AdminSupportDashboard />} />
           <Route path="adminReportPage" element={<AdminReportPage />} />
-          <Route path="courses" element={<Courses />} />
-          <Route path="support" element={<AdminSupportDashboard />} />
           <Route path="courses/:id" element={<CourseDetails />} />
           <Route path="courses/edit/:id" element={<EditCourse />} />
           <Route path="courses/add" element={<AddCourse />} />

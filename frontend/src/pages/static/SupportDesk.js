@@ -19,11 +19,11 @@ function SupportDesk() {
   }, []);
 
   const handleSupportClick = () => {
-    navigate("/support-request");
+    navigate("/student/support-request");
   };
 
   const handleViewRequestsClick = () => {
-    navigate("/support-list");
+    navigate("/student/support-list");
   };
 
   const handleAdminClick = () => {

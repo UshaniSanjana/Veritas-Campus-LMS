@@ -425,7 +425,7 @@ const SupportList = () => {
 
             <Col lg={3} className="text-center text-lg-end mt-3 mt-lg-0">
               {" "}
-              <Link to="/support-request" className="btn create-request-btn">
+              <Link to="/student/support-request" className="btn create-request-btn">
                 <i className="bi bi-plus-circle me-2"></i>
                 New Request
               </Link>
@@ -477,7 +477,7 @@ const SupportList = () => {
           ) : (
             <p>You haven't submitted any support requests yet.</p>
           )}{" "}
-          <Link to="/support-request" className="btn create-request-btn">
+          <Link to="/student/support-request" className="btn create-request-btn">
             <i className="bi bi-plus-circle me-2"></i>
             Create Your First Request
           </Link>
@@ -722,7 +722,7 @@ const SupportList = () => {
       </Modal>
       <div className="support-list-footer">
         {" "}
-        <Link to="/supportdesk" className="btn back-button">
+        <Link to="/student/supportdesk" className="btn back-button">
           <i className="bi bi-arrow-left me-2"></i>
           Back to Support Desk
         </Link>

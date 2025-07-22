@@ -2,13 +2,11 @@ import React from 'react';
 import '../css/SidebarAdmin.css';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {FaTachometerAlt} from 'react-icons/fa';
 import { 
   faBullhorn,
   faBell,
   faListAlt,
   faCog,
-  
 } from '@fortawesome/free-solid-svg-icons';
 
 const SidebarAdmin = () => {

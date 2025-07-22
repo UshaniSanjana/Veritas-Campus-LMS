@@ -20,7 +20,7 @@ function SuccessfullyRequest() {
     // If someone tries to access this page directly without submitting a form,
     // redirect them to the support form
     if (!studentName || !requestId) {
-      navigate("/support-request");
+      navigate("/student/support-request");
     }
   }, [studentName, requestId, navigate]);
 
@@ -51,10 +51,10 @@ function SuccessfullyRequest() {
           You can expect a response within two working days.
         </p>
         <div className="d-flex justify-content-center gap-3">
-          <Link to="/support-list" className="btn btn-primary">
+          <Link to="/student/support-list" className="btn btn-primary">
             View My Requests
           </Link>
-          <Link to="/supportdesk" className="btn btn-outline-secondary">
+          <Link to="/student/supportdesk" className="btn btn-outline-secondary">
             Back to Support Desk
           </Link>
         </div>
