@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import {
   useGetAnnouncements,
   useDeleteAnnouncement,
@@ -22,62 +22,47 @@ export default function ViewAnnouncements() {
   }, [data]);
   console.log(announcements);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading announcements</p>;
+  if (loading) return <p className="text-center text-gray-600">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">Error loading announcements</p>;
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this announcement?")) {
       await deleteAnnouncement(id);
-
       setAnnouncement((prev) => prev.filter((a) => a._id !== id));
     }
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">All Announcements</h1>
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6 text-gray-700">Announcements</h1>
 
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
-          <thead class="text-xs text-white uppercase bg-green-500 ">
+      <div className="overflow-x-auto rounded-lg shadow">
+        <table className="w-full text-sm text-left text-gray-700">
+          <thead className="text-xs uppercase bg-green-600 text-white">
             <tr>
-              <th scope="col" class="px-6 py-3">
-                Title
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Date
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Done By
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Status
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Message
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Send To
-              </th>
-              <th scope="col" class="px-6 py-3">
-                Action
-              </th>
+              <th scope="col" className="px-6 py-4">Title</th>
+              <th scope="col" className="px-6 py-4">Date</th>
+              <th scope="col" className="px-6 py-4">Done By</th>
+              <th scope="col" className="px-6 py-4">Status</th>
+              <th scope="col" className="px-6 py-4">Message</th>
+              <th scope="col" className="px-6 py-4">Send To</th>
+              <th scope="col" className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {announcements.map((announcement) => (
+            {announcements.map((announcement, idx) => (
               <tr
-                key={announcement.id}
-                className="bg-white border-b border-gray-200 hover:bg-gray-50"
+                key={announcement._id}
+                className={`${
+                  idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                } border-b hover:bg-gray-100 transition-colors`}
               >
-                <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                   {announcement.title}
-                </th>
+                </td>
                 <td className="px-6 py-4">
                   {announcement.createdAt
-                    ? new Date(announcement.createdAt).toLocaleDateString(
-                        "en-GB"
-                      ) // DD/MM/YYYY
+                    ? new Date(announcement.createdAt).toLocaleDateString("en-GB")
                     : ""}
                 </td>
                 <td className="px-6 py-4">{announcement.doneBy}</td>
@@ -85,20 +70,19 @@ export default function ViewAnnouncements() {
                 <td className="px-6 py-4">{announcement.message}</td>
                 <td className="px-6 py-4">{announcement.sendTo}</td>
                 <td className="px-6 py-4 text-right">
-                  <div className="flex gap-4">
+                  <div className="flex gap-3 justify-end">
                     <Link
-                    to={`/edit-announcement/${announcement._id}`}
-                    className="font-medium text-blue-600 hover:underline"
+                      to={`/edit-announcement/${announcement._id}`}
+                      className="inline-block px-3 py-1 rounded text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100"
                     >
-                    Edit
+                      Edit
                     </Link>
-                    <a
-                      href="#"
-                      className="font-medium text-red-600 hover:underline"
+                    <button
                       onClick={() => handleDelete(announcement._id)}
+                      className="inline-block px-3 py-1 rounded text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100"
                     >
                       Delete
-                    </a>
+                    </button>
                   </div>
                 </td>
               </tr>

@@ -20,6 +20,7 @@ export default function AnnouncementForm({
   };
 
   return (
+    <div>
     <div className="bg-white rounded-lg shadow p-6">
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -146,6 +147,7 @@ export default function AnnouncementForm({
           <div className="mt-4 text-green-600 font-medium">Posted successfully!</div>
         )}
       </form>
+    </div>
     </div>
   );
 }

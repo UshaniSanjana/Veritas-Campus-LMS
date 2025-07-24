@@ -98,16 +98,6 @@ function App() {
           />
         </Route>
 
-        {/* <Route path="/admin" element={<Layout_Announcement />}>
-          <Route path="create-announcement" element={<CreateAnnouncement />} />
-          <Route path="send-notification" element={<SendNotification />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="announcements" element={<ViewAnnouncements />} />
-        </Route>
-        <Route path="" element={<Layout_Announcement />}>
-          <Route path="/edit-announcement/:id" element={<EditAnnouncement />} />
-          <Route path="/edit-notification/:id" element={<EditNotification />} />
-        </Route> */}
 
         <Route path="/admin" element={<Layout_Announcement />}>
           <Route path="create-announcement" element={<CreateAnnouncement />} />
