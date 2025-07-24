@@ -176,13 +176,13 @@ export default function EditAnnouncement() {
             </div>
           </div>
           <div className="flex justify-between w-full md:w-[30%] mt-8">
-            <button
+            {/* <button
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
               disabled
             >
               Attachments
-            </button>
+            </button> */}
             <button
               type="submit"
               disabled={updateLoading}
