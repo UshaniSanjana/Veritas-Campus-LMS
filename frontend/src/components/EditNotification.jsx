@@ -53,14 +53,17 @@ export default function EditNotification() {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Edit Notification</h1>
-      <form action="">
-        <div className="flex flex-col p-4">
-          <div class="mb-6 w-full md:w-[30%]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-2xl bg-white rounded-lg shadow-md p-8">
+        <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
+          Edit Notification
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
             <label
-              for="title"
-              class="block mb-2 text-sm font-medium text-gray-900"
+              htmlFor="title"
+              className="block mb-2 text-sm font-medium text-gray-700"
             >
               Title
             </label>
@@ -69,14 +72,15 @@ export default function EditNotification() {
               id="title"
               value={formData.title}
               onChange={handleInputChange}
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              className="w-full p-3 bg-gray-50 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
-          <div class="mb-6 w-full md:w-[30%]">
+
+          <div>
             <label
-              for="recipient"
-              class="block mb-2 text-sm font-medium text-gray-900"
+              htmlFor="recipient"
+              className="block mb-2 text-sm font-medium text-gray-700"
             >
               Recipient
             </label>
@@ -85,15 +89,15 @@ export default function EditNotification() {
               id="recipient"
               value={formData.recipient}
               onChange={handleInputChange}
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              className="w-full p-3 bg-gray-50 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
 
-          <div class="mb-6 w-full md:w-[30%]">
+          <div>
             <label
-              for="message"
-              class="block mb-2 text-sm font-medium text-gray-900"
+              htmlFor="message"
+              className="block mb-2 text-sm font-medium text-gray-700"
             >
               Message
             </label>
@@ -102,22 +106,50 @@ export default function EditNotification() {
               value={formData.message}
               onChange={handleInputChange}
               rows="4"
-              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-              placeholder="Write your thoughts here..."
+              className="w-full p-3 bg-gray-50 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Write your message here..."
+              required
             ></textarea>
           </div>
 
-          <div className="flex">
+          <div className="flex justify-end">
             <button
-              type="button"
-              onClick={handleSubmit}
-              class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+              type="submit"
+              disabled={updateLoading}
+              className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 disabled:opacity-50"
             >
-              Update
+              {updateLoading ? "Updating..." : "Update"}
             </button>
           </div>
-        </div>
-      </form>
+
+          {updateError && (
+            <div className="text-red-500 mt-2">
+              {updateError.message || "Error updating notification"}
+            </div>
+          )}
+          {updateResponse && (
+            <div className="text-green-500 mt-2 text-center font-bold text-lg">
+              Updated successfully!
+            </div>
+          )}
+        </form>
+        
+      </div>
+      <div className="w-full md:w-1/2 hidden md:block">
+  {/* Replace first two images with a blank block */}
+  <div className="w-full h-full bg-black flex items-center justify-center">
+    {/* Optional: add text or icon inside if you want */}
+    <span className="text-white"></span>
+  </div>
+</div>
+
+{/* Keep this last image outside if it’s meant to be separate */}
+<img
+  src="https://www.cae.net/wp-content/uploads/2015/10/shutterstock_760431790-scaled.jpg"
+  alt="Announcement Visual"
+  className="object-cover w-full h-full"
+/>
+
     </div>
   );
 }
