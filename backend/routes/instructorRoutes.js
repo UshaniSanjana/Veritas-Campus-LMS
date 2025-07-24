@@ -1,46 +1,44 @@
-const express = require("express");
-console.log("instructorRoutes.js is being loaded");
+const express = require('express');
+console.log('instructorRoutes.js is being loaded');
 const router = express.Router();
-const {
-  getModuleDetails,
-  addContentToModule,
-  updateContentInModule,
-  deleteContentFromModule,
-  createModule,
-  getAllModules,
-  getAllAssignments,
-  createAssignmentForModule,
-  updateAssignmentInModule,
-} = require("../controllers/instructor/instructorController");
+
+const { 
+    getModuleDetails, 
+    addContentToModule, 
+    updateContentInModule, 
+    deleteContentFromModule, 
+    createModule, 
+    getAllModules, 
+    getAllAssignments,
+    createAssignmentForModule,
+    updateAssignmentInModule 
+} = require('../../controllers/instructor/instructorController');
 
 // GET all modules for instructor
-router.get("/modules", getAllModules);
+router.get('/', getAllModules); // Corrected
 
 // GET module details for instructor
-router.get("/modules/:moduleId", getModuleDetails);
+router.get('/:moduleId', getModuleDetails); // Corrected
 
 // POST create a new module
-router.post("/modules", createModule);
+router.post('/', createModule); // Corrected
 
 // POST add content to a module
-router.post("/modules/:moduleId/content", addContentToModule);
+router.post('/:moduleId/content', addContentToModule); // Corrected
 
 // PUT update content in a module
-router.put("/modules/:moduleId/content/:contentId", updateContentInModule);
+router.put('/:moduleId/content/:contentId', updateContentInModule); // Corrected
 
 // DELETE content from a module
-router.delete("/modules/:moduleId/content/:contentId", deleteContentFromModule);
+router.delete('/:moduleId/content/:contentId', deleteContentFromModule); // Corrected
 
 // GET all assignments for instructor
-router.get("/assignments", getAllAssignments);
+router.get('/assignments/all', getAllAssignments); // Changed path to avoid conflict with ":moduleId"
 
 // POST add a new assignment to a module
-router.post("/modules/:moduleId/assignments", createAssignmentForModule);
+router.post('/:moduleId/assignments', createAssignmentForModule); // Corrected
 
 // PUT update an assignment within a module
-router.put(
-  "/modules/:moduleId/assignments/:assignmentId",
-  updateAssignmentInModule
-);
+router.put('/:moduleId/assignments/:assignmentId', updateAssignmentInModule); // Corrected
 
 module.exports = router;
