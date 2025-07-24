@@ -22,14 +22,17 @@ export default function NotificationForm({ onSubmit, loading, error }) {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Send Notification</h1>
-      <form action="" onSubmit={handleSubmit}>
-        <div className="flex flex-col p-4">
-          <div class="mb-6 w-full md:w-[30%]">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-2xl bg-white rounded-lg shadow-md p-8">
+        <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
+          Send Notification
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
             <label
-              for="title"
-              class="block mb-2 text-sm font-medium text-gray-900"
+              htmlFor="title"
+              className="block mb-2 text-sm font-medium text-gray-700"
             >
               Title
             </label>
@@ -38,14 +41,15 @@ export default function NotificationForm({ onSubmit, loading, error }) {
               id="title"
               value={formData.title}
               onChange={handleInputChange}
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              className="w-full p-3 bg-gray-50 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
-          <div class="mb-6 w-full md:w-[30%]">
+
+          <div>
             <label
-              for="recipient"
-              class="block mb-2 text-sm font-medium text-gray-900"
+              htmlFor="recipient"
+              className="block mb-2 text-sm font-medium text-gray-700"
             >
               Recipient
             </label>
@@ -54,15 +58,15 @@ export default function NotificationForm({ onSubmit, loading, error }) {
               id="recipient"
               value={formData.recipient}
               onChange={handleInputChange}
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              className="w-full p-3 bg-gray-50 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
 
-          <div class="mb-6 w-full md:w-[30%]">
+          <div>
             <label
-              for="message"
-              class="block mb-2 text-sm font-medium text-gray-900"
+              htmlFor="message"
+              className="block mb-2 text-sm font-medium text-gray-700"
             >
               Message
             </label>
@@ -71,22 +75,29 @@ export default function NotificationForm({ onSubmit, loading, error }) {
               value={formData.message}
               onChange={handleInputChange}
               rows="4"
-              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-              placeholder="Write your thoughts here..."
+              className="w-full p-3 bg-gray-50 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Write your message here..."
+              required
             ></textarea>
           </div>
 
-          <div className="flex">
+          <div className="flex justify-end">
             <button
               type="submit"
               disabled={loading}
-              className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+              className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-500 disabled:opacity-50"
             >
               {loading ? "Sending..." : "Send"}
             </button>
           </div>
-        </div>
-      </form>
+
+          {error && (
+            <div className="text-red-500 mt-2">
+              {error.message || "Error sending notification"}
+            </div>
+          )}
+        </form>
+      </div>
     </div>
   );
 }
