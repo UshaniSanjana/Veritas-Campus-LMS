@@ -98,7 +98,7 @@ function App() {
           />
         </Route>
 
-        <Route path="/admin" element={<Layout_Announcement />}>
+        {/* <Route path="/admin" element={<Layout_Announcement />}>
           <Route path="create-announcement" element={<CreateAnnouncement />} />
           <Route path="send-notification" element={<SendNotification />} />
           <Route path="settings" element={<Settings />} />
@@ -107,9 +107,18 @@ function App() {
         <Route path="" element={<Layout_Announcement />}>
           <Route path="/edit-announcement/:id" element={<EditAnnouncement />} />
           <Route path="/edit-notification/:id" element={<EditNotification />} />
+        </Route> */}
+
+        <Route path="/admin" element={<Layout_Announcement />}>
+          <Route path="create-announcement" element={<CreateAnnouncement />} />
+          <Route path="send-notification" element={<SendNotification />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="announcements" element={<ViewAnnouncements />} />
+          <Route path="edit-announcement/:id" element={<EditAnnouncement />} />
+          <Route path="edit-notification/:id" element={<EditNotification />} />
         </Route>
 
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" >
           <Route path="admin-dashboard" element={<AdminDashboard />} />
           <Route path="singleViewSupport/:id" element={<SingleViewSupport />} />
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -123,6 +132,7 @@ function App() {
           <Route path="courses/edit/:id" element={<EditCourse />} />
           <Route path="courses/add" element={<AddCourse />} />
           <Route path="adminSupport" element={<AdminSupport />} />
+
         </Route>
 
         <Route path="/instructor" element={<InstructorLayout />}>
