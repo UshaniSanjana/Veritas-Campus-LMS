@@ -1,5 +1,0 @@
-# API route handlers
-admin.js
-instructor.js
-student.js 
-auth.js

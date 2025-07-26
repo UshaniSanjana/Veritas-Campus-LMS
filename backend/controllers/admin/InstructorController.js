@@ -1,234 +1,211 @@
-// controllers/admin/InstructorController.js
-const Instructor = require('../../models/InstructorModel');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const Instructor = require('../../models/Instructor');
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../../uploads/instructors');
+// Create Instructor
+const createInstructor = async (req, res) => {
+  try {
+    const { name, email, department, contactNumber, assignedCourse, password } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !department || !contactNumber || !assignedCourse || !password) {
+      return res.status(400).json({ 
+        message: 'All fields are required',
+        required: ['name', 'email', 'department', 'contactNumber', 'assignedCourse', 'password']
+      });
+    }
+
+    // Check if email already exists
+    const existingInstructor = await Instructor.findOne({ email });
+    if (existingInstructor) {
+      return res.status(409).json({ message: 'Email already exists' });
+    }
+
+    // Validate contact number format
+    if (!/^\d{10}$/.test(contactNumber)) {
+      return res.status(400).json({ message: 'Contact number must be exactly 10 digits' });
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    const newInstructor = new Instructor({
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      department: department.trim(),
+      contactNumber,
+      assignedCourse: assignedCourse.trim(),
+      password
+    });
+
+    const savedInstructor = await newInstructor.save();
+    res.status(201).json({
+      message: 'Instructor created successfully',
+      instructor: savedInstructor
+    });
+  } catch (error) {
+    console.error('Error creating instructor:', error.message);
     
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        message: 'Validation failed',
+        errors: Object.values(error.errors).map(err => err.message)
+      });
     }
     
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, 'instructor-' + uniqueSuffix + ext);
-  }
-});
-
-// File filter to only accept image files
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only image files are allowed!'), false);
+    // Handle duplicate key errors
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      return res.status(409).json({
+        message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
+      });
+    }
+    
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-// Configure the upload middleware
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 2 * 1024 * 1024 // 2MB limit
-  },
-  fileFilter: fileFilter
-});
-
-// Helper function to handle errors
-const handleError = (err, res) => {
-  console.error('Error:', err);
-  return res.status(500).json({
-    success: false,
-    message: err.message || 'An error occurred during processing'
-  });
+// Get all instructors
+const getAllInstructors = async (req, res) => {
+  try {
+    const instructors = await Instructor.find().select('-password').sort({ createdAt: -1 });
+    res.status(200).json({
+      message: 'Instructors fetched successfully',
+      count: instructors.length,
+      instructors
+    });
+  } catch (error) {
+    console.error('Error fetching instructors:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
 
-// Controller methods
-const instructorController = {
-  // Create a new instructor
-  createInstructor: async (req, res) => {
-    // Process the image upload using multer
-    upload.single('profileImage')(req, res, async (err) => {
-      if (err) {
-        return handleError(err, res);
+// Get instructor by ID
+const getInstructorById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const instructor = await Instructor.findById(id).select('-password');
+    if (!instructor) {
+      return res.status(404).json({ message: 'Instructor not found' });
+    }
+    
+    res.status(200).json({
+      message: 'Instructor fetched successfully',
+      instructor
+    });
+  } catch (error) {
+    console.error('Error fetching instructor:', error.message);
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ message: 'Invalid instructor ID format' });
+    }
+    
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Update Instructor
+const updateInstructor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, department, contactNumber, assignedCourse, password } = req.body;
+
+    const instructor = await Instructor.findById(id);
+    if (!instructor) {
+      return res.status(404).json({ message: 'Instructor not found' });
+    }
+
+    // Check if email is being updated and if it already exists
+    if (email && email !== instructor.email) {
+      const emailExists = await Instructor.findOne({ email: email.toLowerCase() });
+      if (emailExists) {
+        return res.status(409).json({ message: 'Email already exists' });
       }
+    }
 
-      try {
-        const instructorData = { ...req.body };
-        
-        // Add file path if an image was uploaded
-        if (req.file) {
-          // Store relative path for database
-          instructorData.profileImage = '/uploads/instructors/' + path.basename(req.file.path);
-        }
-        
-        // Create new instructor in database
-        const instructor = new Instructor(instructorData);
-        await instructor.save();
-        
-        res.status(201).json({
-          success: true,
-          message: 'Instructor created successfully',
-          data: instructor
-        });
-      } catch (error) {
-        // If there was an error and a file was uploaded, remove it
-        if (req.file && req.file.path) {
-          fs.unlink(req.file.path, (unlinkErr) => {
-            if (unlinkErr) console.error('Error deleting file:', unlinkErr);
-          });
-        }
-        
-        return handleError(error, res);
+    // Validate contact number if provided
+    if (contactNumber && !/^\d{10}$/.test(contactNumber)) {
+      return res.status(400).json({ message: 'Contact number must be exactly 10 digits' });
+    }
+
+    // Validate password length if provided
+    if (password && password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
+    // Update fields
+    if (name) instructor.name = name.trim();
+    if (email) instructor.email = email.trim().toLowerCase();
+    if (department) instructor.department = department.trim();
+    if (contactNumber) instructor.contactNumber = contactNumber;
+    if (assignedCourse) instructor.assignedCourse = assignedCourse.trim();
+    if (password) instructor.password = password;
+
+    const updatedInstructor = await instructor.save();
+    res.status(200).json({
+      message: 'Instructor updated successfully',
+      instructor: updatedInstructor
+    });
+  } catch (error) {
+    console.error('Error updating instructor:', error.message);
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ message: 'Invalid instructor ID format' });
+    }
+    
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        message: 'Validation failed',
+        errors: Object.values(error.errors).map(err => err.message)
+      });
+    }
+    
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      return res.status(409).json({
+        message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
+      });
+    }
+    
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Delete Instructor
+const deleteInstructor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const instructor = await Instructor.findByIdAndDelete(id);
+    if (!instructor) {
+      return res.status(404).json({ message: 'Instructor not found' });
+    }
+    
+    res.status(200).json({
+      message: 'Instructor deleted successfully',
+      instructor: {
+        instructorID: instructor.instructorID,
+        name: instructor.name,
+        email: instructor.email
       }
     });
-  },
-
-  // Get all instructors
-  getAllInstructors: async (req, res) => {
-    try {
-      const instructors = await Instructor.find().sort({ createdAt: -1 });
-      
-      res.status(200).json({
-        success: true,
-        count: instructors.length,
-        data: instructors
-      });
-    } catch (error) {
-      return handleError(error, res);
+  } catch (error) {
+    console.error('Error deleting instructor:', error.message);
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ message: 'Invalid instructor ID format' });
     }
-  },
-
-  // Get a single instructor by ID
-  getInstructorById: async (req, res) => {
-    try {
-      const instructor = await Instructor.findById(req.params.id);
-      
-      if (!instructor) {
-        return res.status(404).json({
-          success: false,
-          message: 'Instructor not found'
-        });
-      }
-      
-      res.status(200).json({
-        success: true,
-        data: instructor
-      });
-    } catch (error) {
-      return handleError(error, res);
-    }
-  },
-
-  // Update an instructor
-  updateInstructor: async (req, res) => {
-    // Process the image upload first if present
-    upload.single('profileImage')(req, res, async (err) => {
-      if (err) {
-        return handleError(err, res);
-      }
-
-      try {
-        // Find the instructor first
-        const instructor = await Instructor.findById(req.params.id);
-        
-        if (!instructor) {
-          // Remove uploaded file if instructor not found
-          if (req.file && req.file.path) {
-            fs.unlink(req.file.path, (unlinkErr) => {
-              if (unlinkErr) console.error('Error deleting file:', unlinkErr);
-            });
-          }
-          
-          return res.status(404).json({
-            success: false,
-            message: 'Instructor not found'
-          });
-        }
-        
-        const updateData = { ...req.body };
-        
-        // Add file path if an image was uploaded
-        if (req.file) {
-          // Remove old profile image if exists
-          if (instructor.profileImage) {
-            const oldFilePath = path.join(__dirname, '../..', instructor.profileImage);
-            if (fs.existsSync(oldFilePath)) {
-              fs.unlink(oldFilePath, (unlinkErr) => {
-                if (unlinkErr) console.error('Error deleting old file:', unlinkErr);
-              });
-            }
-          }
-          
-          // Store relative path for database
-          updateData.profileImage = '/uploads/instructors/' + path.basename(req.file.path);
-        }
-        
-        // Update instructor in database
-        const updatedInstructor = await Instructor.findByIdAndUpdate(
-          req.params.id,
-          updateData,
-          { new: true, runValidators: true }
-        );
-        
-        res.status(200).json({
-          success: true,
-          message: 'Instructor updated successfully',
-          data: updatedInstructor
-        });
-      } catch (error) {
-        // If there was an error and a file was uploaded, remove it
-        if (req.file && req.file.path) {
-          fs.unlink(req.file.path, (unlinkErr) => {
-            if (unlinkErr) console.error('Error deleting file:', unlinkErr);
-          });
-        }
-        
-        return handleError(error, res);
-      }
-    });
-  },
-
-  // Delete an instructor
-  deleteInstructor: async (req, res) => {
-    try {
-      const instructor = await Instructor.findById(req.params.id);
-      
-      if (!instructor) {
-        return res.status(404).json({
-          success: false,
-          message: 'Instructor not found'
-        });
-      }
-      
-      // Delete profile image if exists
-      if (instructor.profileImage) {
-        const filePath = path.join(__dirname, '../..', instructor.profileImage);
-        if (fs.existsSync(filePath)) {
-          fs.unlink(filePath, (unlinkErr) => {
-            if (unlinkErr) console.error('Error deleting file:', unlinkErr);
-          });
-        }
-      }
-      
-      // Remove from database
-      await Instructor.findByIdAndDelete(req.params.id);
-      
-      res.status(200).json({
-        success: true,
-        message: 'Instructor deleted successfully'
-      });
-    } catch (error) {
-      return handleError(error, res);
-    }
+    
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
-module.exports = instructorController;
+module.exports = {
+  createInstructor,
+  getAllInstructors,
+  getInstructorById,
+  updateInstructor,
+  deleteInstructor
+};

@@ -1,4 +1,4 @@
-// EditInstructorForm.jsx
+// EditInstructorForm.jsx - Corrected Version
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,89 +8,151 @@ function EditInstructorForm() {
   const { id } = useParams(); // Get instructor ID from URL params
   
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '', // Changed from firstName/lastName to just name
     email: '',
-    phone: '',
+    contactNumber: '', // Changed from phone to phonenumber
     department: '',
-    qualification: '',
-    experience: '',
-    address: '',
-    joinDate: '',
-    profileImage: null,
+    assignedCourse: '',
   });
 
-  const [currentImage, setCurrentImage] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
   const [apiError, setApiError] = useState(null);
 
+  // Available courses for each department
+  const coursesByDepartment = {
+    'Diploma in Human Resource Management': [
+      'Introduction to HR Management',
+      'Recruitment and Selection',
+      'Employee Relations',
+      'Performance Management',
+      'HR Analytics',
+      'Compensation and Benefits'
+    ],
+    'Diploma in Business Administration': [
+      'Business Fundamentals',
+      'Marketing Management',
+      'Operations Management',
+      'Strategic Management',
+      'Business Ethics',
+      'Entrepreneurship'
+    ],
+    'Diploma in English': [
+      'English Literature',
+      'Creative Writing',
+      'Academic Writing',
+      'Business Communication',
+      'Grammar and Composition',
+      'Public Speaking'
+    ],
+    'Diploma in Internal Sales & Marketing': [
+      'Sales Fundamentals',
+      'Digital Marketing',
+      'Customer Relationship Management',
+      'Sales Psychology',
+      'Market Research',
+      'Brand Management'
+    ]
+  };
+
+  // Get available courses based on selected department
+  const getAvailableCourses = () => {
+    return coursesByDepartment[formData.department] || [];
+  };
+
   // Fetch instructor data when component mounts
   useEffect(() => {
     const fetchInstructor = async () => {
       try {
         setIsLoading(true);
+        setApiError(null); // Clear any previous errors
         
-        const response = await axios.get(`http://localhost:5000/api/instructors/${id}`);
-        // Check if response has a data property with nested data
-        const instructorData = response.data.data || response.data;
+        console.log('Fetching instructor with ID:', id); // Debug log
         
-        // Format join date for date input (YYYY-MM-DD)
-        const joinDate = instructorData.joinDate 
-          ? new Date(instructorData.joinDate).toISOString().split('T')[0] 
-          : '';
+        // Try multiple possible API endpoints
+        let response;
+        try {
+          response = await axios.get(`http://localhost:5000/api/${id}`);
+        } catch (error) {
+          // If first endpoint fails, try the original one
+          console.log('First endpoint failed, trying alternative...');
+          response = await axios.get(`http://localhost:5000/api/${id}`);
+        }
         
-        // Ensure we're extracting data from the correct structure
+        console.log('API Response:', response); // Debug log
+        console.log('Response data:', response.data); // Debug log
+        
+        // Handle different response structures
+        let instructorData;
+        if (response.data.data) {
+          instructorData = response.data.data;
+        } else if (response.data.instructor) {
+          instructorData = response.data.instructor;
+        } else {
+          instructorData = response.data;
+        }
+        
+        console.log('Instructor data to set:', instructorData); // Debug log
+        
+        // Map the API data to form data structure
         const dataToSet = {
-          firstName: instructorData.firstName || '',
-          lastName: instructorData.lastName || '',
+          name: instructorData.name || '',
           email: instructorData.email || '',
-          phone: instructorData.phone || '',
+          contactNumber: instructorData.contactNumber || instructorData.contactNumber || instructorData.phone || '',
           department: instructorData.department || '',
-          qualification: instructorData.qualification || '',
-          experience: instructorData.experience || '',
-          address: instructorData.address || '',
-          joinDate: joinDate,
-          profileImage: null, // We'll keep the existing image unless changed
+          assignedCourse: instructorData.assignedCourse || instructorData.assigned_course || '',
         };
         
+        console.log('Data being set to form:', dataToSet); // Debug log
         setFormData(dataToSet);
-        
-        // Set current image URL if exists
-        if (instructorData.profileImage) {
-          // Fix: Ensure we have the full URL to the image
-          const imageUrl = instructorData.profileImage.startsWith('http') 
-            ? instructorData.profileImage 
-            : `http://localhost:5000${instructorData.profileImage}`;
-          
-          setCurrentImage(imageUrl);
-        }
         
       } catch (error) {
         console.error('Error fetching instructor:', error);
-        setApiError('Failed to load instructor data. Please try again.');
+        console.error('Error response:', error.response); // More detailed error logging
+        
+        if (error.response) {
+          // Server responded with error status
+          setApiError(`Failed to load instructor: ${error.response.data?.message || error.response.statusText} (Status: ${error.response.status})`);
+        } else if (error.request) {
+          // Request was made but no response received
+          setApiError('No response from server. Please check if the backend is running on http://localhost:5000');
+        } else {
+          // Something else happened
+          setApiError('Failed to load instructor data. Please try again.');
+        }
       } finally {
         setIsLoading(false);
       }
     };
 
     if (id) {
+      console.log('Component mounted with ID:', id); // Debug log
       fetchInstructor();
     } else {
       console.error('No instructor ID provided in URL params');
       setApiError('No instructor ID provided. Please select an instructor to edit.');
       setIsLoading(false);
     }
-  }, [id]); // Only re-run if id changes
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    
+    // If department changes, reset assigned course
+    if (name === 'department') {
+      setFormData({
+        ...formData,
+        [name]: value,
+        assignedCourse: '', // Reset course when department changes
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
     
     // Clear error when user starts typing
     if (errors[name]) {
@@ -101,43 +163,44 @@ function EditInstructorForm() {
     }
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      
-      // Create a preview URL for the selected image
-      const previewUrl = URL.createObjectURL(file);
-      setCurrentImage(previewUrl);
-      
-      setFormData({
-        ...formData,
-        profileImage: file,
-      });
-    }
-  };
-
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    // Validate name
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    }
     
+    // Validate email
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email address is invalid';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
     
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!/^\d{10}$/.test(formData.phone.replace(/[^0-9]/g, ''))) {
-      newErrors.phone = 'Phone number is invalid';
+    // Validate phone number
+    if (!formData.contactNumber.trim()) {
+      newErrors.contactNumber = 'Phone number is required';
+    } else {
+      const cleanPhone = formData.contactNumber.replace(/[^0-9]/g, '');
+      if (cleanPhone.length < 10) {
+        newErrors.contactNumber = 'Phone number must be at least 10 digits';
+      } else if (cleanPhone.length > 15) {
+        newErrors.contactNumber = 'Phone number is too long';
+      }
     }
     
-    if (!formData.department.trim()) newErrors.department = 'Department is required';
-    if (!formData.qualification.trim()) newErrors.qualification = 'Qualification is required';
-    if (!formData.experience.trim()) newErrors.experience = 'Experience is required';
-    if (!formData.joinDate) newErrors.joinDate = 'Join date is required';
+    // Validate department
+    if (!formData.department.trim()) {
+      newErrors.department = 'Department is required';
+    }
+    
+    // Validate assigned course
+    if (!formData.assignedCourse.trim()) {
+      newErrors.assignedCourse = 'Assigned course is required';
+    }
     
     return newErrors;
   };
@@ -155,28 +218,27 @@ function EditInstructorForm() {
     setApiError(null);
     
     try {
-      // Create a FormData object to handle file uploads
-      const formDataToSend = new FormData();
+      console.log('Submitting data:', formData); // Debug log
       
-      // Append all form fields to the FormData object
-      Object.keys(formData).forEach(key => {
-        if (key !== 'profileImage') {
-          formDataToSend.append(key, formData[key]);
-        }
-      });
-      
-      // Append the file if a new one was selected
-      if (formData.profileImage) {
-        formDataToSend.append('profileImage', formData.profileImage);
+      // Try multiple possible API endpoints for update
+      let response;
+      try {
+        response = await axios.put(`http://localhost:5000/api/${id}`, formData, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      } catch (error) {
+        // If first endpoint fails, try the original one
+        console.log('First update endpoint failed, trying alternative...');
+        response = await axios.put(`http://localhost:5000/api/${id}`, formData, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
       }
       
-      // Send data to the backend API using PUT method for updates
-      const response = await axios.put(`http://localhost:5000/api/instructors/${id}`, formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      
+      console.log('Update response:', response); // Debug log
       setShowSuccess(true);
       
       // Show success message briefly before navigating
@@ -186,6 +248,8 @@ function EditInstructorForm() {
       }, 2000);
     } catch (error) {
       console.error('Error updating instructor:', error);
+      console.error('Error response:', error.response); // More detailed error logging
+      
       setApiError(
         error.response?.data?.message || 
         'An error occurred while updating the instructor. Please try again.'
@@ -195,10 +259,10 @@ function EditInstructorForm() {
     }
   };
 
-  // Redesigned styles to match the image while keeping original fields
+  // Styles
   const styles = {
     container: {
-      backgroundColor: '#ffffff',
+      backgroundColor: '#f8f9fa',
       minHeight: '100vh',
       padding: '20px',
       fontFamily: 'Arial, sans-serif',
@@ -206,182 +270,182 @@ function EditInstructorForm() {
     },
     formCard: {
       backgroundColor: '#ffffff',
-      borderRadius: '4px',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
-      padding: '20px',
-      maxWidth: '800px',
+      borderRadius: '8px',
+      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+      padding: '30px',
+      maxWidth: '700px',
       margin: '0 auto',
     },
     header: {
-      marginBottom: '20px',
+      marginBottom: '30px',
+      textAlign: 'center',
     },
     headerTitle: {
-      fontSize: '24px',
+      fontSize: '28px',
       fontWeight: 'bold',
-      color: '#333',
+      color: '#2c3e50',
       margin: '0',
     },
+    subtitle: {
+      fontSize: '16px',
+      color: '#7f8c8d',
+      marginTop: '8px',
+    },
     requiredNote: {
-      backgroundColor: '#fffde7',
-      padding: '10px 15px',
-      borderRadius: '4px',
-      marginBottom: '20px',
+      backgroundColor: '#fff3cd',
+      border: '1px solid #ffeaa7',
+      padding: '12px 16px',
+      borderRadius: '6px',
+      marginBottom: '25px',
       fontSize: '14px',
       color: '#856404',
-    },
-    formGrid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
-      gap: '20px',
     },
     formGroup: {
       display: 'flex',
       flexDirection: 'column',
-      marginBottom: '15px',
-    },
-    fullWidth: {
-      gridColumn: '1 / -1',
+      marginBottom: '20px',
     },
     label: {
       marginBottom: '8px',
-      fontWeight: 'bold',
+      fontWeight: '600',
       fontSize: '14px',
+      color: '#2c3e50',
     },
     asterisk: {
-      color: '#f44336',
+      color: '#e74c3c',
+      marginLeft: '2px',
     },
     input: {
-      padding: '10px',
-      border: '1px solid #ddd',
-      borderRadius: '4px',
+      padding: '12px',
+      border: '2px solid #e9ecef',
+      borderRadius: '6px',
       fontSize: '14px',
       width: '100%',
       boxSizing: 'border-box',
+      transition: 'border-color 0.3s ease',
+      backgroundColor: '#fff',
+    },
+    inputFocused: {
+      borderColor: '#3498db',
+      outline: 'none',
+      boxShadow: '0 0 0 3px rgba(52, 152, 219, 0.1)',
     },
     select: {
-      padding: '10px',
-      border: '1px solid #ddd',
-      borderRadius: '4px',
+      padding: '12px',
+      border: '2px solid #e9ecef',
+      borderRadius: '6px',
       fontSize: '14px',
       backgroundColor: '#fff',
       width: '100%',
       boxSizing: 'border-box',
-    },
-    imageUploadArea: {
-      border: '1px dashed #ddd',
-      borderRadius: '4px',
-      padding: '20px',
-      textAlign: 'center',
+      transition: 'border-color 0.3s ease',
       cursor: 'pointer',
-      height: '150px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    currentImageContainer: {
-      marginBottom: '10px',
-      textAlign: 'center',
-    },
-    currentImage: {
-      maxWidth: '100%',
-      maxHeight: '100px',
-      borderRadius: '4px',
-    },
-    uploadIcon: {
-      fontSize: '24px',
-      marginBottom: '8px',
-      color: '#ccc',
-    },
-    uploadText: {
-      color: '#666',
-      fontSize: '14px',
-    },
-    uploadInfo: {
-      fontSize: '12px',
-      color: '#999',
-      marginTop: '8px',
-    },
-    submitButton: {
-      backgroundColor: '#95C436',
-      color: 'white',
-      border: "1px solid #3E9355",
-      borderRadius: '6px',
-      padding: '14px 24px',
-      fontSize: '16px',
-      fontWeight: '600',
-      cursor: 'pointer',
-      marginTop: '20px',
-      transition: 'background-color 0.3s',
     },
     buttonContainer: {
       display: 'flex',
-      justifyContent: 'flex-end',
-      marginTop: '20px',
-      marginTop: '30px',
+      justifyContent: 'center',
       gap: '15px',
+      marginTop: '30px',
     },
-    cancelButton: {
-      backgroundColor: '#D7D7D7',
+    submitButton: {
+      backgroundColor: '#27ae60',
       color: 'white',
-      border: "1px solid #9B9B9B",
+      border: 'none',
       borderRadius: '6px',
-      padding: '14px 24px',
+      padding: '14px 28px',
       fontSize: '16px',
       fontWeight: '600',
       cursor: 'pointer',
-      marginTop: '20px',
-      transition: 'background-color 0.3s',
+      transition: 'all 0.3s ease',
+      minWidth: '120px',
+    },
+    submitButtonHover: {
+      backgroundColor: '#219a52',
+      transform: 'translateY(-2px)',
+    },
+    cancelButton: {
+      backgroundColor: '#95a5a6',
+      color: 'white',
+      border: 'none',
+      borderRadius: '6px',
+      padding: '14px 28px',
+      fontSize: '16px',
+      fontWeight: '600',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      minWidth: '120px',
+    },
+    cancelButtonHover: {
+      backgroundColor: '#7f8c8d',
+      transform: 'translateY(-2px)',
     },
     errorMessage: {
-      color: '#f44336',
+      color: '#e74c3c',
       fontSize: '12px',
-      marginTop: '4px',
-    },
-    sectionHeader: {
-      gridColumn: '1 / -1',
-      borderBottom: '1px solid #eee',
-      paddingBottom: '10px',
-      marginBottom: '15px',
-      marginTop: '15px',
-    },
-    sectionTitle: {
-      fontSize: '16px',
-      fontWeight: 'bold',
-      color: '#444',
+      marginTop: '5px',
+      fontWeight: '500',
     },
     loadingContainer: {
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '400px',
       fontSize: '18px',
-      color: '#666',
+      color: '#7f8c8d',
     },
-    debugPanel: {
-      backgroundColor: '#f8f9fa',
-      padding: '15px',
+    loadingSpinner: {
+      border: '4px solid #f3f3f3',
+      borderTop: '4px solid #3498db',
+      borderRadius: '50%',
+      width: '40px',
+      height: '40px',
+      animation: 'spin 1s linear infinite',
       marginBottom: '20px',
-      borderRadius: '4px',
-      border: '1px solid #ddd',
-      fontFamily: 'monospace',
-      fontSize: '12px',
-      overflow: 'auto',
-      whiteSpace: 'pre-wrap',
     },
     successMessage: {
-      backgroundColor: '#e8f5e9',
-      padding: '10px 15px',
-      borderRadius: '4px',
+      backgroundColor: '#d4edda',
+      border: '1px solid #c3e6cb',
+      padding: '12px 16px',
+      borderRadius: '6px',
       marginBottom: '20px',
-      color: '#2e7d32',
+      color: '#155724',
+      textAlign: 'center',
+      fontWeight: '500',
     },
     errorAlert: {
-      backgroundColor: '#ffebee',
-      padding: '10px 15px',
-      borderRadius: '4px',
+      backgroundColor: '#f8d7da',
+      border: '1px solid #f5c6cb',
+      padding: '12px 16px',
+      borderRadius: '6px',
       marginBottom: '20px',
-      color: '#c62828',
+      color: '#721c24',
+      textAlign: 'center',
+      fontWeight: '500',
+    },
+    formRow: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '20px',
+    },
+    sectionTitle: {
+      fontSize: '18px',
+      fontWeight: 'bold',
+      color: '#2c3e50',
+      marginBottom: '15px',
+      marginTop: '25px',
+      paddingBottom: '8px',
+      borderBottom: '2px solid #ecf0f1',
+    },
+    debugInfo: {
+      backgroundColor: '#e8f4f8',
+      border: '1px solid #bee5eb',
+      padding: '15px',
+      borderRadius: '6px',
+      marginBottom: '20px',
+      fontSize: '12px',
+      color: '#0c5460',
+      fontFamily: 'monospace',
     }
   };
 
@@ -390,7 +454,11 @@ function EditInstructorForm() {
       <div style={styles.container}>
         <div style={styles.formCard}>
           <div style={styles.loadingContainer}>
-            Loading instructor data...
+            <div style={styles.loadingSpinner}></div>
+            <p>Loading instructor data...</p>
+            <p style={{ fontSize: '14px', marginTop: '10px' }}>
+              Fetching instructor ID: {id}
+            </p>
           </div>
         </div>
       </div>
@@ -399,82 +467,95 @@ function EditInstructorForm() {
 
   return (
     <div style={styles.container}>
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          
+          .submit-btn:hover {
+            background-color: #219a52 !important;
+            transform: translateY(-2px);
+          }
+          
+          .cancel-btn:hover {
+            background-color: #7f8c8d !important;
+            transform: translateY(-2px);
+          }
+          
+          .form-input:focus {
+            border-color: #3498db !important;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+          }
+        `}
+      </style>
+      
       <div style={styles.formCard}>
         <div style={styles.header}>
           <h1 style={styles.headerTitle}>Edit Instructor</h1>
+          <p style={styles.subtitle}>Update instructor information</p>
         </div>
+
+        
         
         <div style={styles.requiredNote}>
-          Fields marked with an asterisk (*) are required.
+          <strong>Note:</strong> All fields marked with an asterisk (*) are required.
         </div>
 
         {showSuccess && (
           <div style={styles.successMessage}>
-            Instructor has been updated successfully. Redirecting...
+            ✅ Instructor has been updated successfully! Redirecting...
           </div>
         )}
 
         {apiError && (
           <div style={styles.errorAlert}>
-            {apiError}
+            ❌ {apiError}
           </div>
         )}
         
         <form onSubmit={handleSubmit}>
-          <div style={styles.formGrid}>
-            {/* Personal Information Section */}
-            <div style={styles.sectionHeader}>
-              <h3 style={styles.sectionTitle}>Personal Information</h3>
-            </div>
-            
+          {/* Personal Information */}
+          <h3 style={styles.sectionTitle}>Personal Information</h3>
+          
+          <div style={styles.formGroup}>
+            <label style={styles.label}>
+              Full Name<span style={styles.asterisk}>*</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="form-input"
+              style={{
+                ...styles.input,
+                borderColor: errors.name ? '#e74c3c' : formData.name ? '#27ae60' : '#e9ecef',
+              }}
+              placeholder="Enter full name"
+            />
+            {errors.name && <p style={styles.errorMessage}>{errors.name}</p>}
+          </div>
+
+          {/* Contact Information */}
+          <h3 style={styles.sectionTitle}>Contact Information</h3>
+          
+          <div style={styles.formRow}>
             <div style={styles.formGroup}>
               <label style={styles.label}>
-                First Name <span style={styles.asterisk}>*</span>
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                style={{
-                  ...styles.input,
-                  border: formData.firstName ? '1px solid #2196F3' : '1px solid #ddd',
-                }}
-                placeholder="Enter first name"
-              />
-              {errors.firstName && <p style={styles.errorMessage}>{errors.firstName}</p>}
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Last Name <span style={styles.asterisk}>*</span>
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                style={{
-                  ...styles.input,
-                  border: formData.lastName ? '1px solid #2196F3' : '1px solid #ddd',
-                }}
-                placeholder="Enter last name"
-              />
-              {errors.lastName && <p style={styles.errorMessage}>{errors.lastName}</p>}
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Email Address <span style={styles.asterisk}>*</span>
+                Email Address<span style={styles.asterisk}>*</span>
               </label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                className="form-input"
                 style={{
                   ...styles.input,
-                  border: formData.email ? '1px solid #2196F3' : '1px solid #ddd',
+                  borderColor: errors.email ? '#e74c3c' : formData.email ? '#27ae60' : '#e9ecef',
                 }}
                 placeholder="Enter email address"
               />
@@ -483,178 +564,95 @@ function EditInstructorForm() {
             
             <div style={styles.formGroup}>
               <label style={styles.label}>
-                Phone Number <span style={styles.asterisk}>*</span>
+                Phone Number<span style={styles.asterisk}>*</span>
               </label>
               <input
                 type="tel"
-                name="phone"
-                value={formData.phone}
+                name="contactNumber"
+                value={formData.contactNumber}
                 onChange={handleChange}
+                className="form-input"
                 style={{
                   ...styles.input,
-                  border: formData.phone ? '1px solid #2196F3' : '1px solid #ddd',
+                  borderColor: errors.contactNumber ? '#e74c3c' : formData.contactNumber ? '#27ae60' : '#e9ecef',
                 }}
                 placeholder="Enter phone number"
               />
-              {errors.phone && <p style={styles.errorMessage}>{errors.phone}</p>}
+              {errors.contactNumber && <p style={styles.errorMessage}>{errors.contactNumber}</p>}
             </div>
-            
-            <div style={{...styles.formGroup, ...styles.fullWidth}}>
-              <label style={styles.label}>
-                Address
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                style={{
-                  ...styles.input,
-                  border: formData.address ? '1px solid #2196F3' : '1px solid #ddd',
-                }}
-                placeholder="Enter full address"
-              />
-            </div>
-            
-            {/* Professional Information Section */}
-            <div style={styles.sectionHeader}>
-              <h3 style={styles.sectionTitle}>Professional Information</h3>
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Department <span style={styles.asterisk}>*</span>
-              </label>
-              <select
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                style={{
-                  ...styles.select,
-                  border: formData.department ? '1px solid #2196F3' : '1px solid #ddd',
-                }}
-              >
-                <option value="">Select Department</option>
-                <option value="Diploma in Human Resource Management">Diploma in Human Resource Management</option>
-                <option value="Diploma in Business Administration">Diploma in Business Administration</option>
-                <option value="Diploma in English">Diploma in English</option>
-                <option value="Diploma in Internal Sales & Marketing">Diploma in Internal Sales & Marketing</option>
-              </select>
-              {errors.department && <p style={styles.errorMessage}>{errors.department}</p>}
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Highest Qualification <span style={styles.asterisk}>*</span>
-              </label>
-              <input
-                type="text"
-                name="qualification"
-                value={formData.qualification}
-                onChange={handleChange}
-                style={{
-                  ...styles.input,
-                  border: formData.qualification ? '1px solid #2196F3' : '1px solid #ddd',
-                }}
-                placeholder="E.g., Ph.D. in Computer Science"
-              />
-              {errors.qualification && <p style={styles.errorMessage}>{errors.qualification}</p>}
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Years of Experience <span style={styles.asterisk}>*</span>
-              </label>
-              
-               <select
-                name="experience"
-                value={formData.experience}
-                onChange={handleChange}
-                style={{
-                  ...styles.input,
-                  border: formData.experience ? '1px solid #2196F3' : '1px solid #ddd',
-                }}
-              >
-                <option value="">Select years of experience</option>
-                <option value="1">1 Year</option>
-                <option value="2">2 Year</option>
-                <option value="3">3 Year</option>
-                <option value="4">4 Year</option>
-                <option value="5">5 Year</option>
-                <option value="6">6 Year</option>
-                <option value="7">7 Year</option>
-                <option value="8">8 Year</option>
-                <option value="9">9 Year</option>
-                <option value="10">10 Year</option>
-                <option value="10+">10+ Year</option>
-                
-              </select>
-              {errors.experience && <p style={styles.errorMessage}>{errors.experience}</p>}
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Join Date <span style={styles.asterisk}>*</span>
-              </label>
-              <input
-                type="date"
-                name="joinDate"
-                value={formData.joinDate}
-                onChange={handleChange}
-                style={{
-                  ...styles.input,
-                  border: formData.joinDate ? '1px solid #2196F3' : '1px solid #ddd',
-                }}
-              />
-              {errors.joinDate && <p style={styles.errorMessage}>{errors.joinDate}</p>}
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Profile Image
-              </label>
-              
-              {currentImage && (
-                <div style={styles.currentImageContainer}>
-                  <img 
-                    src={currentImage} 
-                    alt="Current profile" 
-                    style={styles.currentImage} 
-                  />
-                  <p style={{ fontSize: '12px', marginTop: '5px' }}>Current profile image</p>
-                </div>
-              )}
-              
-              <label htmlFor="profileImage" style={styles.imageUploadArea}>
-                <div style={styles.uploadIcon}>📷</div>
-                <div style={styles.uploadText}>
-                  {currentImage ? 'Change photo' : 'Select a photo'}
-                </div>
-                <input
-                  type="file"
-                  id="profileImage"
-                  name="profileImage"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                  accept="image/*"
-                />
-              </label>
-              <div style={styles.uploadInfo}>
-                Max size: 2MB. Formats: JPG, PNG
-              </div>
-            </div>
+          </div>
+
+          {/* Professional Information */}
+          <h3 style={styles.sectionTitle}>Professional Information</h3>
+          
+          <div style={styles.formGroup}>
+            <label style={styles.label}>
+              Department<span style={styles.asterisk}>*</span>
+            </label>
+            <select
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              className="form-input"
+              style={{
+                ...styles.select,
+                borderColor: errors.department ? '#e74c3c' : formData.department ? '#27ae60' : '#e9ecef',
+              }}
+            >
+              <option value="">Select Department</option>
+              <option value="Diploma in Human Resource Management">Diploma in Human Resource Management</option>
+              <option value="Diploma in Business Administration">Diploma in Business Administration</option>
+              <option value="Diploma in English">Diploma in English</option>
+              <option value="Diploma in Internal Sales & Marketing">Diploma in Internal Sales & Marketing</option>
+            </select>
+            {errors.department && <p style={styles.errorMessage}>{errors.department}</p>}
+          </div>
+          
+          <div style={styles.formGroup}>
+            <label style={styles.label}>
+              Assigned Course<span style={styles.asterisk}>*</span>
+            </label>
+            <select
+              name="assignedCourse"
+              value={formData.assignedCourse}
+              onChange={handleChange}
+              className="form-input"
+              style={{
+                ...styles.select,
+                borderColor: errors.assignedCourse ? '#e74c3c' : formData.assignedCourse ? '#27ae60' : '#e9ecef',
+              }}
+              disabled={!formData.department}
+            >
+              <option value="">
+                {!formData.department ? 'Select department first' : 'Select assigned course'}
+              </option>
+              {getAvailableCourses().map(course => (
+                <option key={course} value={course}>
+                  {course}
+                </option>
+              ))}
+            </select>
+            {errors.assignedCourse && <p style={styles.errorMessage}>{errors.assignedCourse}</p>}
+            {!formData.department && (
+              <p style={{ fontSize: '12px', color: '#7f8c8d', marginTop: '5px' }}>
+                Please select a department to see available courses
+              </p>
+            )}
           </div>
           
           <div style={styles.buttonContainer}>
             <button 
               type="button" 
+              className="cancel-btn"
               style={styles.cancelButton}
               onClick={() => navigate('/allinstrutors')}
+              disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
+              className="submit-btn"
               disabled={isSubmitting}
               style={{
                 ...styles.submitButton,
@@ -662,7 +660,7 @@ function EditInstructorForm() {
                 cursor: isSubmitting ? 'not-allowed' : 'pointer',
               }}
             >
-              {isSubmitting ? 'Updating...' : 'Update Instructor'}
+              {isSubmitting ? '⏳ Updating...' : '✅ Update Instructor'}
             </button>
           </div>
         </form>

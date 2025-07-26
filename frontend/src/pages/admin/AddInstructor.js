@@ -1,4 +1,4 @@
-// ImprovedInstructorForm.jsx
+// ModifiedInstructorForm.jsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -7,30 +7,37 @@ function InstructorForm() {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    phone: '',
     department: '',
-    qualification: '',
-    experience: '',
-    address: '',
-    joinDate: '',
-    profileImage: null,
+    contactNumber: '',
+    assignedCourse: '',
+    password: '',
+    confirmPassword: ''
   });
 
-  const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [apiError, setApiError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Sample courses data - replace with actual API call
+  const availableCourses = [
+    { id: 'HRM001', name: 'Diploma in Human Resource Management' },
+    { id: 'BBA001', name: 'Diploma in Business Administration' },
+    { id: 'ENG001', name: 'Diploma in English' },
+    { id: 'SMK001', name: 'Diploma in Internal Sales & Marketing' },
+    { id: 'IT001', name: 'Diploma in Information Technology' },
+    { id: 'ACC001', name: 'Diploma in Accounting' }
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Special validation for first name and last name (only letters)
-    if ((name === 'firstName' || name === 'lastName') && value !== '') {
-      // Allow only letters and spaces
+    // Special validation for name (only letters and spaces)
+    if (name === 'name' && value !== '') {
       const letterRegex = /^[A-Za-z\s]+$/;
       if (!letterRegex.test(value)) {
         setErrors({
@@ -41,9 +48,8 @@ function InstructorForm() {
       }
     }
     
-    // Special validation for phone number (only numbers)
-    if (name === 'phone') {
-      // Allow only numbers
+    // Special validation for contact number (only numbers)
+    if (name === 'contactNumber') {
       const numberRegex = /^[0-9]*$/;
       if (value !== '' && !numberRegex.test(value)) {
         setErrors({
@@ -73,71 +79,25 @@ function InstructorForm() {
     }
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      
-      // Validate file size (2MB max)
-      if (selectedFile.size > 2 * 1024 * 1024) {
-        setErrors({
-          ...errors,
-          profileImage: 'File size must be less than 2MB'
-        });
-        return;
-      }
-      
-      // Validate file type
-      if (!selectedFile.type.match('image/jpeg|image/png|image/jpg')) {
-        setErrors({
-          ...errors,
-          profileImage: 'Only JPG, JPEG or PNG files are allowed'
-        });
-        return;
-      }
-      
-      // Create preview URL
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        setImagePreview(loadEvent.target.result);
-      };
-      reader.readAsDataURL(selectedFile);
-      
-      setFormData({
-        ...formData,
-        profileImage: selectedFile,
-      });
-      
-      // Clear any previous errors
-      if (errors.profileImage) {
-        setErrors({
-          ...errors,
-          profileImage: '',
-        });
-      }
-    }
+  const validateEmail = (email) => {
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return emailRegex.test(String(email).toLowerCase());
   };
 
-  const validateEmail = (email) => {
-    // More comprehensive email validation
-    const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return emailRegex.test(String(email).toLowerCase()) ;
+  const validatePassword = (password) => {
+    // Password should be at least 8 characters with at least one letter and one number
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
+    return passwordRegex.test(password);
   };
 
   const validateForm = () => {
     const newErrors = {};
     
-    // First name validation
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
-    } else if (!/^[A-Za-z\s]+$/.test(formData.firstName)) {
-      newErrors.firstName = 'First name should only contain letters';
-    }
-    
-    // Last name validation
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
-    } else if (!/^[A-Za-z\s]+$/.test(formData.lastName)) {
-      newErrors.lastName = 'Last name should only contain letters';
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (!/^[A-Za-z\s]+$/.test(formData.name)) {
+      newErrors.name = 'Name should only contain letters and spaces';
     }
     
     // Email validation
@@ -147,18 +107,36 @@ function InstructorForm() {
       newErrors.email = 'Please enter a valid email address';
     }
     
-    // Phone validation
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = 'Phone number must be exactly 10 digits';
+    // Department validation
+    if (!formData.department.trim()) {
+      newErrors.department = 'Department is required';
     }
     
-    // Other required fields
-    if (!formData.department.trim()) newErrors.department = 'Department is required';
-    if (!formData.qualification.trim()) newErrors.qualification = 'Qualification is required';
-    if (!formData.experience.trim()) newErrors.experience = 'Experience is required';
-    if (!formData.joinDate) newErrors.joinDate = 'Join date is required';
+    // Contact number validation
+    if (!formData.contactNumber.trim()) {
+      newErrors.contactNumber = 'Contact number is required';
+    } else if (!/^\d{10}$/.test(formData.contactNumber)) {
+      newErrors.contactNumber = 'Contact number must be exactly 10 digits';
+    }
+    
+    // Assigned course validation
+    if (!formData.assignedCourse) {
+      newErrors.assignedCourse = 'Assigned course is required';
+    }
+    
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (!validatePassword(formData.password)) {
+      newErrors.password = 'Password must be at least 8 characters with at least one letter and one number';
+    }
+    
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
     
     return newErrors;
   };
@@ -176,25 +154,20 @@ function InstructorForm() {
     setApiError(null);
     
     try {
-      // Create a FormData object to handle file uploads
-      const formDataToSend = new FormData();
-      
-      // Append all form fields to the FormData object
-      Object.keys(formData).forEach(key => {
-        if (key !== 'profileImage') {
-          formDataToSend.append(key, formData[key]);
-        }
-      });
-      
-      // Append the file if it exists
-      if (formData.profileImage) {
-        formDataToSend.append('profileImage', formData.profileImage);
-      }
+      // Prepare data for submission (exclude confirmPassword)
+      const submitData = {
+        name: formData.name,
+        email: formData.email,
+        department: formData.department,
+        contactNumber: formData.contactNumber,
+        assignedCourse: formData.assignedCourse,
+        password: formData.password
+      };
       
       // Send data to the backend API
-      const response = await axios.post('http://localhost:5000/api/instructors', formDataToSend, {
+      const response = await axios.post('http://localhost:5000/api/', submitData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/json'
         }
       });
       
@@ -203,7 +176,6 @@ function InstructorForm() {
       
       // Show success message briefly before navigating
       setTimeout(() => {
-        // Navigate to the ManageInstructors page after successful submission
         navigate('/allinstrutors');
       }, 1500);
     } catch (error) {
@@ -217,7 +189,15 @@ function InstructorForm() {
     }
   };
 
-  // Improved styles for a better UI
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  // Styles
   const styles = {
     container: {
       backgroundColor: '#f5f7fa',
@@ -231,7 +211,7 @@ function InstructorForm() {
       borderRadius: '8px',
       boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
       padding: '30px',
-      maxWidth: '900px',
+      maxWidth: '800px',
       margin: '0 auto',
     },
     header: {
@@ -293,10 +273,32 @@ function InstructorForm() {
       boxSizing: 'border-box',
       transition: 'border-color 0.3s, box-shadow 0.3s',
     },
-    inputFocus: {
-      borderColor: '#3182ce',
-      boxShadow: '0 0 0 3px rgba(66, 153, 225, 0.2)',
-      outline: 'none',
+    passwordContainer: {
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+    },
+    passwordInput: {
+      padding: '12px 45px 12px 16px',
+      border: '1px solid #e2e8f0',
+      borderRadius: '6px',
+      fontSize: '15px',
+      width: '100%',
+      boxSizing: 'border-box',
+      transition: 'border-color 0.3s, box-shadow 0.3s',
+    },
+    eyeButton: {
+      position: 'absolute',
+      right: '12px',
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: '18px',
+      color: '#718096',
+      padding: '0',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     select: {
       padding: '12px 16px',
@@ -312,71 +314,10 @@ function InstructorForm() {
       backgroundPosition: 'right 12px center',
       backgroundSize: '16px',
     },
-    imageUploadArea: {
-      border: '2px dashed #cbd5e0',
-      borderRadius: '6px',
-      padding: '30px 20px',
-      textAlign: 'center',
-      cursor: 'pointer',
-      minHeight: '180px',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      transition: 'border-color 0.3s, background-color 0.3s',
-    },
-    imageUploadAreaActive: {
-      borderColor: '#4299e1',
-      backgroundColor: 'rgba(66, 153, 225, 0.05)',
-    },
-    uploadIcon: {
-      fontSize: '36px',
-      marginBottom: '15px',
-      color: '#718096',
-    },
-    uploadText: {
-      color: '#4a5568',
-      fontSize: '16px',
-      fontWeight: '500',
-      marginBottom: '5px',
-    },
-    uploadInfo: {
-      fontSize: '13px',
-      color: '#718096',
-      marginTop: '8px',
-    },
-    imagePreviewContainer: {
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginBottom: '15px',
-    },
-    imagePreview: {
-      maxWidth: '100%',
-      maxHeight: '180px',
-      borderRadius: '6px',
-      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-      marginBottom: '10px',
-    },
-    removeImageButton: {
-      background: 'none',
-      border: 'none',
-      color: '#e53e3e',
-      cursor: 'pointer',
-      fontSize: '14px',
-      display: 'flex',
-      alignItems: 'center',
-      padding: '5px 10px',
-    },
-    trashIcon: {
-      marginRight: '5px',
-      fontSize: '14px',
-    },
     submitButton: {
       backgroundColor: '#95C436',
       color: 'white',
-      border: "1px solid #3E9355",
+      border: '1px solid #3E9355',
       borderRadius: '6px',
       padding: '14px 24px',
       fontSize: '16px',
@@ -384,21 +325,17 @@ function InstructorForm() {
       cursor: 'pointer',
       marginTop: '20px',
       transition: 'background-color 0.3s',
-    },
-    submitButtonHover: {
-      backgroundColor: '#388e3c',
     },
     buttonContainer: {
       display: 'flex',
       justifyContent: 'flex-end',
       marginTop: '30px',
       gap: '15px',
-      
     },
     cancelButton: {
       backgroundColor: '#D7D7D7',
       color: 'white',
-      border: "1px solid #9B9B9B",
+      border: '1px solid #9B9B9B',
       borderRadius: '6px',
       padding: '14px 24px',
       fontSize: '16px',
@@ -406,28 +343,6 @@ function InstructorForm() {
       cursor: 'pointer',
       marginTop: '20px',
       transition: 'background-color 0.3s',
-    },
-    cancelButtonHover: {
-      backgroundColor: '#e0e0e0',
-    },
-    sectionHeader: {
-      gridColumn: '1 / -1',
-      borderBottom: '1px solid #eaeaea',
-      paddingBottom: '12px',
-      marginBottom: '20px',
-      marginTop: '20px',
-    },
-    sectionTitle: {
-      fontSize: '18px',
-      fontWeight: '600',
-      color: '#2c3e50',
-      margin: '0',
-      display: 'flex',
-      alignItems: 'center',
-    },
-    sectionIcon: {
-      marginRight: '10px',
-      color: '#4299e1',
     },
     successMessage: {
       backgroundColor: '#e8f5e9',
@@ -464,6 +379,11 @@ function InstructorForm() {
       fontSize: '13px',
       marginTop: '6px',
     },
+    passwordStrengthInfo: {
+      fontSize: '12px',
+      color: '#718096',
+      marginTop: '4px',
+    }
   };
 
   return (
@@ -475,7 +395,7 @@ function InstructorForm() {
         
         <div style={styles.requiredNote}>
           <span style={styles.infoIcon}>ℹ️</span>
-          Fields marked with an asterisk (*) are required.
+          All fields are required.
         </div>
 
         {showSuccess && (
@@ -494,42 +414,19 @@ function InstructorForm() {
         
         <form onSubmit={handleSubmit}>
           <div style={styles.formGrid}>
-            {/* Personal Information Section */}
-            <div style={styles.sectionHeader}>
-              <h3 style={styles.sectionTitle}>
-                <span style={styles.sectionIcon}>👤</span>
-                Personal Information
-              </h3>
-            </div>
-            
-            <div style={styles.formGroup}>
+            <div style={{...styles.formGroup, ...styles.fullWidth}}>
               <label style={styles.label}>
-                First Name <span style={styles.asterisk}>*</span>
+                Full Name <span style={styles.asterisk}>*</span>
               </label>
               <input
                 type="text"
-                name="firstName"
-                value={formData.firstName}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 style={styles.input}
-                placeholder="Enter first name"
+                placeholder="Enter full name"
               />
-              {errors.firstName && <p style={styles.fieldError}>{errors.firstName}</p>}
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Last Name <span style={styles.asterisk}>*</span>
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                style={styles.input}
-                placeholder="Enter last name"
-              />
-              {errors.lastName && <p style={styles.fieldError}>{errors.lastName}</p>}
+              {errors.name && <p style={styles.fieldError}>{errors.name}</p>}
             </div>
             
             <div style={styles.formGroup}>
@@ -549,40 +446,18 @@ function InstructorForm() {
             
             <div style={styles.formGroup}>
               <label style={styles.label}>
-                Phone Number <span style={styles.asterisk}>*</span>
+                Contact Number <span style={styles.asterisk}>*</span>
               </label>
               <input
                 type="tel"
-                name="phone"
-                value={formData.phone}
+                name="contactNumber"
+                value={formData.contactNumber}
                 onChange={handleChange}
                 style={styles.input}
-                placeholder="Enter 10-digit phone number"
+                placeholder="Enter 10-digit contact number"
                 maxLength={10}
               />
-              {errors.phone && <p style={styles.fieldError}>{errors.phone}</p>}
-            </div>
-            
-            <div style={{...styles.formGroup, ...styles.fullWidth}}>
-              <label style={styles.label}>
-                Address
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                style={styles.input}
-                placeholder="Enter full address"
-              />
-            </div>
-            
-            {/* Professional Information Section */}
-            <div style={styles.sectionHeader}>
-              <h3 style={styles.sectionTitle}>
-                <span style={styles.sectionIcon}>💼</span>
-                Professional Information
-              </h3>
+              {errors.contactNumber && <p style={styles.fieldError}>{errors.contactNumber}</p>}
             </div>
             
             <div style={styles.formGroup}>
@@ -596,127 +471,85 @@ function InstructorForm() {
                 style={styles.select}
               >
                 <option value="">Select Department</option>
-                <option value="Diploma in Human Resource Management">Diploma in Human Resource Management</option>
-                <option value="Diploma in Business Administration">Diploma in Business Administration</option>
-                <option value="Diploma in English">Diploma in English</option>
-                <option value="Diploma in Internal Sales & Marketing">Diploma in Internal Sales & Marketing</option>
+                <option value="Human Resource Management">Human Resource Management</option>
+                <option value="Business Administration">Business Administration</option>
+                <option value="English">English</option>
+                <option value="Internal Sales & Marketing">Internal Sales & Marketing</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Accounting">Accounting</option>
               </select>
               {errors.department && <p style={styles.fieldError}>{errors.department}</p>}
             </div>
             
             <div style={styles.formGroup}>
               <label style={styles.label}>
-                Highest Qualification <span style={styles.asterisk}>*</span>
-              </label>
-              <input
-                type="text"
-                name="qualification"
-                value={formData.qualification}
-                onChange={handleChange}
-                style={styles.input}
-                placeholder="E.g., Ph.D. in Computer Science"
-              />
-              {errors.qualification && <p style={styles.fieldError}>{errors.qualification}</p>}
-            </div>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Years of Experience <span style={styles.asterisk}>*</span>
+                Assigned Course (ID) <span style={styles.asterisk}>*</span>
               </label>
               <select
-                name="experience"
-                value={formData.experience}
+                name="assignedCourse"
+                value={formData.assignedCourse}
                 onChange={handleChange}
                 style={styles.select}
               >
-                <option value="">Select years of experience</option>
-                <option value="1">1 Year</option>
-                <option value="2">2 Year</option>
-                <option value="3">3 Year</option>
-                <option value="4">4 Year</option>
-                <option value="5">5 Year</option>
-                <option value="6">6 Year</option>
-                <option value="7">7 Year</option>
-                <option value="8">8 Year</option>
-                <option value="9">9 Year</option>
-                <option value="10">10 Year</option>
-                <option value="10+">10+ Year</option>
-                
+                <option value="">Select Course</option>
+                {availableCourses.map((course) => (
+                  <option key={course.id} value={course.id}>
+                    {course.id} - {course.name}
+                  </option>
+                ))}
               </select>
-              
-              {errors.experience && <p style={styles.fieldError}>{errors.experience}</p>}
+              {errors.assignedCourse && <p style={styles.fieldError}>{errors.assignedCourse}</p>}
             </div>
             
             <div style={styles.formGroup}>
               <label style={styles.label}>
-                Join Date <span style={styles.asterisk}>*</span>
+                Password <span style={styles.asterisk}>*</span>
               </label>
-              <input
-                type="date"
-                name="joinDate"
-                value={formData.joinDate}
-                onChange={handleChange}
-                style={styles.input}
-              />
-              {errors.joinDate && <p style={styles.fieldError}>{errors.joinDate}</p>}
+              <div style={styles.passwordContainer}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  style={styles.passwordInput}
+                  placeholder="Enter password"
+                />
+                <button
+                  type="button"
+                  style={styles.eyeButton}
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? "👁️" : "👁️‍🗨️"}
+                </button>
+              </div>
+              <div style={styles.passwordStrengthInfo}>
+                At least 8 characters with letters and numbers
+              </div>
+              {errors.password && <p style={styles.fieldError}>{errors.password}</p>}
             </div>
             
-            <div style={{...styles.formGroup, ...styles.fullWidth}}>
+            <div style={styles.formGroup}>
               <label style={styles.label}>
-                Profile Image
+                Confirm Password <span style={styles.asterisk}>*</span>
               </label>
-              
-              {/* Image Preview */}
-              {imagePreview && (
-                <div style={styles.imagePreviewContainer}>
-                  <img 
-                    src={imagePreview} 
-                    alt="Profile Preview" 
-                    style={styles.imagePreview}
-                  />
-                  <button 
-                    type="button" 
-                    style={styles.removeImageButton}
-                    onClick={() => {
-                      setImagePreview(null);
-                      setFormData({
-                        ...formData,
-                        profileImage: null
-                      });
-                    }}
-                  >
-                    <span style={styles.trashIcon}>🗑️</span>
-                    Remove Image
-                  </button>
-                </div>
-              )}
-              
-              {/* Image Upload Area (only show if no preview) */}
-              {!imagePreview && (
-                <label 
-                  htmlFor="profileImage" 
-                  style={styles.imageUploadArea}
+              <div style={styles.passwordContainer}>
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  style={styles.passwordInput}
+                  placeholder="Confirm password"
+                />
+                <button
+                  type="button"
+                  style={styles.eyeButton}
+                  onClick={toggleConfirmPasswordVisibility}
                 >
-                  <div style={styles.uploadIcon}>📷</div>
-                  <div style={styles.uploadText}>Select a profile photo</div>
-                  <div style={styles.uploadInfo}>
-                    Click or drag and drop an image here
-                  </div>
-                  <input
-                    type="file"
-                    id="profileImage"
-                    name="profileImage"
-                    onChange={handleImageChange}
-                    style={{ display: 'none' }}
-                    accept="image/jpeg, image/png, image/jpg"
-                  />
-                </label>
-              )}
-              
-              <div style={styles.uploadInfo}>
-                Max size: 2MB. Accepted formats: JPG, JPEG, PNG
+                  {showConfirmPassword ? "👁️" : "👁️‍🗨️"}
+                </button>
               </div>
-              {errors.profileImage && <p style={styles.fieldError}>{errors.profileImage}</p>}
+              {errors.confirmPassword && <p style={styles.fieldError}>{errors.confirmPassword}</p>}
             </div>
           </div>
           

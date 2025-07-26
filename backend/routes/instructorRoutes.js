@@ -1,13 +1,26 @@
-// routes/InstructorRoutes.js
 const express = require('express');
 const router = express.Router();
-const instructorController = require('../controllers/admin/InstructorController');
+const {
+  createInstructor,
+  getAllInstructors,
+  getInstructorById,
+  updateInstructor,
+  deleteInstructor
+} = require('../controllers/admin/instructorController');
 
-// Routes for instructors
-router.post('/', instructorController.createInstructor);
-router.get('/', instructorController.getAllInstructors);
-router.get('/:id', instructorController.getInstructorById);
-router.put('/:id', instructorController.updateInstructor);
-router.delete('/:id', instructorController.deleteInstructor);
+// Create instructor
+router.post('/', createInstructor);
+
+// Get all instructors
+router.get('/', getAllInstructors);
+
+// Get instructor by ID
+router.get('/:id', getInstructorById);
+
+// Update instructor
+router.put('/:id', updateInstructor);
+
+// Delete instructor
+router.delete('/:id', deleteInstructor);
 
 module.exports = router;
