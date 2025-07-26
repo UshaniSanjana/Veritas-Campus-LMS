@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const instructorRoutes = require('./routes/InstructorRoutes');
+const instructorRoutes = require('./routes/instructorRoutes');
 
 //dotenv
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const {mongoose} = require('mongoose');
 
@@ -19,7 +20,7 @@ mongoose.connect(process.env.MONGO_URL)
 app.use('/uploads', express.static('uploads'));
 
 // API Routes
-app.use('/api/instructors', instructorRoutes);
+app.use('/api', instructorRoutes);
 
 //start the server
 const PORT = process.env.PORT || 5000;
