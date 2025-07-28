@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const StudentSupport = require("../models/Student/supportModel");
-const InstructorSupport = require("../models/InstructorSupport");
+const InstructorSupport = require("../models/Lecturesupportmodel");
 const mongoose = require("mongoose");
 
 // Get all student support requests
@@ -79,25 +79,26 @@ router.get("/getRequestById/:id", async (req, res) => {
 // Reply
 router.put("/reply/:id", async (req, res) => {
   const { id } = req.params;
-  const { reply } = req.body;
+  const { message, adminName } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid ID format" });
   }
 
+  const updateData = {
+    status: "replied",
+    adminReply: {
+      message,
+      adminName,
+      repliedAt: new Date()
+    }
+  };
+
   try {
-    let updatedRequest = await StudentSupport.findByIdAndUpdate(
-      id,
-      { $set: { reply: reply, status: "Replied" } },
-      { new: true }
-    );
+    let updatedRequest = await StudentSupport.findByIdAndUpdate(id, updateData, { new: true });
 
     if (!updatedRequest) {
-      updatedRequest = await InstructorSupport.findByIdAndUpdate(
-        id,
-        { $set: { reply: reply, status: "Replied" } },
-        { new: true }
-      );
+      updatedRequest = await InstructorSupport.findByIdAndUpdate(id, updateData, { new: true });
     }
 
     if (!updatedRequest) {
@@ -107,10 +108,9 @@ router.put("/reply/:id", async (req, res) => {
     res.json(updatedRequest);
   } catch (error) {
     console.error("Error updating reply:", error);
-    res
-      .status(500)
-      .json({ message: "Failed to send reply", error: error.message });
+    res.status(500).json({ message: "Failed to send reply", error: error.message });
   }
 });
+
 
 module.exports = router;

@@ -12,6 +12,10 @@ const courseSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+     instructor: [{
+    type: String,
+    trim: true,
+  }],
     // instructor: [String], // Optional
     modules: [{ type: mongoose.Schema.Types.ObjectId, ref: "Module" }],
   },

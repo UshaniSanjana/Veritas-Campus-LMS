@@ -4,7 +4,7 @@ import axios from "axios";
 import "../../css/supportCSS.css";
 import { MdDownload } from "react-icons/md";
 import html2pdf from "html2pdf.js";
-import Sidebar from "../../components/Sidebar";
+
 
 // Section component
 const Section = ({ title, requests, onStatusChange, showUserId }) => {
@@ -50,6 +50,7 @@ const Section = ({ title, requests, onStatusChange, showUserId }) => {
                     : req.issue || req.message || "No description"}
                 </td>
                 <td>
+                  <div className="action">
                   <button
                     className="v-btn"
                     onClick={() =>
@@ -67,7 +68,9 @@ const Section = ({ title, requests, onStatusChange, showUserId }) => {
                     <option>In Progress</option>
                     <option>Resolved</option>
                   </select>
+                  </div>
                 </td>
+                
               </tr>
             ))
           )}
@@ -144,7 +147,7 @@ const AdminSupport = () => {
 
   return (
     <div className="admin-support-container">
-      <Sidebar />
+      
       <div className="body">
         <h1 className="title">Support Requests</h1>
 

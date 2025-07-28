@@ -143,7 +143,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <Sidebar />
+    
       <div className="dashboard-main">
         <h3>Quick Overview</h3>
         <div className="dashboard-top">
