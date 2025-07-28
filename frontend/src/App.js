@@ -2,6 +2,11 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./index.css";
 
+// Bootstrap
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 import Footer from "./components/Footer";
 
 // Static Pages
@@ -58,10 +63,6 @@ import AddAnnouncement from "./components/AddAnnouncement";
 import AddedAnnouncement from "./components/AddedAnnouncement";
 import UpdateAnnouncement from "./components/UpdateAnnouncement";
 
-// Bootstrap
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "bootstrap-icons/font/bootstrap-icons.css";
 
 import StudentLayout from "./layouts/StudentLayout";
 import StudentProfile from "./pages/student/StudentProfile";
