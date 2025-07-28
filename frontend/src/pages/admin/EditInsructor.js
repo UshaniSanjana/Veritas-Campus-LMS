@@ -74,11 +74,11 @@ function EditInstructorForm() {
         // Try multiple possible API endpoints
         let response;
         try {
-          response = await axios.get(`http://localhost:5000/api/${id}`);
+          response = await axios.get(`http://localhost:5000/api/instructors/${id}`);
         } catch (error) {
           // If first endpoint fails, try the original one
           console.log('First endpoint failed, trying alternative...');
-          response = await axios.get(`http://localhost:5000/api/${id}`);
+          response = await axios.get(`http://localhost:5000/api/instructors/${id}`);
         }
         
         console.log('API Response:', response); // Debug log
@@ -223,7 +223,7 @@ function EditInstructorForm() {
       // Try multiple possible API endpoints for update
       let response;
       try {
-        response = await axios.put(`http://localhost:5000/api/${id}`, formData, {
+        response = await axios.put(`http://localhost:5000/api/instructors/${id}`, formData, {
           headers: {
             'Content-Type': 'application/json'
           }
@@ -231,7 +231,7 @@ function EditInstructorForm() {
       } catch (error) {
         // If first endpoint fails, try the original one
         console.log('First update endpoint failed, trying alternative...');
-        response = await axios.put(`http://localhost:5000/api/${id}`, formData, {
+        response = await axios.put(`http://localhost:5000/api/instructors/${id}`, formData, {
           headers: {
             'Content-Type': 'application/json'
           }
@@ -244,7 +244,7 @@ function EditInstructorForm() {
       // Show success message briefly before navigating
       setTimeout(() => {
         // Navigate to the ManageInstructors page after successful submission
-        navigate('/allinstrutors');
+        navigate('/admin/allinstrutors');
       }, 2000);
     } catch (error) {
       console.error('Error updating instructor:', error);

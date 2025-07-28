@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import '../../css/ManageInstructors.css';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'http://localhost:5000/api/instructors';
 
 const Instructor = () => {
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ const Instructor = () => {
 
   const handleEdit = (instructor) => {
     // Navigate to edit page with instructor ID
-    navigate(`/editinstructor/${instructor._id}`, { 
+    navigate(`/admin/editinstructor/${instructor._id}`, { 
       state: { instructor } 
     });
   };

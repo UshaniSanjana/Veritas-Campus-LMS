@@ -1,18 +1,38 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getCurrentUser } from "../../api/user";
 
-const Courses = () => {
+export const Courses = () => {
   const studentId = "68187117c8e50295c68bba3e";
   const [courses, setCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [enrolling, setEnrolling] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null); // NEW STATE
   const [code, setCode] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchAllCourses = async () => {
       try {
-        const allCourses = await axios.get(`http://localhost:5000/api/courses`);
+        const userData = await getCurrentUser();
+        if (!userData) {
+          throw new Error("User data is missing");
+        }
+
+        setUser(userData);
+
+        const course = userData.course;
+
+        const courseData = await axios.post(
+          `http://localhost:5000/api/course`,
+          {
+            title: course,
+          }
+        );
+
+        const allCourses = await axios.get(
+          `http://localhost:5000/api/courses/${courseData.data._id}/modules`
+        );
         const allEnrolled = await axios.get(
           `http://localhost:5000/api/enrolled/${studentId}`
         );
@@ -26,13 +46,11 @@ const Courses = () => {
     fetchAllCourses();
   }, []);
 
-  const handleEnroll = async (courseId) => {
+  const handleEnroll = async (moduleId) => {
     setEnrolling(true);
     try {
-      await axios.post(`http://localhost:5000/api/enroll/${courseId}`, {
-        courseId,
+      await axios.post(`http://localhost:5000/api/enroll/${moduleId}`, {
         studentId,
-        code,
       });
       alert("Enrolled successfully!");
       const allEnrolled = await axios.get(
@@ -47,10 +65,10 @@ const Courses = () => {
     }
   };
 
-  const isEnrolled = (courseId) => {
+  const isEnrolled = (moduleId) => {
     return enrolledCourses.some(
       (enrollment) =>
-        enrollment._id === courseId || enrollment.courseId === courseId
+        enrollment._id === moduleId || enrollment.moduleId === moduleId
     );
   };
 
@@ -89,7 +107,7 @@ const Courses = () => {
             </div>
           ))
         ) : (
-          <h6>No courses found</h6>
+          <h6>No modules found</h6>
         )}
       </div>
 
@@ -150,5 +168,3 @@ const Courses = () => {
     </div>
   );
 };
-
-export default Courses;
