@@ -79,6 +79,7 @@ import Quiz from "./pages/student/quiz/Quiz";
 import PublicLayout from "./layouts/PublicLayout";
 import InstructorLayout from "./layouts/InstructorLayout";
 import AdminLayout from "./layouts/AdminLayout";
+import { StudentModules } from "./pages/student/StudentModules";
 
 function App() {
   return (
@@ -99,22 +100,19 @@ function App() {
           />
         </Route>
 
-
         <Route path="/admin" element={<Layout_Announcement />}>
           <Route path="create-announcement" element={<CreateAnnouncement />} />
           <Route path="send-notification" element={<SendNotification />} />
           <Route path="settings" element={<Settings />} />
           <Route path="announcements" element={<ViewAnnouncements />} />
-       
         </Route>
 
         <Route path="" element={<Layout_Announcement />}>
           <Route path="edit-announcement/:id" element={<EditAnnouncement />} />
           <Route path="edit-notification/:id" element={<EditNotification />} />
-        
         </Route>
 
-        <Route path="/admin" >
+        <Route path="/admin">
           <Route path="admin-dashboard" element={<AdminDashboard />} />
           <Route path="singleViewSupport/:id" element={<SingleViewSupport />} />
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -128,7 +126,6 @@ function App() {
           <Route path="courses/edit/:id" element={<EditCourse />} />
           <Route path="courses/add" element={<AddCourse />} />
           <Route path="adminSupport" element={<AdminSupport />} />
-
         </Route>
 
         <Route path="/instructor" element={<InstructorLayout />}>
@@ -157,7 +154,7 @@ function App() {
             path="successfully-request"
             element={<SuccessfullyRequest />}
           />
-          <Route path="mycourses" element={<Courses />} />
+          <Route path="mycourses" element={<StudentModules />} />
           <Route path="studentProfile" element={<StudentProfile />} />
           <Route path="enrolledcourses" element={<EnrolledCourses />} />
           <Route path="editProfile" element={<EditProfile />} />

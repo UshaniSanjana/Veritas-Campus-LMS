@@ -14,8 +14,13 @@ const studentSchema = new mongoose.Schema(
     address: { type: String, required: true },
     gender: { type: String, required: true },
     mobile: { type: String, required: true },
-    degree: { type: String, required: true },
-    image: { type: String }, // optional
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+      required: true,
+      unique: true,
+    },
+    image: { type: String },
   },
   { timestamps: true }
 );

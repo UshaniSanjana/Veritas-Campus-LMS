@@ -1,42 +1,51 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getCurrentUser } from "../../api/user";
 
-export const Courses = () => {
-  const studentId = "68187117c8e50295c68bba3e";
+export const StudentModules = () => {
   const [courses, setCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [enrolling, setEnrolling] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null); // NEW STATE
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [code, setCode] = useState("");
   const [user, setUser] = useState(null);
+
+  const studentId = localStorage.getItem("studentId");
 
   useEffect(() => {
     const fetchAllCourses = async () => {
       try {
-        const userData = await getCurrentUser();
-        if (!userData) {
-          throw new Error("User data is missing");
-        }
-
-        setUser(userData);
-
-        const course = userData.course;
+        const studentData = await axios.get(
+          `http://localhost:5000/api/student/${studentId}`
+        );
+        setUser(studentData.data.student);
 
         const courseData = await axios.post(
           `http://localhost:5000/api/course`,
           {
-            title: course,
+            title: studentData.data.student.course,
           }
         );
 
-        const allCourses = await axios.get(
+        const allModules = await axios.get(
           `http://localhost:5000/api/courses/${courseData.data._id}/modules`
         );
+
+        const moduleIds = allModules.data;
+
+        const moduleDetails = await Promise.all(
+          moduleIds.map((id) =>
+            axios
+              .get(`http://localhost:5000/api/instructor/${id}`)
+              .then((res) => res.data)
+          )
+        );
+
+        setCourses(moduleDetails);
+
         const allEnrolled = await axios.get(
           `http://localhost:5000/api/enrolled/${studentId}`
         );
-        setCourses(allCourses.data);
+
         setEnrolledCourses(allEnrolled.data);
       } catch (err) {
         console.error("Error fetching courses");
@@ -46,20 +55,34 @@ export const Courses = () => {
     fetchAllCourses();
   }, []);
 
-  const handleEnroll = async (moduleId) => {
+  const handleEnroll = async (moduleId, code) => {
     setEnrolling(true);
     try {
+      console.log(
+        "Enrolling in module:",
+        moduleId,
+        "with code:",
+        code,
+        "studentId:",
+        studentId
+      );
       await axios.post(`http://localhost:5000/api/enroll/${moduleId}`, {
         studentId,
+        code,
       });
       alert("Enrolled successfully!");
+
       const allEnrolled = await axios.get(
         `http://localhost:5000/api/enrolled/${studentId}`
       );
       setEnrolledCourses(allEnrolled.data);
-      setSelectedCourse(null); // close modal
+      setSelectedCourse(null);
+      setCode(""); // Clear code after success
     } catch (err) {
-      alert("Cannot enroll to the course");
+      console.error(err);
+      alert(
+        err.response?.data?.error || "Cannot enroll to the course. Try again."
+      );
     } finally {
       setEnrolling(false);
     }
@@ -149,8 +172,8 @@ export const Courses = () => {
               <div className="d-flex gap-3 mt-3 justify-content-center">
                 <button
                   className="btn btn-success"
-                  onClick={() => handleEnroll(selectedCourse._id)}
-                  disabled={enrolling}
+                  onClick={() => handleEnroll(selectedCourse._id, code)}
+                  disabled={enrolling || code.trim() === ""}
                 >
                   {enrolling ? "Enrolling..." : "Confirm Enroll"}
                 </button>
