@@ -42,6 +42,13 @@ import SingleViewSupport from "./pages/admin/SingleViewSupport";
 import AdminReportPage from "./pages/admin/AdminReportPage";
 import AdminSupport from "./pages/admin/AdminSupport";
 
+import AddInstructor from './pages/admin/AddInstructor';
+import ManageInstrutors from './pages/admin/ManageInstrutors';
+import EditInsructor from './pages/admin/EditInsructor';
+import QuizExam from './pages/admin/QuizExam';
+import Quizes from './pages/admin/Quizes';
+import Exams from './pages/admin/Exams';
+
 // Student Pages
 import SupportForm from "./pages/student/SupportForm";
 import SupportList from "./pages/student/SupportList";
@@ -126,6 +133,12 @@ function App() {
           <Route path="courses/edit/:id" element={<EditCourse />} />
           <Route path="courses/add" element={<AddCourse />} />
           <Route path="adminSupport" element={<AdminSupport />} />
+          <Route path="addinstructor" element={<AddInstructor />} />
+          <Route path="allinstrutors" element={<ManageInstrutors />} />
+          <Route path="editinstructor/:id" element={<EditInsructor />} />
+          <Route path="quizexam" element={<QuizExam />} />
+          <Route path="quizes" element={<Quizes />} />
+          <Route path="exams" element={<Exams />} />
         </Route>
 
         <Route path="/instructor" element={<InstructorLayout />}>
