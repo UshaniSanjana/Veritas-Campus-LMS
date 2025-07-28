@@ -39,7 +39,7 @@ const createInstructor = async (req, res) => {
       name,
       email,
       password,
-      role: "student",
+      role: "instructor",
     });
 
     await user.save();
