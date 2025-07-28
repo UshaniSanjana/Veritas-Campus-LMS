@@ -11,11 +11,7 @@ const Navbar = () => {
       <nav className="flex flex-wrap items-center justify-between px-6 py-4 bg-white shadow-md">
         {/* Left: Logo & Brand */}
         <div className="flex items-center space-x-4">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-20 h-auto"
-          />
+          <img src={logo} alt="Logo" className="w-20 h-auto" />
           <div className="h-10 border-l-2 border-black"></div>
           <span className="text-2xl font-bold">LearnDash</span>
         </div>
