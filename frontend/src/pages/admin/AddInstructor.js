@@ -165,7 +165,7 @@ function InstructorForm() {
       };
       
       // Send data to the backend API
-      const response = await axios.post('http://localhost:5000/api/', submitData, {
+      const response = await axios.post('http://localhost:5000/api/instructors', submitData, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -176,7 +176,7 @@ function InstructorForm() {
       
       // Show success message briefly before navigating
       setTimeout(() => {
-        navigate('/allinstrutors');
+        navigate('/admin/allinstrutors');
       }, 1500);
     } catch (error) {
       console.error('Error adding instructor:', error);

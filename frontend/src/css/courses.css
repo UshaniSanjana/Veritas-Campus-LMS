@@ -1,16 +1,23 @@
 .courses-page {
+  flex: 1;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  background-color: #fff;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .courses-title {
   font-size: 28px;
   margin-bottom: 20px;
+  font-weight: bold;
+  color: #2e7d32;
 }
 
 .courses-table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 30px;
 }
 
 .courses-table th,
@@ -29,21 +36,13 @@
   text-decoration: underline;
 }
 
-.input-edit {
-  width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-}
-
 .btn-edit,
-.btn-delete,
-.btn-save,
-.btn-cancel {
+.btn-delete {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  margin-right: 5px;
-  font-size: 16px;
+  margin-right: 10px;
+  font-size: 18px;
 }
 
 .btn-edit:hover {
@@ -54,32 +53,25 @@
   color: red;
 }
 
-.btn-save {
-  color: green;
-}
-
-.btn-cancel {
-  color: gray;
-}
-
- .btn-add-new {
-  background-color: #25d158 ; /* green for positive action */
-  color: #f8f5f9;
-  border: 4px solid green;
-  padding: 20px 40px;
-  
-  border-radius: 10px;
-  font-size: 20px;
-  font-weight: 700;
+.btn-add-new {
+  background-color: #25d158;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(141, 71, 71, 0.15);
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
- .btn-add-new:hover {
+
+.btn-add-new:hover {
   background-color: #218838;
   transform: scale(1.03);
 }
- .btn-add-new:active {
+
+.btn-add-new:active {
   background-color: #1e7e34;
   transform: scale(1);
 }
@@ -87,5 +79,5 @@
 .button-container {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px; /* optional spacing below the button */
+  margin-bottom: 20px;
 }
