@@ -2,15 +2,15 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import SidebarAdmin from "../../components/SidebarAdmin";
 
-const Layout_Announcement = () => {
-  return (
-    <div className="flex">
+const Layout_Announcement = () => (
+  <>
+    <div style={{ display: "flex" }}>
       <SidebarAdmin />
-      <div className="ml-10 p-4 sm:ml-64 w-full">
-        <Outlet /> {/* This is where your page content will render */}
+      <div className="admin-content">
+        <Outlet />  {/* This renders the child page */}
       </div>
     </div>
-  );
-};
+  </>
+);
 
 export default Layout_Announcement;

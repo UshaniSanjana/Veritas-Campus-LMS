@@ -5,13 +5,13 @@ export default function AnnouncementForm({
   onSubmit,
   loading,
   error,
-  success
+  success,
 }) {
   const [formData, setFormData] = React.useState(initialValues);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setFormData(prev => ({ ...prev, [id]: value }));
+    setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -20,11 +20,11 @@ export default function AnnouncementForm({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div className="bg-white rounded-lg shadow-md p-8 mx-auto  ">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Title */}
-          <div className="col-span-2">
+          <div className="md:col-span-2">
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
               Title
             </label>
@@ -33,7 +33,7 @@ export default function AnnouncementForm({
               id="title"
               value={formData.title}
               onChange={handleChange}
-              className="bg-gray-50 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="bg-gray-50 w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
@@ -48,7 +48,7 @@ export default function AnnouncementForm({
               id="doneBy"
               value={formData.doneBy}
               onChange={handleChange}
-              className="bg-gray-50 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="bg-gray-50 w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
@@ -63,13 +63,13 @@ export default function AnnouncementForm({
               id="status"
               value={formData.status}
               onChange={handleChange}
-              className="bg-gray-50 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="bg-gray-50 w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
 
           {/* Message */}
-          <div className="col-span-2">
+          <div className="md:col-span-2">
             <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
               Message
             </label>
@@ -78,17 +78,17 @@ export default function AnnouncementForm({
               value={formData.message}
               onChange={handleChange}
               rows="4"
-              className="bg-gray-50 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="bg-gray-50 w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               required
             />
           </div>
 
           {/* Send To */}
-          <div className="col-span-2">
+          <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Send to
             </label>
-            <div className="flex space-x-6">
+            <div className="flex flex-wrap gap-8">
               <div className="flex items-center">
                 <input
                   id="sendTo"
@@ -122,17 +122,17 @@ export default function AnnouncementForm({
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-between mt-8">
-          <button
+        <div className="flex flex-col md:flex-row justify-between gap-4 mt-8">
+          {/* <button
             type="button"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-5 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Attachments
-          </button>
+          </button> */}
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
+            className="px-5 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
           >
             {loading ? "Posting..." : "Post Announcement"}
           </button>
@@ -143,9 +143,14 @@ export default function AnnouncementForm({
           <div className="mt-4 text-red-500">{error.message || "Error occurred"}</div>
         )}
         {success && (
-          <div className="mt-4 text-green-600 font-medium">Posted successfully!</div>
+          <div className="mt-4 text-green-600 font-medium text-center">
+            Posted successfully!
+          </div>
         )}
       </form>
+
+      
+      
     </div>
   );
 }
