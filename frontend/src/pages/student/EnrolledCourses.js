@@ -5,6 +5,7 @@ import { getCurrentUser } from "../../api/user";
 const EnrolledCourses = () => {
   const [courses, setCourse] = useState([]);
   const [user, setUser] = useState(null);
+  const studentId = localStorage.getItem("studentId");
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -17,7 +18,7 @@ const EnrolledCourses = () => {
         setUser(userData);
 
         const courses = await axios.get(
-          `http://localhost:5000/api/enrolled/${userData._id}`
+          `http://localhost:5000/api/enrolled/${studentId}`
         );
         setCourse(courses.data);
       } catch (err) {

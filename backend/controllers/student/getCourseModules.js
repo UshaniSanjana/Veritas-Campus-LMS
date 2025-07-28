@@ -22,7 +22,7 @@ exports.getCourseDetails = async (req, res) => {
   const { title } = req.body;
 
   try {
-    const course = await Course.findOne({ title });
+    const course = await Course.findById(title);
 
     if (!course) {
       return res.status(400).json({ message: "Course not found!" });
@@ -34,13 +34,22 @@ exports.getCourseDetails = async (req, res) => {
 
 exports.moduleEnrollment = async (req, res) => {
   const { moduleId } = req.params;
-  const { studentId } = req.body;
+  const { studentId, code } = req.body;
+
+  if (!studentId || !moduleId) {
+    return res
+      .status(400)
+      .json({ error: "studentId and moduleId are required." });
+  }
 
   try {
     const module = await Module.findById(moduleId);
-
     if (!module) {
-      return res.status(404).json({ error: "module not found" });
+      return res.status(404).json({ error: "Module not found" });
+    }
+
+    if (module.code !== code) {
+      return res.status(401).json({ error: "Incorrect code" });
     }
 
     const newEnrollment = new Enrollment({
@@ -52,11 +61,11 @@ exports.moduleEnrollment = async (req, res) => {
 
     res.json({
       message: "Enrollment successful!",
-      Enrollment: newEnrollment,
+      enrollment: newEnrollment,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    console.error("Enrollment Error:", err);
+    res.status(500).json({ error: err.message });
   }
 };
 

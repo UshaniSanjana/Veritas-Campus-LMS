@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 const addStudent = async (req, res) => {
   try {
-    const { name, age, email, address, gender, mobile, degree, password } =
+    const { name, age, email, address, gender, mobile, course, password } =
       req.body;
 
     const newStudent = new Student({
@@ -14,7 +14,7 @@ const addStudent = async (req, res) => {
       address,
       gender,
       mobile,
-      degree,
+      course,
       password,
       image: req.file.path,
     });

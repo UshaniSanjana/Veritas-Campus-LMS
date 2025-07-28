@@ -13,15 +13,16 @@ const StudentProfile = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const studentId = localStorage.getItem("studentId");
 
   // Handle Profile Edit
   const handleEditProfile = () => {
-    navigate("/editprofile");
+    navigate("/student/editprofile");
   };
 
   // Handle Password Change
   const handleChangePassword = () => {
-    navigate("/changepassword");
+    navigate("/student/changepassword");
   };
 
   // Fetch User and Student Data
@@ -44,6 +45,10 @@ const StudentProfile = () => {
         );
         const studentData = studentRes.data.studentProfile;
         setStudent(studentData);
+        const response = await axios.get(
+          `http://localhost:5000/api/enrolled/${studentId}`
+        );
+        setCourse(response.data);
 
         // Handle image preview
         if (studentData?.image) {
@@ -59,26 +64,6 @@ const StudentProfile = () => {
 
     fetchUserAndStudent();
   }, []);
-
-  // Fetch Enrolled Courses - runs after user is set
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        if (user?._id) {
-          const response = await axios.get(
-            `http://localhost:5000/api/enrolled/${user._id}`
-          );
-          setCourse(response.data);
-        }
-      } catch (err) {
-        console.error("Error fetching enrolled courses:", err);
-      }
-    };
-
-    if (user) {
-      fetchCourses();
-    }
-  }, [user]); // Depend on user, not studentId
 
   // Handle logout
   const confirmLogout = () => {
@@ -149,13 +134,13 @@ const StudentProfile = () => {
             <h6 className="mt-3">Name: {student?.name}</h6>
 
             <h6 className="mt-3">Email: {student?.email}</h6>
-            <h6 className="mt-3">Diploma: {student?.degree}</h6>
+            <h6 className="mt-3">Diploma: {student?.course}</h6>
           </div>
         </div>
       </div>
 
       <Link
-        to="/enrolledcourses"
+        to="/student/enrolledcourses"
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <div className="container border border-dark mt-5 px-3">
