@@ -1,7 +1,14 @@
+/* ✅ Sidebar styles (remove fixed width!) */
 .sidebar-admin {
+
+  /* Remove: width: 250px; */
+  height: 100vh;
+  background-color: #2e7d32; /* Dark green */
+
   width: 250px;
   height: 100%;
   background-color: #45b249; 
+
   padding: 20px;
   color: white;
   font-family: 'Segoe UI', sans-serif;
@@ -75,5 +82,10 @@
   width: 20px;
   color: rgba(255, 255, 255, 0.8);
 }
+
+.sidebar-item:hover .icon {
+  color: white;
+}
+
 
 
