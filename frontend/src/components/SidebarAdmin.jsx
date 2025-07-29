@@ -81,7 +81,7 @@ const SidebarAdmin = () => {
             <div className="sidebar-item">
               
               <NavLink
-                to="/admin/add-instructor"
+                to="addinstructor"
                 className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}
               ><FontAwesomeIcon icon={faUserPlus} className="icon" />
                 <span>Add Instructor</span>
@@ -90,7 +90,7 @@ const SidebarAdmin = () => {
             <div className="sidebar-item">
              
               <NavLink
-                to="/admin/view-instructors"
+                to="allinstructors"
                 className={({ isActive }) => (isActive ? 'active-link' : 'inactive-link')}
               > <FontAwesomeIcon icon={faChalkboardTeacher} className="icon" />
                 <span>View all Instructors</span>
