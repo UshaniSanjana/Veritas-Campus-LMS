@@ -19,7 +19,7 @@ const quizRoutes = require("./routes/quizRoutes");
 const quizAnswersRoute = require("./routes/Student/quizAnswersRoute");
 const studentRoutes = require("./routes/student");
 const instructorRoutes = require("./routes/instructorRoutes");
-
+const instructorRoutesV2 = require("./routes/InsructorsRoute")
 // Load env variables
 dotenv.config();
 
@@ -82,5 +82,6 @@ app.use("/api/quizzes", quizRoutes);
 app.use("/api/quizAnswers", quizAnswersRoute);
 app.use("/api", studentRoutes);
 app.use("/api/instructor", instructorRoutes);
+app.use('/api/instructors',instructorRoutesV2 );
 app.use("/api/auth", authRoutes);
 //app.use("/api/student/support", supportRoutes);
