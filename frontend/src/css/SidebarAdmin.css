@@ -1,7 +1,8 @@
+/* ✅ Sidebar styles (remove fixed width!) */
 .sidebar-admin {
-  width: 250px;
+  /* Remove: width: 250px; */
   height: 100vh;
-  background-color: #2e7d32; /* Dark green background */
+  background-color: #2e7d32; /* Dark green */
   padding: 20px;
   color: white;
   font-family: 'Segoe UI', sans-serif;
