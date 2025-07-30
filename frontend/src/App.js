@@ -162,7 +162,7 @@ function App() {
           <Route path="editProfile" element={<EditProfile />} />
           <Route path="changepassword" element={<ChangePassword />} />
           <Route path="progress" element={<Progress />} />
-          <Route path="modulepage" element={<ModulePage />} />
+          <Route path="courses/:courseId/modules/:moduleId" element={<ModulePage />} />
           <Route path="quiz" element={<Quiz />} />
           <Route path="quiz/questions" element={<Questions />} />
           <Route path="submitQuiz" element={<ConfirmSubmissionPage />} />

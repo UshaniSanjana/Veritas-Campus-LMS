@@ -42,7 +42,7 @@ const {
 } = require("../controllers/student/getCourseModules");
 const { getModuleQuizzes } = require("../controllers/student/getModuleQuizzes");
 
-router.get("/progress/:courseId/:studentId", getProgress);
+router.get("/progress/:moduleId/:studentId", getProgress);
 router.post("/progress/lecture", markLectureComplete);
 router.post("/progress/tutorial", markTutorialComplete);
 router.post("/progress/quiz", markQuizAttempt);

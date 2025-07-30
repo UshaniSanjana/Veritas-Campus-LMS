@@ -80,7 +80,7 @@ app.listen(PORT, () => {
 
 app.use("/api/quizzes", quizRoutes);
 app.use("/api/quizAnswers", quizAnswersRoute);
-app.use("/api", studentRoutes);
+app.use("/api/student", studentRoutes);
 app.use("/api/instructor", instructorRoutes);
 app.use("/api/auth", authRoutes);
 //app.use("/api/student/support", supportRoutes);
