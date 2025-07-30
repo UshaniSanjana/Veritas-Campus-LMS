@@ -19,7 +19,7 @@ const quizRoutes = require("./routes/quizRoutes");
 const quizAnswersRoute = require("./routes/Student/quizAnswersRoute");
 const studentRoutes = require("./routes/student");
 const instructorRoutes = require("./routes/instructorRoutes");
-
+const instructorRoutesV2 = require("./routes/InsructorsRoute")
 // Load env variables
 dotenv.config();
 
@@ -51,7 +51,7 @@ mongoose
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
 // Start Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
@@ -82,5 +82,6 @@ app.use("/api/quizzes", quizRoutes);
 app.use("/api/quizAnswers", quizAnswersRoute);
 app.use("/api/student", studentRoutes);
 app.use("/api/instructor", instructorRoutes);
+app.use('/api/instructors',instructorRoutesV2 );
 app.use("/api/auth", authRoutes);
 //app.use("/api/student/support", supportRoutes);

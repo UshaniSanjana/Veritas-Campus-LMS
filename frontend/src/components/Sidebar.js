@@ -22,7 +22,7 @@ const Sidebar = () => {
             to="/admin/adminReportPage"
             className={({ isActive }) => isActive ? 'active-link' : 'inactive-link'}
           >
-             Reports
+              Reports
           </NavLink>
         </li>
 
@@ -67,7 +67,7 @@ const Sidebar = () => {
         <li>
           <FaLifeRing />
           <NavLink
-            to="/admin/support"
+            to="/admin/adminSupport"
             className={({ isActive }) => isActive ? 'active-link' : 'inactive-link'}
           >
             Support

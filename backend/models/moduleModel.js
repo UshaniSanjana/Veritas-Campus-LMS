@@ -21,11 +21,14 @@ const moduleSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   week: { type: Number, required: true },
-  lecturematerials: [{ type: mongoose.Schema.Types.ObjectId, ref: "LectureMaterial" }],
+  lecturematerials: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "LectureMaterial" },
+  ],
   tutorials: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tutorial" }],
   quizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quiz" }],
   assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Assignment" }],
-  recordings: [String] 
+  recordings: [String],
+  code: { type: String }, // For code submissions
 });
 
 const Module = mongoose.model("Module", moduleSchema);

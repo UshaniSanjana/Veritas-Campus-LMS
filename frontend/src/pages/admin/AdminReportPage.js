@@ -263,7 +263,7 @@ export default function ReportsPage() {
 
   return (
     <div className="admin-Report-container">
-      <Sidebar />
+     
       <div className="reports-page" id="download-section">
         <h1 className="title">Reports and Analytics</h1>
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getCurrentUser } from "../../api/user";
 
-const Courses = () => {
+export const Courses = () => {
   const studentId = "68187117c8e50295c68bba3e";
   const [courses, setCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -21,7 +21,7 @@ const Courses = () => {
 
         setUser(userData);
 
-        const course = userData.degree;
+        const course = userData.course;
 
         const courseData = await axios.post(
           `http://localhost:5000/api/course`,
@@ -168,5 +168,3 @@ const Courses = () => {
     </div>
   );
 };
-
-export default Courses;

@@ -2,6 +2,12 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./index.css";
 
+
+// Bootstrap
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 import Footer from "./components/Footer";
 
 // Static Pages
@@ -23,19 +29,26 @@ import Courses from "./pages/admin/CoursesPage";
 import CourseDetails from "./pages/admin/CourseDetails";
 import EditCourse from "./pages/admin/EditCourse";
 import AddCourse from "./pages/admin/AddCourse";
-import AdminSupportDashboard from "./pages/admin/AdminSupportDashboard";
+
 
 import CreateAnnouncement from "./pages/admin/CreateAnnouncement";
 import SendNotification from "./pages/admin/SendNotification";
-import Settings from "./pages/admin/Settings";
+import Settings from "./components/adminContactSettings.jsx";
 import ViewAnnouncements from "./pages/admin/ViewAnnouncements";
-import Layout_Announcement from "./pages/admin/Layout_Announcement";
+
 import EditAnnouncement from "./components/EditeAnnouncemet";
 import EditNotification from "./components/EditNotification";
 
 import SingleViewSupport from "./pages/admin/SingleViewSupport";
 import AdminReportPage from "./pages/admin/AdminReportPage";
 import AdminSupport from "./pages/admin/AdminSupport";
+
+import AddInstructor from './pages/admin/AddInstructor';
+import ManageInstrutors from './pages/admin/ManageInstrutors';
+import EditInsructor from './pages/admin/EditInsructor';
+import QuizExam from './pages/admin/QuizExam';
+import Quizes from './pages/admin/Quizes';
+import Exams from './pages/admin/Exams';
 
 // Student Pages
 import SupportForm from "./pages/student/SupportForm";
@@ -58,10 +71,6 @@ import AddAnnouncement from "./components/AddAnnouncement";
 import AddedAnnouncement from "./components/AddedAnnouncement";
 import UpdateAnnouncement from "./components/UpdateAnnouncement";
 
-// Bootstrap
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "bootstrap-icons/font/bootstrap-icons.css";
 
 import StudentLayout from "./layouts/StudentLayout";
 import StudentProfile from "./pages/student/StudentProfile";
@@ -78,6 +87,7 @@ import Quiz from "./pages/student/quiz/Quiz";
 import PublicLayout from "./layouts/PublicLayout";
 import InstructorLayout from "./layouts/InstructorLayout";
 import AdminLayout from "./layouts/AdminLayout";
+import { StudentModules } from "./pages/student/StudentModules";
 
 function App() {
   return (
@@ -98,35 +108,32 @@ function App() {
           />
         </Route>
 
+        {/*Admin Side Pages */}
+        <Route path="/admin" element={<AdminLayout />}>
 
-        <Route path="/admin" element={<Layout_Announcement />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="adminSupport" element={<AdminSupport />} />
+          <Route path="singleViewSupport/:id" element={<SingleViewSupport />} />
+          <Route path="adminReportPage" element={<AdminReportPage />} />
+
+          <Route path="courses" element={<Courses />} />
+          <Route path="courses/:id" element={<CourseDetails />} />
+          <Route path="courses/edit/:id" element={<EditCourse />} />
+          <Route path="courses/add" element={<AddCourse />} />
+          
+          <Route path="addinstructor" element={<AddInstructor />} />
+          <Route path="allinstrutors" element={<ManageInstrutors />} />
+          <Route path="editinstructor/:id" element={<EditInsructor />} />
+          <Route path="quizexam" element={<QuizExam />} />
+          <Route path="quizes" element={<Quizes />} />
+          <Route path="exams" element={<Exams />} />
+
           <Route path="create-announcement" element={<CreateAnnouncement />} />
           <Route path="send-notification" element={<SendNotification />} />
           <Route path="settings" element={<Settings />} />
           <Route path="announcements" element={<ViewAnnouncements />} />
-       
-        </Route>
-
-        <Route path="" element={<Layout_Announcement />}>
           <Route path="edit-announcement/:id" element={<EditAnnouncement />} />
           <Route path="edit-notification/:id" element={<EditNotification />} />
-        
-        </Route>
-
-        <Route path="/admin" >
-          <Route path="admin-dashboard" element={<AdminDashboard />} />
-          <Route path="singleViewSupport/:id" element={<SingleViewSupport />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="courses" element={<Courses />} />
-          <Route path="course/:id" element={<CourseDetails />} />
-          <Route path="edit-course/:id" element={<EditCourse />} />
-          <Route path="add-course" element={<AddCourse />} />
-          <Route path="support" element={<AdminSupportDashboard />} />
-          <Route path="adminReportPage" element={<AdminReportPage />} />
-          <Route path="courses/:id" element={<CourseDetails />} />
-          <Route path="courses/edit/:id" element={<EditCourse />} />
-          <Route path="courses/add" element={<AddCourse />} />
-          <Route path="adminSupport" element={<AdminSupport />} />
 
         </Route>
 
@@ -156,7 +163,7 @@ function App() {
             path="successfully-request"
             element={<SuccessfullyRequest />}
           />
-          <Route path="mycourses" element={<Courses />} />
+          <Route path="mycourses" element={<StudentModules />} />
           <Route path="studentProfile" element={<StudentProfile />} />
           <Route path="enrolledcourses" element={<EnrolledCourses />} />
           <Route path="editProfile" element={<EditProfile />} />

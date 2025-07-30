@@ -1,12 +1,18 @@
 const User = require("../../models/Student/User");
 const Student = require("../../models/Student/student.model");
+const Course = require("../../models/courses.model");
 
 exports.createStudent = async (req, res) => {
   try {
-    const { name, email, password, age, address, gender, mobile, degree } =
+    const { name, email, password, age, address, gender, mobile, course } =
       req.body;
 
     const image = req.file ? req.file.path : null;
+
+    const courseName = await Course.findOne({ title: course });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
 
     // Step 1: Create User
     const user = new User({
@@ -29,7 +35,7 @@ exports.createStudent = async (req, res) => {
       address,
       gender,
       mobile,
-      degree,
+      course: courseName._id,
       image,
     });
 

@@ -1,6 +1,7 @@
 const Module = require("../../models/moduleModel");
 // const Assignment = require("../../models/assignmentModel"); // Assuming an Assignment model exists
 const mongoose = require("mongoose");
+const Course = require("../../models/courses.model");
 
 // Helper function to validate ObjectId
 const isValidObjectId = (id) => {
@@ -73,14 +74,58 @@ const deleteContentFromModule = async (req, res) => {
 };
 
 // POST create a new module
+// Adjust the path as needed
+
 const createModule = async (req, res) => {
   try {
-    const { title, description, week } = req.body; // Extract week from request body
-    const newModule = new Module({ title, description, week }); // Include week in new Module instance
+    const { course, title, description, week, code } = req.body;
+
+    // Validate required fields
+    if (!course || !title || week === undefined || !code) {
+      return res
+        .status(400)
+        .json({ message: "courseId, title, and week are required." });
+    }
+
+    const courseName = await Course.findOne({ title: course });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Create the Module
+    const newModule = new Module({
+      course: courseName._id,
+      title,
+      description,
+      week,
+      code,
+      lecturematerials: [],
+      tutorials: [],
+      quizzes: [],
+      assignments: [],
+      recordings: [],
+    });
+
     const savedModule = await newModule.save();
-    res.status(201).json(savedModule); // Respond with the created module and 201 status
+
+    // Add module to the Course
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseName._id,
+      { $push: { modules: savedModule._id } },
+      { new: true }
+    );
+
+    if (!updatedCourse) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    res.status(201).json({
+      message: "Module created and added to course successfully",
+      module: savedModule,
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message }); // Respond with error
+    console.error("Error creating module:", error);
+    res.status(500).json({ message: error.message });
   }
 };
 
