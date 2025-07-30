@@ -33,7 +33,7 @@ import AddCourse from "./pages/admin/AddCourse";
 
 import CreateAnnouncement from "./pages/admin/CreateAnnouncement";
 import SendNotification from "./pages/admin/SendNotification";
-import Settings from "./pages/admin/Settings";
+import Settings from "./components/adminContactSettings.jsx";
 import ViewAnnouncements from "./pages/admin/ViewAnnouncements";
 
 import EditAnnouncement from "./components/EditeAnnouncemet";
