@@ -97,18 +97,22 @@ const Dashboard = () => {
   const { data: notificationsData, loading, error } = useGetNotifications(); // Assuming useGetNotifications fetches notifications
 
   const [date, setDate] = useState(new Date());
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]); // Store events in state
   const [event, setEvent] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("All");
   const [selectedFile, setSelectedFile] = useState(null); // File state
 
+  // Retrieve events from localStorage on initial render
   useEffect(() => {
     const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
     setEvents(storedEvents);
   }, []);
 
+  // Save events to localStorage whenever the events state changes
   useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(events));
+    if (events.length > 0) {
+      localStorage.setItem("events", JSON.stringify(events));
+    }
   }, [events]);
 
   const handleDateClick = (date) => {
@@ -183,6 +187,11 @@ const Dashboard = () => {
       console.error("Error uploading file", error);
       alert("Error uploading file");
     }
+  };
+
+  // Handle file download
+  const handleFileDownload = (fileUrl) => {
+    window.open(`http://localhost:5000${fileUrl}`, "_blank");
   };
 
   return (
@@ -283,7 +292,11 @@ const Dashboard = () => {
                     <span className="file-name">{file.name}</span>
                     <span className="file-meta">{file.date} • {file.size}</span>
                   </div>
-                  <button className="file-download">Download</button>
+                  <button 
+                    className="file-download" 
+                    onClick={() => handleFileDownload(file.fileUrl)}>
+                    Download
+                  </button>
                 </li>
               ))}
             </ul>
