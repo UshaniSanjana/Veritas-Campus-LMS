@@ -7,7 +7,6 @@ export const StudentModules = () => {
   const [enrolling, setEnrolling] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [code, setCode] = useState("");
-  const [user, setUser] = useState(null);
 
   const studentId = localStorage.getItem("studentId");
 
@@ -17,7 +16,6 @@ export const StudentModules = () => {
         const studentData = await axios.get(
           `http://localhost:5000/api/student/${studentId}`
         );
-        setUser(studentData.data.student);
 
         const courseData = await axios.post(
           `http://localhost:5000/api/student/course`,
@@ -53,7 +51,7 @@ export const StudentModules = () => {
     };
 
     fetchAllCourses();
-  }, []);
+  }, [studentId]);
 
   const handleEnroll = async (moduleId, code) => {
     setEnrolling(true);

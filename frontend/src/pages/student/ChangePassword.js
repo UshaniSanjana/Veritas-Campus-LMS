@@ -31,7 +31,7 @@ const ChangePassword = () => {
     };
 
     fetchStudent();
-  }, []);
+  }, [studentId]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
