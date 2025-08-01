@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useGetNotifications } from "../../Services/notificationService"; // Import API hook
+import bbImage from "../../assets/bb.png"; // bb image for sidebar
 import "./Dashboard.css";
 
-// Static list for demonstration (can be fetched dynamically in a real app)
 const dashboardData = {
   recentlyAccessedPrograms: [
     {
@@ -52,18 +52,16 @@ const dashboardData = {
 const Dashboard = () => {
   const navigate = useNavigate(); // Initialize navigate
 
-  // Fetch notifications from API using a hook
-  const { data: notificationsData, loading, error } = useGetNotifications();
+  const { data: notificationsData, loading, error } = useGetNotifications(); // Fetch notifications
 
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([]); // Store events in state
   const [event, setEvent] = useState("");
-  const [selectedSemester, setSelectedSemester] = useState("All");
   const [selectedFile, setSelectedFile] = useState(null); // File state
   const [courses, setCourses] = useState([]); // State to store enrolled courses
   const studentId = localStorage.getItem("studentId");
 
-  // Fetch Enrolled Courses
+  // Fetch enrolled courses
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -105,6 +103,7 @@ const Dashboard = () => {
       setEvent("");
     }
   };
+
   const handleDeleteEvent = (id) => setEvents(events.filter((event) => event.id !== id));
   const handleToggleComplete = (id) => {
     setEvents(events.map((event) =>
@@ -112,14 +111,53 @@ const Dashboard = () => {
     ));
   };
 
-  // Handle continue button click
-  const handleContinue = () => {
-    navigate("/student/programme"); // Navigate to the given path
+  // Handle file upload
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleFileUpload = async () => {
+    if (!selectedFile) {
+      alert("Please select a file.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/student/upload-file", // Adjust URL as per your backend
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      alert("File uploaded successfully");
+      console.log(response.data); // Log the file info returned by the backend
+      setSelectedFile(null); // Clear the selected file
+    } catch (error) {
+      console.error("Error uploading file", error);
+      alert("Error uploading file");
+    }
+  };
+
+  // Handle file download
+  const handleFileDownload = (fileUrl) => {
+    window.open(`http://localhost:5000${fileUrl}`, "_blank");
   };
 
   // Handle navigation to Enrolled Courses page
   const handleEnrolledCourses = () => {
     navigate("/student/enrolledcourses"); // Navigate to the Enrolled Courses page
+  };
+
+  // Handle navigation to Programme page when clicking on Recently Accessed Program
+  const handleRecentlyAccessedProgram = () => {
+    navigate("/student/programme"); // Navigate to the Programme page
   };
 
   return (
@@ -133,7 +171,11 @@ const Dashboard = () => {
               <h2 className="section-title">Recently accessed programs</h2>
               <div className="program-grid">
                 {dashboardData.recentlyAccessedPrograms.map((program) => (
-                  <div className="program-card" key={`program-${program.id}`}>
+                  <div
+                    className="program-card"
+                    key={`program-${program.id}`}
+                    onClick={handleRecentlyAccessedProgram} // Navigate to programme page
+                  >
                     <h3 className="program-name">{program.title}</h3>
                     <p className="program-desc">{program.description}</p>
                     <div className="program-meta">
@@ -148,9 +190,6 @@ const Dashboard = () => {
                         <span>{program.progress}% complete</span>
                       </div>
                     </div>
-                    <button className="program-button" onClick={handleContinue}>
-                      Continue
-                    </button>
                   </div>
                 ))}
               </div>
@@ -162,15 +201,15 @@ const Dashboard = () => {
             <div className="rectangle-content">
               <h2 className="section-title">Enrolled Courses</h2>
               {courses.length > 0 ? (
-                <div className="course-list">
+                <div className="course-grid">
                   {courses.map((course, index) => (
-                    <div 
-                      key={index} 
-                      className="course-card" 
-                      onClick={handleEnrolledCourses} // Navigate when clicked
+                    <div
+                      key={index}
+                      className="course-card"
+                      onClick={handleEnrolledCourses} // Navigate to Enrolled Courses page
                     >
-                      <div className="course-name">{course.title}</div>
-                      <div className="course-instructor">Instructor: {course.instructor}</div>
+                      <h3 className="course-title">{course.title}</h3>
+                      <p className="course-instructor">Instructor: {course.instructor}</p>
                     </div>
                   ))}
                 </div>
@@ -197,14 +236,36 @@ const Dashboard = () => {
             </ul>
           </div>
 
+          {/* Private Files Section */}
+          <div className="sidebar-section2">
+            <h3>Private files</h3>
+            <ul className="file-list">
+              {dashboardData.privateFiles.map((file, index) => (
+                <li key={`file-${index}`}>
+                  <div className="file-info">
+                    <span className="file-name">{file.name}</span>
+                    <span className="file-meta">{file.date} • {file.size}</span>
+                  </div>
+                  <button
+                    className="file-download"
+                    onClick={() => handleFileDownload(file.fileUrl)}
+                  >
+                    Download
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {/* File Upload */}
+            <h4>Upload a File</h4>
+            <input type="file" onChange={handleFileChange} />
+            <button onClick={handleFileUpload}>Upload File</button>
+          </div>
+
           {/* Calendar Section */}
           <div className="sidebar-section calendar">
             <h3>Calendar</h3>
-            <Calendar
-              onChange={handleDateClick}
-              value={date}
-              className="react-calendar"
-            />
+            <Calendar onChange={handleDateClick} value={date} className="react-calendar" />
             <div className="upcoming-events">
               <h3>Upcoming Events</h3>
               <div className="event-input">
@@ -213,7 +274,6 @@ const Dashboard = () => {
                   value={event}
                   onChange={(e) => setEvent(e.target.value)}
                   placeholder="Add new event"
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddEvent()}
                 />
                 <button onClick={handleAddEvent}>Add</button>
               </div>
