@@ -224,7 +224,7 @@ const Dashboard = () => {
         <div className="sidebar">
           {/* Notifications Section */}
           <div className="sidebar-section1">
-            <h3>Notifications</h3>
+            <h3>Timeline</h3>
             {loading && <p>Loading notifications...</p>}
             {error && <p>Error loading notifications</p>}
             <ul className="notification-list">
