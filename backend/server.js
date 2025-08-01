@@ -20,6 +20,10 @@ const quizAnswersRoute = require("./routes/Student/quizAnswersRoute");
 const studentRoutes = require("./routes/student");
 const instructorRoutes = require("./routes/instructorRoutes");
 const instructorRoutesV2 = require("./routes/InsructorsRoute")
+const fileRoutes = require('./routes/Student/fileRoutes'); //
+const assignmentRoutes = require('./routes/Student/assignmentRoutes'); //
+const studentNotificationRoutes = require('./routes/Student/notificationRoutes');//
+const instructorNotificationRoutes = require('./routes/Instructor/notificationRoutes'); //
 // Load env variables
 dotenv.config();
 
@@ -42,6 +46,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/student/support", studentSupportRoutes);
 app.use("/api/notification", notificationRouter);
 app.use("/api/announcement", announcementRouter);
+app.use('/api/files', fileRoutes); //
+app.use('/api/assignments', assignmentRoutes); //
+app.use('/api/student/notifications', studentNotificationRoutes); //
+app.use('/api/instructor/notifications', instructorNotificationRoutes);//
+
 
 // Database Connection
 dotenv.config();

@@ -53,6 +53,13 @@ import Exams from './pages/admin/Exams';
 import SupportForm from "./pages/student/SupportForm";
 import SupportList from "./pages/student/SupportList";
 import ModulePage from "./pages/student/ModulePage";
+import StudentPrivateFiles from "./pages/student/StudentPrivateFiles"; // 
+import AssignmentSubmission from "./pages/student/AssignmentSubmission"; //
+import StudentNotificationPage from './pages/student/StudentNotificationPage'; //
+import MarksShowing from "./pages/student/MarksShowing"; //
+
+// Instructor Pages- Notification
+import InstructorNotificationForm from './pages/instructor/InstructorNotificationForm'; //
 
 // Instructor Pages - Quiz
 import AddQuiz from "./pages/instructor/AddQuiz";
@@ -183,6 +190,11 @@ function App() {
           <Route path="support-list" element={<SupportList />} />
           <Route path="modules" element={<ModulePage />} />
         </Route>
+        <Route path="/private-files" element={<StudentPrivateFiles />} />
+        <Route path="/assignment" element={<AssignmentSubmission />} />
+        <Route path="/student/notifications" element={<StudentNotificationPage />} />
+        <Route path="/student/marks" element={<MarksShowing />}/>
+        <Route path="/instructor/notifications" element={<InstructorNotificationForm />} />
       </Routes>
 
       <Footer />
