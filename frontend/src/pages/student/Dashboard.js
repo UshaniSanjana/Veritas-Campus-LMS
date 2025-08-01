@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./Dashboard.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import bbImage from "../../assets/bb.png";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import axios from "axios"; // <-- Add this import
-
-// Import the hook to fetch notifications from the service
 import { useGetNotifications } from "../../Services/notificationService"; // Import API hook
+import "./Dashboard.css";
 
+// Static list for demonstration (can be fetched dynamically in a real app)
 const dashboardData = {
   recentlyAccessedPrograms: [
     {
@@ -18,7 +16,6 @@ const dashboardData = {
         "Learn core business concepts including management, marketing, and finance.",
       lastAccessed: "2 days ago",
       progress: 65,
-      icon: "📊",
     },
     {
       id: 2,
@@ -27,7 +24,6 @@ const dashboardData = {
         "Master HR skills such as recruitment, training, and performance management.",
       lastAccessed: "1 day ago",
       progress: 40,
-      icon: "👥",
     },
     {
       id: 3,
@@ -36,51 +32,14 @@ const dashboardData = {
         "Improve your English language skills for academic and professional use.",
       lastAccessed: "5 hours ago",
       progress: 85,
-      icon: "📖",
-    },
-  ],
-  allCourses: [
-    {
-      id: 1,
-      semester: "Semester 01",
-      name: "Principles of Management",
-      code: "MG101",
-      instructor: "Dr. Brown",
-    },
-    {
-      id: 2,
-      semester: "Semester 01",
-      name: "Computer Systems",
-      code: "CS102",
-      instructor: "Prof. Johnson",
-    },
-    {
-      id: 3,
-      semester: "Semester 01",
-      name: "Web Technologies",
-      code: "CS103",
-      instructor: "Dr. Williams",
     },
     {
       id: 4,
-      semester: "Semester 02",
-      name: "Data Structures",
-      code: "CS201",
-      instructor: "Dr. Davis",
-    },
-    {
-      id: 5,
-      semester: "Semester 02",
-      name: "Machine Learning",
-      code: "CS202",
-      instructor: "Prof. Miller",
-    },
-    {
-      id: 6,
-      semester: "Semester 02",
-      name: "Artificial Intelligence",
-      code: "CS203",
-      instructor: "Dr. Wilson",
+      title: "Diploma in Sales & Marketing",
+      description:
+        "Develop strategies for customer engagement and successful selling.",
+      lastAccessed: "3 days ago",
+      progress: 50,
     },
   ],
   privateFiles: [
@@ -94,31 +53,46 @@ const Dashboard = () => {
   const navigate = useNavigate(); // Initialize navigate
 
   // Fetch notifications from API using a hook
-  const { data: notificationsData, loading, error } = useGetNotifications(); // Assuming useGetNotifications fetches notifications
+  const { data: notificationsData, loading, error } = useGetNotifications();
 
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([]); // Store events in state
   const [event, setEvent] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("All");
   const [selectedFile, setSelectedFile] = useState(null); // File state
+  const [courses, setCourses] = useState([]); // State to store enrolled courses
+  const studentId = localStorage.getItem("studentId");
 
-  // Retrieve events from localStorage on initial render
+  // Fetch Enrolled Courses
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/student/enrolled/${studentId}`
+        );
+        setCourses(response.data);
+      } catch (err) {
+        console.error("Error fetching enrolled courses", err);
+      }
+    };
+    if (studentId) {
+      fetchCourses();
+    }
+  }, [studentId]);
+
+  // Event-related functions
   useEffect(() => {
     const storedEvents = JSON.parse(localStorage.getItem("events")) || [];
     setEvents(storedEvents);
   }, []);
 
-  // Save events to localStorage whenever the events state changes
   useEffect(() => {
     if (events.length > 0) {
       localStorage.setItem("events", JSON.stringify(events));
     }
   }, [events]);
 
-  const handleDateClick = (date) => {
-    setDate(date);
-  };
-
+  const handleDateClick = (date) => setDate(date);
   const handleAddEvent = () => {
     if (event.trim()) {
       const newEvent = {
@@ -131,67 +105,21 @@ const Dashboard = () => {
       setEvent("");
     }
   };
-
-  const handleDeleteEvent = (id) => {
-    setEvents(events.filter((event) => event.id !== id));
-  };
-
+  const handleDeleteEvent = (id) => setEvents(events.filter((event) => event.id !== id));
   const handleToggleComplete = (id) => {
-    setEvents(
-      events.map((event) =>
-        event.id === id ? { ...event, completed: !event.completed } : event
-      )
-    );
+    setEvents(events.map((event) =>
+      event.id === id ? { ...event, completed: !event.completed } : event
+    ));
   };
-
-  const filteredCourses =
-    selectedSemester === "All"
-      ? dashboardData.allCourses
-      : dashboardData.allCourses.filter((course) => course.semester === selectedSemester);
 
   // Handle continue button click
   const handleContinue = () => {
     navigate("/student/programme"); // Navigate to the given path
   };
 
-  // Handle file selection
-  const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-
-  // Handle file upload
-  const handleFileUpload = async () => {
-    if (!selectedFile) {
-      alert("Please select a file.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/student/upload-file", // Adjust URL as per your backend
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      alert("File uploaded successfully");
-      console.log(response.data); // Log the file info returned by the backend
-      setSelectedFile(null); // Clear the selected file
-    } catch (error) {
-      console.error("Error uploading file", error);
-      alert("Error uploading file");
-    }
-  };
-
-  // Handle file download
-  const handleFileDownload = (fileUrl) => {
-    window.open(`http://localhost:5000${fileUrl}`, "_blank");
+  // Handle navigation to Enrolled Courses page
+  const handleEnrolledCourses = () => {
+    navigate("/student/enrolledcourses"); // Navigate to the Enrolled Courses page
   };
 
   return (
@@ -206,21 +134,18 @@ const Dashboard = () => {
               <div className="program-grid">
                 {dashboardData.recentlyAccessedPrograms.map((program) => (
                   <div className="program-card" key={`program-${program.id}`}>
-                    <div className="program-icon">{program.icon}</div>
-                    <div className="program-info">
-                      <h3 className="program-name">{program.title}</h3>
-                      <p className="program-desc">{program.description}</p>
-                      <div className="program-meta">
-                        <span>Last accessed: {program.lastAccessed}</span>
-                        <div className="progress-container">
-                          <div className="progress-bar">
-                            <div
-                              className="progress-fill"
-                              style={{ width: `${program.progress}%` }}
-                            ></div>
-                          </div>
-                          <span>{program.progress}% complete</span>
+                    <h3 className="program-name">{program.title}</h3>
+                    <p className="program-desc">{program.description}</p>
+                    <div className="program-meta">
+                      <span>Last accessed: {program.lastAccessed}</span>
+                      <div className="progress-container">
+                        <div className="progress-bar">
+                          <div
+                            className="progress-fill"
+                            style={{ width: `${program.progress}%` }}
+                          ></div>
                         </div>
+                        <span>{program.progress}% complete</span>
                       </div>
                     </div>
                     <button className="program-button" onClick={handleContinue}>
@@ -232,36 +157,26 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Course Overview */}
+          {/* Enrolled Courses Section */}
           <div className="rectangle-2143">
             <div className="rectangle-content">
-              <div className="section-header">
-                <h2 className="section-title">Course Overview</h2>
-                <select
-                  value={selectedSemester}
-                  onChange={(e) => setSelectedSemester(e.target.value)}
-                  className="semester-filter"
-                >
-                  <option value="All">All Semesters</option>
-                  <option value="Semester 01">Semester 01</option>
-                  <option value="Semester 02">Semester 02</option>
-                </select>
-              </div>
-              <div className="course-grid">
-                {filteredCourses.map((course) => (
-                  <div className="course-card" key={`course-${course.id}`}>
-                    <div className="course-header">
-                      <h3>{course.semester}</h3>
-                      <span className="course-code">{course.code}</span>
+              <h2 className="section-title">Enrolled Courses</h2>
+              {courses.length > 0 ? (
+                <div className="course-list">
+                  {courses.map((course, index) => (
+                    <div 
+                      key={index} 
+                      className="course-card" 
+                      onClick={handleEnrolledCourses} // Navigate when clicked
+                    >
+                      <div className="course-name">{course.title}</div>
+                      <div className="course-instructor">Instructor: {course.instructor}</div>
                     </div>
-                    <h4 className="course-name">{course.name}</h4>
-                    <p className="instructor">Instructor: {course.instructor}</p>
-                    <button className="view-course-btn" onClick={handleContinue}>
-                      View Materials
-                    </button>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No enrolled courses found.</p>
+              )}
             </div>
           </div>
         </div>
@@ -280,31 +195,6 @@ const Dashboard = () => {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Private Files Section */}
-          <div className="sidebar-section2">
-            <h3>Private files</h3>
-            <ul className="file-list">
-              {dashboardData.privateFiles.map((file, index) => (
-                <li key={`file-${index}`}>
-                  <div className="file-info">
-                    <span className="file-name">{file.name}</span>
-                    <span className="file-meta">{file.date} • {file.size}</span>
-                  </div>
-                  <button 
-                    className="file-download" 
-                    onClick={() => handleFileDownload(file.fileUrl)}>
-                    Download
-                  </button>
-                </li>
-              ))}
-            </ul>
-
-            {/* File Upload */}
-            <h4>Upload a File</h4>
-            <input type="file" onChange={handleFileChange} />
-            <button onClick={handleFileUpload}>Upload File</button>
           </div>
 
           {/* Calendar Section */}
