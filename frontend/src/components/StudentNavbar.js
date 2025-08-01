@@ -15,7 +15,6 @@ const StudentNavbar = () => {
           <div className="h-10 border-l-2 border-black"></div>
           <span className="text-2xl font-bold">LearnDash</span>
         </div>
-        console.log("✅ Hamburger JSX runs");
 
         <button
           className="md:hidden block text-3xl font-bold focus:outline-none bg-black"

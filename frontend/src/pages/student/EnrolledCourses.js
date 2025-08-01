@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getCurrentUser } from "../../api/user";
+
 
 const EnrolledCourses = () => {
   const [courses, setCourse] = useState([]);
-  const [user, setUser] = useState(null);
   const studentId = localStorage.getItem("studentId");
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const userData = await getCurrentUser();
-        if (!userData) {
-          throw new Error("User data is missing");
-        }
-
-        setUser(userData);
-
+        
         const courses = await axios.get(
-          `http://localhost:5000/api/enrolled/${studentId}`
+          `http://localhost:5000/api/student/enrolled/${studentId}`
         );
         setCourse(courses.data);
       } catch (err) {
@@ -26,7 +19,7 @@ const EnrolledCourses = () => {
       }
     };
     fetchCourses();
-  }, [user]);
+  }, [studentId]);
 
   return (
     <div className="container px-3">

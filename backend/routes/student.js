@@ -30,6 +30,8 @@ const User = require("../models/Student/User");
 const protect = require("../middleware/authMiddleware");
 const {
   getStudentProfile,
+  getStudentUserId,
+  getUser,
 } = require("../controllers/student/getStudentProfile");
 const {
   createStudent,
@@ -51,7 +53,7 @@ router.get("/courses/:courseId/modules/:moduleId/:studentId", getModuleContent);
 //router.post("/addStudent", upload.single("image"), addStudent);
 router.put("/editStudent/:id", upload.single("image"), editStudent);
 router.put("/changePassword/:id", changepassword);
-router.get("/student/:studentId", getStudent);
+router.get("/:studentId", getStudent);
 // router.post("/addCourse", addCourse);
 // router.get("/courses", Courses);
 // router.post("/enroll/:courseId", CourseEnrollment);
@@ -70,12 +72,14 @@ router.get("/me", protect, async (req, res) => {
   }
 });
 
-router.get("/student/profile/:id", getStudentProfile);
+router.get("/profile/:id", getStudentProfile);
 router.post("/addStudent", upload.single("image"), createStudent);
 router.get("/courses/:id/modules", getCourseModules);
 router.post("/course", getCourseDetails);
 router.post("/enroll/:moduleId", moduleEnrollment);
 router.get("/enrolled/:studentId", GetEnrolledmodules);
 router.get("/quizzes/module/:id", getModuleQuizzes);
+router.get("/userId/:id", getStudentUserId);
+router.get("/user/:id", getUser);
 
 module.exports = router;

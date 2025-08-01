@@ -20,14 +20,14 @@ export const StudentModules = () => {
         setUser(studentData.data.student);
 
         const courseData = await axios.post(
-          `http://localhost:5000/api/course`,
+          `http://localhost:5000/api/student/course`,
           {
             title: studentData.data.student.course,
           }
         );
 
         const allModules = await axios.get(
-          `http://localhost:5000/api/courses/${courseData.data._id}/modules`
+          `http://localhost:5000/api/student/courses/${courseData.data._id}/modules`
         );
 
         const moduleIds = allModules.data;
@@ -43,7 +43,7 @@ export const StudentModules = () => {
         setCourses(moduleDetails);
 
         const allEnrolled = await axios.get(
-          `http://localhost:5000/api/enrolled/${studentId}`
+          `http://localhost:5000/api/student/enrolled/${studentId}`
         );
 
         setEnrolledCourses(allEnrolled.data);
