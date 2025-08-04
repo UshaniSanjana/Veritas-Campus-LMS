@@ -13,20 +13,20 @@ const calculateProgress = async (moduleId, studentId) => {
   // Handle cases where progress document might not exist yet for a new student/course
   const completedLectures = progress ? progress.completedLectures.length : 0;
   const completedTutorials = progress ? progress.completedTutorials.length : 0;
-  //const attemptedQuizes = progress ? progress.attemptedQuizes.length : 0;
+  const attemptedQuizzes = progress ? progress.attemptedQuizzes.length : 0;
   const completedAssignments = progress
     ? progress.completedAssignments.length
     : 0;
 
   // FIXED: Added null/undefined checks for course.lectures, etc.
-  const totalLectures = module.lectures ? module.lectures.length : 0;
-  const totalTutorials = module.tutorials ? module.tutorials.length : 0;
-  //const totalQuizes = module.quizes ? module.quizes.length : 0;
-  const totalAssignments = module.assignments ? module.assignments.length : 0;
+  const totalLectures = Array.isArray(module.lecturematerials) ? module.lecturematerials.length : 0;
+  const totalTutorials = Array.isArray(module.tutorials) ? module.tutorials.length : 0;
+  const totalQuizes = Array.isArray(module.quizzes) ? module.quizzes.length : 0;
+  const totalAssignments = Array.isArray(module.assignments) ? module.assignments.length : 0;
 
-  const totalItems = totalLectures + totalTutorials + totalAssignments;
+  const totalItems = totalLectures + totalTutorials + totalQuizes +  totalAssignments;
 
-  const completedItems = completedLectures + completedTutorials;
+  const completedItems = completedLectures + completedTutorials + attemptedQuizzes + completedAssignments;
 
   const percentage =
     totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
@@ -52,11 +52,15 @@ const getProgress = async (req, res) => {
 
 const markLectureComplete = async (req, res) => {
   try {
-    const { moduleId, studentId, lectureId } = req.body;
+    const { moduleId, studentId, lectureId, completed } = req.body;
+
+    const update = completed
+      ? { $addToSet: { completedLectures: lectureId } }
+      : { $pull: { completedLectures: lectureId } };
 
     const progress = await UserProgress.findOneAndUpdate(
       { moduleId, studentId },
-      { $addToSet: { completedLectures: lectureId } },
+      update,
       { new: true, upsert: true }
     );
 
@@ -70,11 +74,15 @@ const markLectureComplete = async (req, res) => {
 
 const markTutorialComplete = async (req, res) => {
   try {
-    const { moduleId, studentId, tutorialId } = req.body;
+    const { moduleId, studentId, tutorialId, completed } = req.body;
+
+    const update = completed
+      ? { $addToSet: { completedTutorials: tutorialId } }
+      : { $pull: { completedTutorials: tutorialId } };
 
     const progress = await UserProgress.findOneAndUpdate(
       { moduleId, studentId },
-      { $addToSet: { completedTutorials: tutorialId } },
+      update,
       { new: true, upsert: true }
     );
 
@@ -88,11 +96,15 @@ const markTutorialComplete = async (req, res) => {
 
 const markQuizAttempt = async (req, res) => {
   try {
-    const { moduleId, studentId, quizId } = req.body;
+    const { moduleId, studentId, quizId, completed } = req.body;
+
+    const update = completed
+      ? { $addToSet: { attemptedQuizzes: quizId } }
+      : { $pull: { attemptedQuizzes: quizId } };
 
     const progress = await UserProgress.findOneAndUpdate(
       { moduleId, studentId },
-      { $addToSet: { attemptedQuizes: quizId } },
+      update,
       { new: true, upsert: true }
     );
 
@@ -106,11 +118,15 @@ const markQuizAttempt = async (req, res) => {
 
 const markAssignmentComplete = async (req, res) => {
   try {
-    const { moduleId, studentId, assignmentId } = req.body;
+    const { moduleId, studentId, assignmentId, completed } = req.body;
+
+    const update = completed
+      ? { $addToSet: { completedAssignments: assignmentId } }
+      : { $pull: { completedAssignments: assignmentId } };
 
     const progress = await UserProgress.findOneAndUpdate(
       { moduleId, studentId },
-      { $addToSet: { completedAssignments: assignmentId } },
+      update,
       { new: true, upsert: true }
     );
 

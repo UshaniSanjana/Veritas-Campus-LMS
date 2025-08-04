@@ -4,7 +4,7 @@ import {
   useGetAnnouncements,
   useDeleteAnnouncement,
 } from "../../Services/announcementService";
-import Layout_Announcement from "./Layout_Announcement";
+
 
 export default function ViewAnnouncements() {
   const { data, error, loading, refetch } = useGetAnnouncements();
@@ -72,7 +72,7 @@ export default function ViewAnnouncements() {
                 <td className="px-6 py-4 text-right">
                   <div className="flex gap-3 justify-end">
                     <Link
-                      to={`/edit-announcement/${announcement._id}`}
+                      to={`/admin/edit-announcement/${announcement._id}`}
                       className="inline-block px-3 py-1 rounded text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100"
                     >
                       Edit

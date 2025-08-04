@@ -31,7 +31,7 @@ const ModulePage = () => {
         setProgressPercentage(moduleRes.data.overallProgressPercentage || 0);
 
         const progressRes = await API.get(
-          `/student/progress/${courseId}/${studentId}`
+          `/student/progress/${moduleId}/${studentId}`
         );
         const data = progressRes.data.progressDetail || {};
         const completed = [
@@ -74,23 +74,32 @@ const ModulePage = () => {
         default:
           return;
       }
-
-      await API.post(url, {
+      // await API.post(url, {
+      //   studentId,
+      //   courseId,
+      //   [payloadKey]: itemId,
+      //   completed: !completedItems.includes(itemId),
+      // });
+      const payload = {
         studentId,
         courseId,
+        moduleId,
         [payloadKey]: itemId,
         completed: !completedItems.includes(itemId),
-      });
+      };
 
-      setCompletedItems((prev) =>
-        prev.includes(itemId)
-          ? prev.filter((id) => id !== itemId)
-          : [...prev, itemId]
-      );
+      await API.post(url, payload);
+
+
+      // setCompletedItems((prev) =>
+      //   prev.includes(itemId)
+      //     ? prev.filter((id) => id !== itemId)
+      //     : [...prev, itemId]
+      // );
 
       // 🔁 Re-fetch updated progress
       const progressRes = await API.get(
-        `/student/progress/${courseId}/${studentId}`
+        `/student/progress/${moduleId}/${studentId}`
       );
 
       const data = progressRes.data.progressDetail || {};
@@ -160,7 +169,7 @@ const ModulePage = () => {
                     className="form-check-input"
                     type="checkbox"
                     id={item._id}
-                    checked={completedItems.includes(item._id)}
+                    checked={completedItems.includes(String(item._id))}
                     onChange={() => handleCheckbox(item._id, item.type)}
                   />
                 </div>
