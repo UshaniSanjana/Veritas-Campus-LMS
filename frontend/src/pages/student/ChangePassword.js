@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { getCurrentUser } from "../../api/user";
 import { useEffect } from "react";
 
 const ChangePassword = () => {
@@ -8,16 +7,23 @@ const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfrimedPassword] = useState("");
   const [studentData, setStudentData] = useState("");
+  const studentId = localStorage.getItem("studentId");
 
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const userData = await getCurrentUser();
+        const res = await axios.get(
+          `http://localhost:5000/api/student/userId/${studentId}`
+        );
+        const userId = res.data.userId;
+        console.log(userId);
 
-        if (!userData) {
-          throw new Error("User data is missing");
-        }
-        console.log(userData._id);
+        const userRes = await axios.get(
+          `http://localhost:5000/api/student/user/${userId}`
+        );
+        const userData = userRes.data.user;
+        console.log(userData);
+
         setStudentData(userData); // store student data in state
       } catch (error) {
         console.error("Failed to fetch student", error);
@@ -25,13 +31,13 @@ const ChangePassword = () => {
     };
 
     fetchStudent();
-  }, []);
+  }, [studentId]);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/changePassword/${studentData._id}`,
+        `http://localhost:5000/api/student/changePassword/${studentData._id}`,
         {
           currentPassword,
           newPassword,

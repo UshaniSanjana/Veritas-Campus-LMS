@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./index.css";
 
+
 // Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -28,13 +29,13 @@ import Courses from "./pages/admin/CoursesPage";
 import CourseDetails from "./pages/admin/CourseDetails";
 import EditCourse from "./pages/admin/EditCourse";
 import AddCourse from "./pages/admin/AddCourse";
-import AdminSupportDashboard from "./pages/admin/AdminSupportDashboard";
+
 
 import CreateAnnouncement from "./pages/admin/CreateAnnouncement";
 import SendNotification from "./pages/admin/SendNotification";
-import Settings from "./pages/admin/Settings";
+import Settings from "./components/adminContactSettings.jsx";
 import ViewAnnouncements from "./pages/admin/ViewAnnouncements";
-import Layout_Announcement from "./pages/admin/Layout_Announcement";
+
 import EditAnnouncement from "./components/EditeAnnouncemet";
 import EditNotification from "./components/EditNotification";
 
@@ -53,6 +54,13 @@ import Exams from './pages/admin/Exams';
 import SupportForm from "./pages/student/SupportForm";
 import SupportList from "./pages/student/SupportList";
 import ModulePage from "./pages/student/ModulePage";
+import StudentPrivateFiles from "./pages/student/StudentPrivateFiles"; // 
+import AssignmentSubmission from "./pages/student/AssignmentSubmission"; //
+import StudentNotificationPage from './pages/student/StudentNotificationPage'; //
+import MarksShowing from "./pages/student/MarksShowing"; //
+
+// Instructor Pages- Notification
+import InstructorNotificationForm from './pages/instructor/InstructorNotificationForm'; //
 
 // Instructor Pages - Quiz
 import AddQuiz from "./pages/instructor/AddQuiz";
@@ -107,38 +115,33 @@ function App() {
           />
         </Route>
 
-        <Route path="/admin" element={<Layout_Announcement />}>
-          <Route path="create-announcement" element={<CreateAnnouncement />} />
-          <Route path="send-notification" element={<SendNotification />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="announcements" element={<ViewAnnouncements />} />
-        </Route>
+        {/*Admin Side Pages */}
+        <Route path="/admin" element={<AdminLayout />}>
 
-        <Route path="" element={<Layout_Announcement />}>
-          <Route path="edit-announcement/:id" element={<EditAnnouncement />} />
-          <Route path="edit-notification/:id" element={<EditNotification />} />
-        </Route>
-
-        <Route path="/admin">
-          <Route path="admin-dashboard" element={<AdminDashboard />} />
-          <Route path="singleViewSupport/:id" element={<SingleViewSupport />} />
           <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="courses" element={<Courses />} />
-          <Route path="course/:id" element={<CourseDetails />} />
-          <Route path="edit-course/:id" element={<EditCourse />} />
-          <Route path="add-course" element={<AddCourse />} />
-          <Route path="support" element={<AdminSupportDashboard />} />
+          <Route path="adminSupport" element={<AdminSupport />} />
+          <Route path="singleViewSupport/:id" element={<SingleViewSupport />} />
           <Route path="adminReportPage" element={<AdminReportPage />} />
+
+          <Route path="courses" element={<Courses />} />
           <Route path="courses/:id" element={<CourseDetails />} />
           <Route path="courses/edit/:id" element={<EditCourse />} />
           <Route path="courses/add" element={<AddCourse />} />
-          <Route path="adminSupport" element={<AdminSupport />} />
+          
           <Route path="addinstructor" element={<AddInstructor />} />
           <Route path="allinstrutors" element={<ManageInstrutors />} />
           <Route path="editinstructor/:id" element={<EditInsructor />} />
           <Route path="quizexam" element={<QuizExam />} />
           <Route path="quizes" element={<Quizes />} />
           <Route path="exams" element={<Exams />} />
+
+          <Route path="create-announcement" element={<CreateAnnouncement />} />
+          <Route path="send-notification" element={<SendNotification />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="announcements" element={<ViewAnnouncements />} />
+          <Route path="edit-announcement/:id" element={<EditAnnouncement />} />
+          <Route path="edit-notification/:id" element={<EditNotification />} />
+
         </Route>
 
         <Route path="/instructor" element={<InstructorLayout />}>
@@ -173,7 +176,7 @@ function App() {
           <Route path="editProfile" element={<EditProfile />} />
           <Route path="changepassword" element={<ChangePassword />} />
           <Route path="progress" element={<Progress />} />
-          <Route path="modulepage" element={<ModulePage />} />
+          <Route path="courses/:courseId/modules/:moduleId" element={<ModulePage />} />
           <Route path="quiz" element={<Quiz />} />
           <Route path="quiz/questions" element={<Questions />} />
           <Route path="submitQuiz" element={<ConfirmSubmissionPage />} />
@@ -183,6 +186,11 @@ function App() {
           <Route path="support-list" element={<SupportList />} />
           <Route path="modules" element={<ModulePage />} />
         </Route>
+        <Route path="/private-files" element={<StudentPrivateFiles />} />
+        <Route path="/assignment" element={<AssignmentSubmission />} />
+        <Route path="/student/notifications" element={<StudentNotificationPage />} />
+        <Route path="/student/marks" element={<MarksShowing />}/>
+        <Route path="/instructor/notifications" element={<InstructorNotificationForm />} />
       </Routes>
 
       <Footer />

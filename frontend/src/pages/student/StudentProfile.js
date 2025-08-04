@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import profileimage from "../../assets/profileimage.png";
 import axios from "axios";
-import { getCurrentUser } from "../../api/user";
 
 const StudentProfile = () => {
   const [courses, setCourse] = useState([]);
   const [student, setStudent] = useState(null);
   const [previewImage, setPreviewImage] = useState("");
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -31,22 +29,14 @@ const StudentProfile = () => {
       try {
         setLoading(true);
 
-        // Fetch Current User
-        const userData = await getCurrentUser();
-        if (!userData) {
-          throw new Error("User data is missing");
-        }
-
-        setUser(userData);
-
         // Fetch Student Profile using userId (_id)
         const studentRes = await axios.get(
-          `http://localhost:5000/api/student/profile/${userData._id}`
+          `http://localhost:5000/api/student/profile/${studentId}`
         );
         const studentData = studentRes.data.studentProfile;
         setStudent(studentData);
         const response = await axios.get(
-          `http://localhost:5000/api/enrolled/${studentId}`
+          `http://localhost:5000/api/student/enrolled/${studentId}`
         );
         setCourse(response.data);
 
@@ -63,7 +53,7 @@ const StudentProfile = () => {
     };
 
     fetchUserAndStudent();
-  }, []);
+  }, [studentId]);
 
   // Handle logout
   const confirmLogout = () => {

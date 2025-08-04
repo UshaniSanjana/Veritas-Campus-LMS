@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import profileimage from "../../assets/profileimage.png";
 import axios from "axios";
-import { getCurrentUser } from "../../api/user";
 import { useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
@@ -11,17 +10,14 @@ const EditProfile = () => {
   const [studentData, setStudentData] = useState(null);
   const navigate = useNavigate();
 
+  const studentId = localStorage.getItem("studentId");
+
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const userData = await getCurrentUser();
-
-        if (!userData) {
-          throw new Error("User data is missing");
-        }
-
+        
         const studentRes = await axios.get(
-          `http://localhost:5000/api/student/profile/${userData._id}`
+          `http://localhost:5000/api/student/profile/${studentId}`
         );
 
         const student = studentRes.data.studentProfile;
@@ -36,7 +32,7 @@ const EditProfile = () => {
     };
 
     fetchStudent();
-  }, []);
+  }, [studentId]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
