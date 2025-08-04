@@ -59,7 +59,7 @@ export default function NotificationTable({
                 <td class="px-6 py-4 text-right">
                   <div className="flex gap-4">
                     <a
-                      href={`/edit-notification/${noti._id}`}
+                      href={`/admin/edit-notification/${noti._id}`}
                       class="font-medium text-blue-600  hover:underline"
                     >
                       Edit

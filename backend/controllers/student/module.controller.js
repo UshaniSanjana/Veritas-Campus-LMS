@@ -12,7 +12,6 @@ const getModuleContent = async (req, res) => {
     const { courseId, moduleId, studentId } = req.params;
     const mongoose = require('mongoose');
     const moduleObjectId = new mongoose.Types.ObjectId(moduleId); 
-
     
     const course = await Course.findById(courseId)
       .populate({
@@ -33,11 +32,13 @@ const getModuleContent = async (req, res) => {
 
     const module = course.modules[0];
     if (!module) {
+      console.log('Module not found in course:', moduleId);
       return res.status(404).json({ message: 'Module not found in this course' });
     }
+    
 
     // Get student's progress for this specific course
-    const userProgress = await UserProgress.findOne({ courseId, studentId });
+    const userProgress = await UserProgress.findOne({ moduleId, studentId });
 
     // Combine all module items and their completion status
     const allModuleItems = [];
@@ -113,7 +114,7 @@ const getModuleContent = async (req, res) => {
 
 
     // Calculate overall course progress using the exported function
-    const overallProgressPercentage = await calculateProgress(courseId, studentId);
+    const overallProgressPercentage = await calculateProgress(moduleId, studentId);
 
     return res.status(200).json({
       courseTitle: course.title,

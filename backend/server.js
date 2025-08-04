@@ -19,11 +19,15 @@ const quizRoutes = require("./routes/quizRoutes");
 const quizAnswersRoute = require("./routes/Student/quizAnswersRoute");
 const studentRoutes = require("./routes/student");
 const instructorRoutes = require("./routes/instructorRoutes");
-const instructorRoutesV2 = require("./routes/InsructorsRoute")
-const fileRoutes = require('./routes/Student/fileRoutes'); //
-const assignmentRoutes = require('./routes/Student/assignmentRoutes'); //
-const studentNotificationRoutes = require('./routes/Student/notificationRoutes');//
-const instructorNotificationRoutes = require('./routes/Instructor/notificationRoutes'); //
+<<<<<<< HEAD
+//const instructorRoutesV2 = require("./routes/InsructorsRoute")
+// const fileRoutes = require('./routes/Student/fileRoutes'); //
+// const assignmentRoutes = require('./routes/Student/assignmentRoutes'); //
+// const studentNotificationRoutes = require('./routes/Student/notificationRoutes');//
+// const instructorNotificationRoutes = require('./routes/Instructor/notificationRoutes'); //
+=======
+// const instructorRoutesV2 = require("./routes/InsructorsRoute");
+>>>>>>> d6ffe05ffdff6813b229fb9b6ca72d5c3f754ce8
 // Load env variables
 dotenv.config();
 
@@ -89,8 +93,8 @@ app.listen(PORT, () => {
 
 app.use("/api/quizzes", quizRoutes);
 app.use("/api/quizAnswers", quizAnswersRoute);
-app.use("/api", studentRoutes);
+app.use("/api/student", studentRoutes);
 app.use("/api/instructor", instructorRoutes);
-app.use('/api/instructors',instructorRoutesV2 );
+app.use("/api/instructors", instructorRoutesV2);
 app.use("/api/auth", authRoutes);
 //app.use("/api/student/support", supportRoutes);
