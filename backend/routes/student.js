@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const studentController = require('../../backend/controllers/admin/createStudent.controller');
+
 const {
   getProgress,
   markLectureComplete,
@@ -54,6 +56,9 @@ router.get("/courses/:courseId/modules/:moduleId/:studentId", getModuleContent);
 router.put("/editStudent/:id", upload.single("image"), editStudent);
 router.put("/changePassword/:id", changepassword);
 router.get("/:studentId", getStudent);
+router.post("/addStudent", upload.single("image"), createStudent);
+
+
 // router.post("/addCourse", addCourse);
 // router.get("/courses", Courses);
 // router.post("/enroll/:courseId", CourseEnrollment);
@@ -73,7 +78,7 @@ router.get("/me", protect, async (req, res) => {
 });
 
 router.get("/profile/:id", getStudentProfile);
-router.post("/addStudent", upload.single("image"), createStudent);
+router.post("/addStudent", upload.single("image"), addStudent);
 router.get("/courses/:id/modules", getCourseModules);
 router.post("/course", getCourseDetails);
 router.post("/enroll/:moduleId", moduleEnrollment);

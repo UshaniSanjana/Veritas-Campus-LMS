@@ -6,7 +6,7 @@ const studentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      unique: true,
+      // unique: true,
     },
     name: { type: String, required: true },
     email: { type: String, required: true },
@@ -17,8 +17,8 @@ const studentSchema = new mongoose.Schema(
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
-      required: true,
-      unique: true,
+      // required: true,
+      
     },
     image: { type: String },
   },
