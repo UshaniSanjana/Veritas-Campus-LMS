@@ -95,6 +95,7 @@ import PublicLayout from "./layouts/PublicLayout";
 import InstructorLayout from "./layouts/InstructorLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import { StudentModules } from "./pages/student/StudentModules";
+import AddStudent from "./pages/admin/AddStudent.jsx";
 
 function App() {
   return (
@@ -141,6 +142,7 @@ function App() {
           <Route path="announcements" element={<ViewAnnouncements />} />
           <Route path="edit-announcement/:id" element={<EditAnnouncement />} />
           <Route path="edit-notification/:id" element={<EditNotification />} />
+          <Route path="add-student" element={<AddStudent />} />
 
         </Route>
 
