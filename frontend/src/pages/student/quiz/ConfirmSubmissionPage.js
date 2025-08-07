@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const ConfirmSubmissionPage = () => {
-  const navigate = useState();
+  const navigate = useNavigate();
   return (
     <div className="container">
       <div className="container d-flex justify-content-center">
@@ -22,10 +23,10 @@ const ConfirmSubmissionPage = () => {
       <div className="d-flex justify-content-left">
         <button
           className="btn btn-success fw-bold mb-5 mt-3"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/student/dashboard")}
           type="submit"
           style={{
-            width: "150px",
+            width: "200px",
             height: "30px",
             fontSize: "15px",
             fontFamily: "'Poppins', sans-serif",
@@ -35,7 +36,7 @@ const ConfirmSubmissionPage = () => {
             borderRadius: "6px",
           }}
         >
-          Back to course
+          Back to dashboard
         </button>
       </div>
     </div>

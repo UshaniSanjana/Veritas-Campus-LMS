@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Questions = () => {
-  const moduleId = "6858160cf306555894fa56ad";
+  const { moduleId } = useParams();
   const [availableToday, setAvailableToday] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quizes, setQuizes] = useState([]);
@@ -16,7 +16,7 @@ const Questions = () => {
     const fetchQuizes = async () => {
       setLoading(true);
       const res = await axios.get(
-        `http://localhost:5000/api/quizzes/module/${moduleId}`
+        `http://localhost:5000/api/student/quizzes/module/${moduleId}`
       );
       console.log(res.data);
 
@@ -82,7 +82,7 @@ const Questions = () => {
         payload
       );
       alert("Quiz submitted successfully!");
-      navigate("/submitQuiz");
+      navigate("/student/submitQuiz");
       setShowModal(false);
     } catch (error) {
       console.error("Submission error:", error);

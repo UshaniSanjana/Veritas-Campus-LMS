@@ -1,8 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Quiz = () => {
   const navigate = useNavigate();
+  const { moduleId } = useParams();
+
   return (
     <div className="container">
       <div className="container d-flex justify-content-left">
@@ -25,7 +27,7 @@ const Quiz = () => {
       <div className="d-flex justify-content-center">
         <button
           className="btn btn-success fw-bold mb-5 mt-3"
-          onClick={() => navigate("/quiz/questions")}
+          onClick={() => navigate(`/student/quiz/questions/${moduleId}`)}
           type="submit"
           style={{
             width: "150px",

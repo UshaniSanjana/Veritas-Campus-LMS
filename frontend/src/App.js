@@ -180,8 +180,8 @@ function App() {
           <Route path="progress" element={<Progress />} />
           <Route path="courses/:courseId/modules/:moduleId/:studentId" element={<ModulePage />} />
           <Route path="/student/assignments/:assignmentId" element={<AssignmentSubmissionPage />} />
-          <Route path="quiz" element={<Quiz />} />
-          <Route path="quiz/questions" element={<Questions />} />
+          <Route path="quiz/:moduleId" element={<Quiz />} />
+          <Route path="quiz/questions/:moduleId" element={<Questions />} />
           <Route path="submitQuiz" element={<ConfirmSubmissionPage />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="programme" element={<ProgrammesList />} />

@@ -4,13 +4,11 @@ import "react-calendar/dist/Calendar.css";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../../utils/api";
 import { decodeToken } from "../../utils/decodeToken";
-import { FaBookOpen } from "react-icons/fa"; 
-import { MdAssignment } from "react-icons/md"; 
-import { FaRegFileAlt } from "react-icons/fa"; 
-import { MdQuiz } from "react-icons/md"; 
-import { FaVideo } from "react-icons/fa"; 
-
-
+import { FaBookOpen } from "react-icons/fa";
+import { MdAssignment } from "react-icons/md";
+import { FaRegFileAlt } from "react-icons/fa";
+import { MdQuiz } from "react-icons/md";
+import { FaVideo } from "react-icons/fa";
 
 const ModulePage = () => {
   const navigate = useNavigate();
@@ -45,7 +43,7 @@ const ModulePage = () => {
           ...(data.completedLectures || []),
           ...(data.completedTutorials || []),
           ...(data.completedAssignments || []),
-          ...(data.attemptedQuizzes || [])
+          ...(data.attemptedQuizzes || []),
         ].map(String);
         setCompletedItems(completed);
       } catch (error) {
@@ -97,7 +95,6 @@ const ModulePage = () => {
 
       await API.post(url, payload);
 
-
       // setCompletedItems((prev) =>
       //   prev.includes(itemId)
       //     ? prev.filter((id) => id !== itemId)
@@ -114,11 +111,10 @@ const ModulePage = () => {
         ...(data.completedLectures || []),
         ...(data.completedTutorials || []),
         ...(data.completedAssignments || []),
-        ...(data.attemptedQuizzes || [])
+        ...(data.attemptedQuizzes || []),
       ].map(String);
       setCompletedItems(completed);
       setProgressPercentage(progressRes.data.percentage || 0);
-
     } catch (error) {
       console.error("Failed to update progress:", error);
     }
@@ -140,7 +136,6 @@ const ModulePage = () => {
         return null;
     }
   };
-
 
   return (
     <div className="container">
@@ -167,7 +162,7 @@ const ModulePage = () => {
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     if (item.type === "quiz") {
-                      navigate("/quiz", {
+                      navigate(`/student/quiz/${moduleId}`, {
                         state: { courseId, itemId: item._id },
                       });
                     } else if (item.type === "assignment") {
@@ -182,13 +177,16 @@ const ModulePage = () => {
                           moduleId,
                           moduleTitle,
                           studentId,
-                          assignmentIndex: moduleItems
-                            .filter((itm) => itm.type === "assignment")
-                            .findIndex((itm) => itm._id === item._id) + 1,
+                          assignmentIndex:
+                            moduleItems
+                              .filter((itm) => itm.type === "assignment")
+                              .findIndex((itm) => itm._id === item._id) + 1,
                         },
                       });
                     } else if (
-                      ["lecture", "tutorial", "recording"].includes(item.type) &&
+                      ["lecture", "tutorial", "recording"].includes(
+                        item.type
+                      ) &&
                       item.fileUrl
                     ) {
                       const cleanedUrl = item.fileUrl.replace(/\\/g, "/");
@@ -196,13 +194,15 @@ const ModulePage = () => {
                       window.open(filePath, "_blank");
                     }
                   }}
-
                 >
                   {renderIcon(item.type)}
                   <p className="m-0">
                     {item.title}
                     {item.fileUrl && (
-                      <span className="text-muted ms-1" style={{ fontSize: "0.8em" }}>
+                      <span
+                        className="text-muted ms-1"
+                        style={{ fontSize: "0.8em" }}
+                      >
                         {/* [view] */}
                       </span>
                     )}
