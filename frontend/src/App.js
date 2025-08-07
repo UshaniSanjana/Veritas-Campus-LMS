@@ -85,7 +85,7 @@ import EnrolledCourses from "./pages/student/EnrolledCourses";
 import EditProfile from "./pages/student/EditProfile";
 import ChangePassword from "./pages/student/ChangePassword";
 import Progress from "./pages/student/Progress";
-
+import AssignmentSubmissionPage from "./pages/student/AssignmentSubmissionPage";
 import Questions from "./pages/student/quiz/Questions";
 import ConfirmSubmissionPage from "./pages/student/quiz/ConfirmSubmissionPage";
 import Dashboard from "./pages/student/Dashboard";
@@ -178,7 +178,8 @@ function App() {
           <Route path="editProfile" element={<EditProfile />} />
           <Route path="changepassword" element={<ChangePassword />} />
           <Route path="progress" element={<Progress />} />
-          <Route path="courses/:courseId/modules/:moduleId" element={<ModulePage />} />
+          <Route path="courses/:courseId/modules/:moduleId/:studentId" element={<ModulePage />} />
+          <Route path="/student/assignments/:assignmentId" element={<AssignmentSubmissionPage />} />
           <Route path="quiz" element={<Quiz />} />
           <Route path="quiz/questions" element={<Questions />} />
           <Route path="submitQuiz" element={<ConfirmSubmissionPage />} />
