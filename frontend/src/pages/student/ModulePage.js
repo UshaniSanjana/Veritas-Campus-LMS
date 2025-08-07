@@ -4,13 +4,20 @@ import "react-calendar/dist/Calendar.css";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "../../utils/api";
 import { decodeToken } from "../../utils/decodeToken";
+import { FaBookOpen } from "react-icons/fa"; 
+import { MdAssignment } from "react-icons/md"; 
+import { FaRegFileAlt } from "react-icons/fa"; 
+import { MdQuiz } from "react-icons/md"; 
+import { FaVideo } from "react-icons/fa"; 
+
+
 
 const ModulePage = () => {
   const navigate = useNavigate();
-  const { courseId, moduleId } = useParams();
+  const { courseId, moduleId, studentId } = useParams();
   const token = localStorage.getItem("token");
   const decoded = decodeToken(token);
-  const studentId = localStorage.getItem("studentId");
+  // const studentId = localStorage.getItem("studentId");
 
   const [courseTitle, setCourseTitle] = useState("");
   const [moduleTitle, setModuleTitle] = useState("");
@@ -117,6 +124,23 @@ const ModulePage = () => {
     }
   };
 
+  const renderIcon = (type) => {
+    switch (type) {
+      case "lecture":
+        return <FaBookOpen color="#007bff" size={20} className="me-2" />;
+      case "tutorial":
+        return <FaRegFileAlt color="#17a2b8" size={20} className="me-2" />;
+      case "quiz":
+        return <MdQuiz color="#ffc107" size={22} className="me-2" />;
+      case "assignment":
+        return <MdAssignment color="#28a745" size={22} className="me-2" />;
+      case "recording":
+        return <FaVideo color="#dc3545" size={20} className="me-2" />;
+      default:
+        return null;
+    }
+  };
+
 
   return (
     <div className="container">
@@ -143,9 +167,28 @@ const ModulePage = () => {
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     if (item.type === "quiz") {
-                      navigate("/quiz", { state: { courseId, itemId: item._id } });
+                      navigate("/quiz", {
+                        state: { courseId, itemId: item._id },
+                      });
+                    } else if (item.type === "assignment") {
+                      navigate(`/student/assignments/${item._id}`, {
+                        state: {
+                          assignmentId: item._id,
+                          title: item.title,
+                          openDate: item.openDate,
+                          dueDate: item.dueDate,
+                          fileUrl: item.fileUrl,
+                          courseId,
+                          moduleId,
+                          moduleTitle,
+                          studentId,
+                          assignmentIndex: moduleItems
+                            .filter((itm) => itm.type === "assignment")
+                            .findIndex((itm) => itm._id === item._id) + 1,
+                        },
+                      });
                     } else if (
-                      ["lecture", "assignment", "tutorial", "recording"].includes(item.type) &&
+                      ["lecture", "tutorial", "recording"].includes(item.type) &&
                       item.fileUrl
                     ) {
                       const cleanedUrl = item.fileUrl.replace(/\\/g, "/");
@@ -153,10 +196,11 @@ const ModulePage = () => {
                       window.open(filePath, "_blank");
                     }
                   }}
+
                 >
-                  <i className={`${item.icon} me-2`}></i>
+                  {renderIcon(item.type)}
                   <p className="m-0">
-                    {item.title} ({item.type}){" "}
+                    {item.title}
                     {item.fileUrl && (
                       <span className="text-muted ms-1" style={{ fontSize: "0.8em" }}>
                         {/* [view] */}
@@ -184,9 +228,16 @@ const ModulePage = () => {
             <p className="fw-bold fs-6 text-center mt-2">Progress</p>
             <div className="progress mx-3" role="progressbar">
               <div
-                className="progress-bar"
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
+                className="progress-bar bg-primary"
+                role="progressbar"
+                style={{
+                  width: `${progressPercentage}%`,
+                  height: "100%", // ✅ Match parent height
+                  transition: "width 0.6s ease-in-out",
+                }}
+              >
+                {progressPercentage}%
+              </div>
             </div>
 
             <p className="fw-bold fs-6 text-center mt-4">Calendar</p>
@@ -194,7 +245,7 @@ const ModulePage = () => {
               <Calendar className="react-calendar" />
             </div>
 
-            <p className="fw-bold fs-6 text-center mt-4">Support Service</p>
+            {/* <p className="fw-bold fs-6 text-center mt-4">Support Service</p>
             <p className="text-center">
               Need help or have an issue? Click here to 
               access support services including technical 
@@ -208,7 +259,7 @@ const ModulePage = () => {
               >
                 Click Here
               </button>
-            </div>
+            </div> */}
 
             <p className="fw-bold fs-6 text-center mt-4">View Marks</p>
             <div className="d-flex justify-content-center mb-3">

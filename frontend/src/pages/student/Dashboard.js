@@ -58,24 +58,23 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]); // Store events in state
   const [event, setEvent] = useState("");
   const [selectedFile, setSelectedFile] = useState(null); // File state
-  const [courses, setCourses] = useState([]); // State to store enrolled courses
+  const [enrolledModules, setEnrolledModules] = useState([]); // State to store enrolled courses
   const studentId = localStorage.getItem("studentId");
 
   // Fetch enrolled courses
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5000/api/student/enrolled/${studentId}`
-        );
-        setCourses(response.data);
-      } catch (err) {
-        console.error("Error fetching enrolled courses", err);
-      }
-    };
-    if (studentId) {
-      fetchCourses();
+  const fetchModules = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/student/enrolled/${studentId}`
+      );
+      setEnrolledModules(response.data);
+    } catch (err) {
+      console.error("Error fetching enrolled modules", err);
     }
+  };
+
+  if (studentId) fetchModules();
   }, [studentId]);
 
   // Event-related functions
@@ -198,26 +197,32 @@ const Dashboard = () => {
 
           {/* Enrolled Courses Section */}
           <div className="rectangle-2143">
-            <div className="rectangle-content">
-              <h2 className="section-title">Enrolled Courses</h2>
-              {courses.length > 0 ? (
-                <div className="course-grid">
-                  {courses.map((course, index) => (
-                    <div
-                      key={index}
-                      className="course-card"
-                      onClick={handleEnrolledCourses} // Navigate to Enrolled Courses page
-                    >
-                      <h3 className="course-title">{course.title}</h3>
-                      <p className="course-instructor">Instructor: {course.instructor}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No enrolled courses found.</p>
-              )}
+              <div className="rectangle-content">
+                <h2 className="section-title">Enrolled Modules</h2>
+                {enrolledModules.length > 0 ? (
+                  <div className="course-grid">
+                    {enrolledModules.map((module, index) => (
+                      <div
+                        key={index}
+                        className="course-card"
+                        onClick={() => {
+                          const courseId = module.course?._id;
+                          const moduleId = module._id;
+                          navigate(`/student/courses/${courseId}/modules/${moduleId}/${studentId}`);
+                        }}
+                      >
+                        <h3 className="course-title">{module.title}</h3>
+                        <p className="course-instructor">
+                          Course: {module.course?.title || "N/A"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>No enrolled modules found.</p>
+                )}
+              </div>
             </div>
-          </div>
         </div>
 
         {/* Right Sidebar */}
