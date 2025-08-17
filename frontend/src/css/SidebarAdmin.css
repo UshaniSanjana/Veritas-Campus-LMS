@@ -1,21 +1,14 @@
-/* ✅ Sidebar styles (remove fixed width!) */
 .sidebar-admin {
-
-  /* Remove: width: 250px; */
-  height: 100vh;
-  background-color: #2e7d32; /* Dark green */
-
   width: 250px;
-  height: 100%;
-  background-color: #45b249; 
-
+  height: 100vh;
+  background-color: #2e7d32; /* Dark green background */
   padding: 20px;
   color: white;
   font-family: 'Segoe UI', sans-serif;
 }
 
 .sidebar-title {
-  font-size: 30px;
+  font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 30px;
   color: white;
@@ -23,53 +16,30 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.sidebar-title span,
-.sidebar-item span {
-  color: white;
-}
-
 .sidebar-section {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
-  padding: 15px 0;
+  padding: 12px 0;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.9);
   transition: all 0.2s ease;
 }
 
 .sidebar-item:hover {
-  
-  border: 1px solid white; /* Highlight border */
-  padding-left: 8px; /* Shift text slightly */
-  border-radius: 10px;
-  
-}
-
-
-/* Active and Inactive NavLink Styling */
-.active-link {
-   background-color: rgba(255, 255, 255, 0.1);
-  border-left: 1px solid white;
-  padding-left: 8px;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  width: 100%;
+  padding-left: 10px;
 }
-
-.inactive-link {
-  color: rgba(255, 255, 255, 0.9);
-  text-decoration: none;
-}
-
 
 .sub-items {
   margin-left: 24px;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   padding-left: 15px;
-  color: white;
 }
 
 .sub-items .sidebar-item {
@@ -86,6 +56,3 @@
 .sidebar-item:hover .icon {
   color: white;
 }
-
-
-

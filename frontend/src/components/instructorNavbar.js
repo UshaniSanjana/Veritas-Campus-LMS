@@ -300,7 +300,6 @@ const InstrcutorNavbar = () => {
           marginLeft: "40px",
         }}
       >
-        <span>HOME</span>
         {showProgrammes && <span> / PROGRAMMES</span>}
         {showDiplomaSubmenu && <span> / DIPLOMA PROGRAMMES</span>}
         {showManagementSubmenu && <span> / MANAGEMENT & BUSINESS STUDIES</span>}
