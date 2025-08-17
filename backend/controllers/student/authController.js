@@ -62,8 +62,6 @@ exports.signIn = async (req, res) => {
     user.lastSignIn = new Date();
     await user.save();
 
-    
-
     let studentId = null;
     if (user.role === "student") {
       const student = await Student.findOne({ userId: user._id });

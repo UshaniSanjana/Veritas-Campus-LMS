@@ -9,4 +9,4 @@ const announcementSchema = new mongoose.Schema({
     visibility: { type: String, enum: ['Public', 'Private'], required: true},
 });
 
-module.exports = mongoose.model('Announcement', announcementSchema);
+module.exports = mongoose.model('InstructorAnnouncement', announcementSchema);

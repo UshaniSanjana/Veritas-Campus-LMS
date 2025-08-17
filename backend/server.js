@@ -14,19 +14,21 @@ const adminSupportRoutes = require("./routes/adminsupportroutes");
 const adminReportRoutes = require("./routes/adminReportRoute");
 const courseStatsRoutes = require("./routes/adminCourseStats");
 const adminDashboardRoutes = require("./routes/adminDashboard");
-const quizRoutes = require("./routes/quizRoutes");
+//const quizRoutes = require("./routes/quizRoutes");
 
 const quizAnswersRoute = require("./routes/Student/quizAnswersRoute");
 const studentRoutes = require("./routes/student");
-const instructorRoutes = require("./routes/instructorRoutes");
+//const instructorRoutes = require("./routes/instructorRoutes");
+const instructorRoutesV2 = require("./routes/InsructorsRoute")
 
-//const instructorRoutesV2 = require("./routes/InsructorsRoute")
-// const fileRoutes = require('./routes/Student/fileRoutes'); //
-// const assignmentRoutes = require('./routes/Student/assignmentRoutes'); //
-// const studentNotificationRoutes = require('./routes/Student/notificationRoutes');//
-// const instructorNotificationRoutes = require('./routes/Instructor/notificationRoutes'); //
-
-// const instructorRoutesV2 = require("./routes/InsructorsRoute");
+//instructor
+const dashboardRoutes = require('./routes/instructor/dashboardRoutes');
+const announcementRoute = require("./routes/instructor/announcementRoute");
+const instructorquizRoutes = require("./routes/instructor/quizRoutes");
+const lectureRoutes = require("./routes/instructor/lectureRoutes");
+const instructorSupportRoutes = require('./routes/instructor/LectureSupportRoute');
+const InstructorRoutes = require('./routes/instructor/instructorRoutes');
+const assignmentRoutes = require('./routes/instructor/assignmentRoutes');
 
 // Load env variables
 dotenv.config();
@@ -45,15 +47,11 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 
 app.use("/api/auth", authRoutes);
-// Routes
 
+// Routes
 app.use("/api/student/support", studentSupportRoutes);
 app.use("/api/notification", notificationRouter);
 app.use("/api/announcement", announcementRouter);
-// app.use("/api/files", fileRoutes); //
-// app.use("/api/assignments", assignmentRoutes); //
-// app.use("/api/student/notifications", studentNotificationRoutes); //
-// app.use("/api/instructor/notifications", instructorNotificationRoutes); //
 
 // Database Connection
 dotenv.config();
@@ -79,6 +77,14 @@ app.use("/api/adminReport", adminReportRoutes);
 app.use("/api/adminCourseStats", courseStatsRoutes);
 app.use("/api/adminDashboard", adminDashboardRoutes);
 
+app.use('/api/instructor', assignmentRoutes);
+app.use('/api/instructor/modules', InstructorRoutes);
+app.use('/api/instructor/support', instructorSupportRoutes);
+app.use('/api/instructor/announcement', announcementRoute);
+app.use('/api/instructor/quiz', instructorquizRoutes);
+app.use('/api/instructor/lecture', lectureRoutes);
+app.use('/api/instructor', dashboardRoutes);
+
 // Database Connection
 dotenv.config();
 mongoose
@@ -90,10 +96,12 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-app.use("/api/quizzes", quizRoutes);
+//app.use("/api/quizzes", quizRoutes);
 app.use("/api/quizAnswers", quizAnswersRoute);
-app.use("/api/student", studentRoutes);
-app.use("/api/instructor", instructorRoutes);
-//app.use("/api/instructors", instructorRoutesV2);
+app.use("/api", studentRoutes);
+//app.use("/api/instructor", instructorRoutes);
+app.use('/api/instructors',instructorRoutesV2 );
 app.use("/api/auth", authRoutes);
 //app.use("/api/student/support", supportRoutes);
+
+

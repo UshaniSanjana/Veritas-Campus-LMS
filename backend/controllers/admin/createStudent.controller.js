@@ -1,60 +1,51 @@
-const Student = require("../../models/Student/student.model");
 const User = require("../../models/Student/User");
+const Student = require("../../models/Student/student.model");
 const Course = require("../../models/courses.model");
 
-const createStudent = async (req, res) => {
+exports.createStudent = async (req, res) => {
   try {
-    console.log("🔥 Incoming createStudent request...");
-    console.log("Headers:", req.headers);
-    console.log("Body:", req.body);
-    console.log("File:", req.file);
+    const { name, email, password, age, address, gender, mobile, course } =
+      req.body;
 
-    const { name, email, age, address, gender, mobile, course, password } = req.body;
+    const image = req.file ? req.file.path : null;
 
-    // ✅ Check if course exists
-    const courseDoc = await Course.findById(course);
-    console.log("📘 Found courseDoc:", courseDoc);
-    if (!courseDoc) {
-      return res.status(400).json({ error: "Course not found" });
+    const courseName = await Course.findOne({ title: course });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
     }
 
-    // ✅ Step 1: Create User
-    const newUser = new User({
+    // Step 1: Create User
+    const user = new User({
       name,
       email,
       password,
-      role: "student", // default role
+      role: "student",
     });
-    await newUser.save();
-    console.log("✅ User created:", newUser);
 
-    // ✅ Step 2: Create Student
-    const newStudent = new Student({
+    await user.save();
+
+    console.log("User created:", user._id);
+
+    // Step 2: Create Student (excluding password if not needed)
+    const student = await Student.create({
+      userId: user._id,
       name,
       email,
       age,
       address,
       gender,
       mobile,
-      course: courseDoc._id,
-      userId: newUser._id, // ✅ critical
-      image: req.file?.filename || null,
-    });
-    await newStudent.save();
-    console.log("✅ Student created:", newStudent);
-
-    return res.status(201).json({
-      message: "Student and user created successfully",
-      student: newStudent,
-      user: newUser,
+      course: courseName._id,
+      image,
     });
 
+    res.status(201).json({
+      message: "Student created successfully",
+      userId: user._id,
+      studentId: student._id,
+    });
   } catch (error) {
-    console.error("❌ Error in createStudent:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("Error creating student:", error);
+    res.status(500).json({ message: error.message });
   }
-};
-
-module.exports = {
-  createStudent,
 };

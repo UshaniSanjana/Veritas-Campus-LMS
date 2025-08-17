@@ -1,45 +1,31 @@
-import Student from "../../models/Student/student.model.js";
-import User from "../../models/Student/User.js";
+const User = require("../../models/Student/User");
+const Student = require("../../models/Student/student.model");
 
 // GET /api/student/profile/:id
-export const getStudentProfile = async (req, res) => {
+exports.getStudentProfile = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; // This should be the User's _id (userId)
 
-    const student = await Student.findById(id);
+    // Step 1: Find user (excluding password)
+    const user = await User.findById(id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Step 2: Find student profile by userId
+    const student = await Student.findOne({ userId: id });
     if (!student) {
       return res.status(404).json({ message: "Student profile not found" });
     }
 
+    // Step 3: Return both user info and student profile
     res.status(200).json({
       success: true,
+      user,
       studentProfile: student,
     });
   } catch (err) {
     console.error("Failed to fetch student profile:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-export const getStudentUserId = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const student = await Student.findById(id);
-    const userId = student.userId;
-    res.status(200).json({ userId: userId });
-  } catch (err) {
-    console.error("Failed to fetch student profile:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-};
-
-export const getUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-    res.status(200).json({ user: user });
-  } catch (err) {
-    console.error("Failed to fetch user:", err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

@@ -1,19 +1,17 @@
-const mongoose = require("mongoose");
 const Course = require("../../models/courses.model");
 const Enrollment = require("../../models/enrollment.model");
 const Module = require("../../models/moduleModel");
 
 exports.getCourseModules = async (req, res) => {
-  const { id: courseId } = req.params;
-
+  const courseId = req.params.id;
   try {
-    const modules = await Module.find({ course: courseId }); // course is the field in Module schema
+    const course = await Course.findById(courseId).select("modules");
 
-    if (!modules || modules.length === 0) {
-      return res.status(404).json({ message: "No modules found for this course" });
+    if (!course) {
+      return res.status(400).json({ message: "Course not found!" });
     }
 
-    res.status(200).json(modules);
+    res.status(200).json(course.modules);
   } catch (error) {
     console.error("Error fetching course modules:", error);
     res.status(500).json({ message: "Server error" });
@@ -75,18 +73,12 @@ exports.GetEnrolledmodules = async (req, res) => {
   const { studentId } = req.params;
 
   try {
-    const enrollments = await Enrollment.find({ studentId }).populate({
-      path: "moduleId",
-      populate: {
-        path: "course",
-        model: "Course",
-      },
-    });
-
+    const enrollments = await Enrollment.find({ studentId }).populate(
+      "moduleId"
+    );
     const modules = enrollments.map((enroll) => enroll.moduleId);
     res.json(modules);
   } catch (err) {
-    console.error("Failed to fetch the enrollment list:", err);
-    res.status(500).json({ message: "Server error" });
+    res.json({ message: "failed to fetch the enrollment list" });
   }
 };

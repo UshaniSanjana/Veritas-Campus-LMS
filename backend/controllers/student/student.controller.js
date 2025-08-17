@@ -16,13 +16,8 @@ const addStudent = async (req, res) => {
       mobile,
       course,
       password,
-      image: req.file?.path,
+      image: req.file.path,
     });
-     // Check if user exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: "Email already exists" });
-    }
 
     await newStudent.save();
     res.status(201).json({ message: "Student added successfully" });
