@@ -140,7 +140,7 @@ const SupportList = () => {
             </Col>
 
             <Col lg={3} className="text-lg-end text-center mt-3 mt-lg-0">
-            <Link to="/instructor/supportform" className="btn btn-success">
+            <Link to="instructor/supportform" className="btn btn-success">
                 <i className="bi bi-plus-circle me-2"></i>  Add New Request
             </Link>
             </Col>
