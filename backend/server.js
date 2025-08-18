@@ -4,6 +4,8 @@ const cors = require("cors");
 const path = require("path");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/Student/authRoutes");
+const fileUpload = require("express-fileupload");
+
 
 const notificationRouter = require("./routes/notification.router");
 const announcementRouter = require("./routes/announcement.router");
@@ -18,7 +20,7 @@ const adminDashboardRoutes = require("./routes/adminDashboard");
 
 const quizAnswersRoute = require("./routes/Student/quizAnswersRoute");
 const studentRoutes = require("./routes/student");
-//const instructorRoutes = require("./routes/instructorRoutes");
+const instructorRoutes = require("./routes/instructor/instructor");
 const instructorRoutesV2 = require("./routes/InsructorsRoute")
 
 //instructor
@@ -41,6 +43,7 @@ app.use(express.json());
 
 app.use(cors());
 
+app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -102,6 +105,5 @@ app.use("/api", studentRoutes);
 //app.use("/api/instructor", instructorRoutes);
 app.use('/api/instructors',instructorRoutesV2 );
 app.use("/api/auth", authRoutes);
+app.use('/api/instructor', instructorRoutes);
 //app.use("/api/student/support", supportRoutes);
-
-
