@@ -81,9 +81,14 @@ JWT_SECRET=your_jwt_secret
 ```
 
 ## Deployment
-Backend : Hosted On  Railway.app
-Frontend : Hosted On Vercel
-Live Application : https://veritascampuslms.vercel.app/
+- Backend : Hosted On  Railway.app
+- Frontend : Hosted On Vercel
+
+## Live Application
+```sh
+https://veritascampuslms.vercel.app/
+```
+
 ## Project Structure
 ```
 LMS/
