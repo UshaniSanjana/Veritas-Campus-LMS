@@ -76,17 +76,34 @@ The application will be accessible at `http://localhost:3000/`.
 Create a `.env` file in the `server` directory with the following variables:
 ```env
 MONGO_URL=your_mongodb_connection_string
+PORT=5000
+JWT_SECRET=your_jwt_secret
 ```
 
+## Deployment
+Backend : Hosted On  Railway.app
+Frontend : Hosted On Vercel
+Live Application : https://veritascampuslms.vercel.app/
 ## Project Structure
 ```
 LMS/
+Veritas-Campus-Learning-Management-System/
 ├── frontend/       # React.js frontend
-├── backend/       # Express.js backend
-│   ├── server.js # Main server file
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+├── backend/        # Express.js backend
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── uploads/
+│   ├── server.js
+│   ├── package.json
 ├── README.md
 ├── .gitignore
-├── package.json
+
 ```
 
 ## Contributing
