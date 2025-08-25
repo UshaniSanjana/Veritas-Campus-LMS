@@ -70,12 +70,12 @@ router.get("/me", protect, async (req, res) => {
   }
 });
 
-router.get("/student/profile/:id", getStudentProfile);
+router.get("/profile/:id", getStudentProfile);
 router.post("/addStudent", upload.single("image"), createStudent);
 router.get("/courses/:id/modules", getCourseModules);
 router.post("/course", getCourseDetails);
 router.post("/enroll/:moduleId", moduleEnrollment);
-router.get("/student/enrolled/:studentId", GetEnrolledmodules);
+router.get("/enrolled/:studentId", GetEnrolledmodules);
 router.get("/quizzes/module/:id", getModuleQuizzes);
 
 module.exports = router;
