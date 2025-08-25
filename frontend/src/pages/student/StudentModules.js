@@ -14,7 +14,7 @@ export const StudentModules = () => {
     const fetchAllCourses = async () => {
       try {
         const studentData = await axios.get(
-          `https://veritas-campus-lms-production.up.railway.app/api/student/${studentId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/profile/${studentId}`
         );
 
         const courseData = await axios.post(
