@@ -28,11 +28,11 @@ const Navbar = () => {
               WHO WE ARE
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/programmes" className="text-black hover:text-green-600">
               PROGRAMMES
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link to="/news" className="text-black hover:text-green-600">
               NEWS
