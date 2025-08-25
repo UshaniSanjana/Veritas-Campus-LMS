@@ -75,7 +75,7 @@ router.post("/addStudent", upload.single("image"), createStudent);
 router.get("/courses/:id/modules", getCourseModules);
 router.post("/course", getCourseDetails);
 router.post("/enroll/:moduleId", moduleEnrollment);
-router.get("/enrolled/:studentId", GetEnrolledmodules);
+router.get("/student/enrolled/:studentId", GetEnrolledmodules);
 router.get("/quizzes/module/:id", getModuleQuizzes);
 
 module.exports = router;
