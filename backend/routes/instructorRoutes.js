@@ -12,7 +12,7 @@ const {
   getAllAssignments,
   createAssignmentForModule,
   updateAssignmentInModule,
-} = require("../controllers/instructor/instructorController");
+} = require("../controllers/instructor/InstructorController");
 
 // GET all modules for instructor
 router.get("/", getAllModules); // Corrected

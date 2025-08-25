@@ -1,12 +1,12 @@
-import { Router } from "express";
-const router = Router();
-import {
+const express = require("express");
+const router = express.Router();
+const {
   createInstructor,
   getAllInstructors,
   getInstructorById,
   updateInstructor,
   deleteInstructor,
-} from "../controllers/admin/instructorController";
+} = require("../controllers/admin/instructorController.js");
 
 // Create instructor
 router.post("/", createInstructor);
@@ -23,4 +23,4 @@ router.put("/:id", updateInstructor);
 // Delete instructor
 router.delete("/:id", deleteInstructor);
 
-export default router;
+module.exports = router;
