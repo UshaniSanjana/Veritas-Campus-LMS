@@ -13,46 +13,49 @@ export const StudentModules = () => {
   useEffect(() => {
     const fetchAllCourses = async () => {
       try {
+        if (!studentId) {
+          throw new Error("No student ID found");
+        }
+
         const studentData = await axios.get(
           `https://veritas-campus-lms-production.up.railway.app/api/student/profile/${studentId}`
         );
 
+        console.log("Student Data received:", studentData.data);
+
+        if (!studentData.data) {
+          throw new Error("No data received from student profile");
+        }
+
+        // ✅ use studentProfile instead of student
+        if (!studentData.data.studentProfile) {
+          throw new Error("No student profile in response");
+        }
+
+        if (!studentData.data.studentProfile.course) {
+          throw new Error("Student has no course assigned");
+        }
+
+        console.log("id:", studentData.data.studentProfile.course);
+
         const courseData = await axios.post(
           `https://veritas-campus-lms-production.up.railway.app/api/student/course`,
           {
-            title: studentData.data.student.course,
+            title: studentData.data.studentProfile.course,
           }
         );
 
-        const allModules = await axios.get(
-          `https://veritas-campus-lms-production.up.railway.app/api/student/courses/${courseData.data._id}/modules`
-        );
-
-        const moduleIds = allModules.data;
-
-        const moduleDetails = await Promise.all(
-          moduleIds.map((id) =>
-            axios
-              .get(
-                `https://veritas-campus-lms-production.up.railway.app/api/instructor/${id}`
-              )
-              .then((res) => res.data)
-          )
-        );
-
-        setCourses(moduleDetails);
-
-        const allEnrolled = await axios.get(
-          `https://veritas-campus-lms-production.up.railway.app/api/student/enrolled/${studentId}`
-        );
-
-        setEnrolledCourses(allEnrolled.data);
+        console.log("Course Data:", courseData.data);
       } catch (err) {
-        console.error("Error fetching courses");
+        console.error("Error fetching courses:", err.message);
+        setCourses([]);
+        setEnrolledCourses([]);
       }
     };
 
-    fetchAllCourses();
+    if (studentId) {
+      fetchAllCourses();
+    }
   }, [studentId]);
 
   const handleEnroll = async (moduleId, code) => {
