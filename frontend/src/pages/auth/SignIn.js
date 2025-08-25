@@ -109,10 +109,6 @@ function SignIn() {
           <button type="submit" className="auth-button" disabled={loading}>
             {loading ? "Signing In..." : "Sign In"}
           </button>
-
-          <p className="auth-switch">
-            Don't have an account? <a href="/signup">Sign Up</a>
-          </p>
         </form>
       </div>
     </div>
