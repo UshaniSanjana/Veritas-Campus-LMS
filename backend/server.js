@@ -43,9 +43,8 @@ app.use(fileUpload());
 app.use(
   cors({
     origin: [
-      "http://localhost:3000", // for local development
-      "https://your-frontend-domain.vercel.app", // REPLACE WITH YOUR ACTUAL VERCEL URL
-      "https://*.vercel.app", // allows Vercel preview deployments
+      "http://localhost:3000", // local dev
+      "https://veritas-campus-lms-hzqe.vercel.app", // your frontend
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
