@@ -18,14 +18,14 @@ export const StudentModules = () => {
         );
 
         const courseData = await axios.post(
-          `https://veritas-campus-lms-production.up.railway.app/api/student/course`,
+          `https://veritas-campus-lms-production.up.railway.app/api/course`,
           {
             title: studentData.data.student.course,
           }
         );
 
         const allModules = await axios.get(
-          `https://veritas-campus-lms-production.up.railway.app/api/student/courses/${courseData.data._id}/modules`
+          `https://veritas-campus-lms-production.up.railway.app/api/courses/${courseData.data._id}/modules`
         );
 
         const moduleIds = allModules.data;
@@ -76,7 +76,7 @@ export const StudentModules = () => {
       alert("Enrolled successfully!");
 
       const allEnrolled = await axios.get(
-        `https://veritas-campus-lms-production.up.railway.app/api/enrolled/${studentId}`
+        `https://veritas-campus-lms-production.up.railway.app/api/student/enrolled/${studentId}`
       );
       setEnrolledCourses(allEnrolled.data);
       setSelectedCourse(null);
