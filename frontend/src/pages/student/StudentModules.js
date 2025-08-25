@@ -18,14 +18,14 @@ export const StudentModules = () => {
         );
 
         const courseData = await axios.post(
-          `https://veritas-campus-lms-production.up.railway.app/api/course`,
+          `https://veritas-campus-lms-production.up.railway.app/api/student/course`,
           {
             title: studentData.data.student.course,
           }
         );
 
         const allModules = await axios.get(
-          `https://veritas-campus-lms-production.up.railway.app/api/courses/${courseData.data._id}/modules`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/courses/${courseData.data._id}/modules`
         );
 
         const moduleIds = allModules.data;
@@ -67,7 +67,7 @@ export const StudentModules = () => {
         studentId
       );
       await axios.post(
-        `https://veritas-campus-lms-production.up.railway.app/api/enroll/${moduleId}`,
+        `https://veritas-campus-lms-production.up.railway.app/api/student/enroll/${moduleId}`,
         {
           studentId,
           code,
