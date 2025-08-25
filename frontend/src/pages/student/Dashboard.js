@@ -63,18 +63,18 @@ const Dashboard = () => {
 
   // Fetch enrolled courses
   useEffect(() => {
-  const fetchModules = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/student/enrolled/${studentId}`
-      );
-      setEnrolledModules(response.data);
-    } catch (err) {
-      console.error("Error fetching enrolled modules", err);
-    }
-  };
+    const fetchModules = async () => {
+      try {
+        const response = await axios.get(
+          `https://veritas-campus-lms-production.up.railway.app/api/student/enrolled/${studentId}`
+        );
+        setEnrolledModules(response.data);
+      } catch (err) {
+        console.error("Error fetching enrolled modules", err);
+      }
+    };
 
-  if (studentId) fetchModules();
+    if (studentId) fetchModules();
   }, [studentId]);
 
   // Event-related functions
@@ -103,11 +103,14 @@ const Dashboard = () => {
     }
   };
 
-  const handleDeleteEvent = (id) => setEvents(events.filter((event) => event.id !== id));
+  const handleDeleteEvent = (id) =>
+    setEvents(events.filter((event) => event.id !== id));
   const handleToggleComplete = (id) => {
-    setEvents(events.map((event) =>
-      event.id === id ? { ...event, completed: !event.completed } : event
-    ));
+    setEvents(
+      events.map((event) =>
+        event.id === id ? { ...event, completed: !event.completed } : event
+      )
+    );
   };
 
   // Handle file upload
@@ -126,7 +129,7 @@ const Dashboard = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/student/upload-file", // Adjust URL as per your backend
+        "https://veritas-campus-lms-production.up.railway.app/student/upload-file", // Adjust URL as per your backend
         formData,
         {
           headers: {
@@ -146,7 +149,10 @@ const Dashboard = () => {
 
   // Handle file download
   const handleFileDownload = (fileUrl) => {
-    window.open(`http://localhost:5000${fileUrl}`, "_blank");
+    window.open(
+      `https://veritas-campus-lms-production.up.railway.app${fileUrl}`,
+      "_blank"
+    );
   };
 
   // Handle navigation to Enrolled Courses page
@@ -197,32 +203,34 @@ const Dashboard = () => {
 
           {/* Enrolled Courses Section */}
           <div className="rectangle-2143">
-              <div className="rectangle-content">
-                <h2 className="section-title">Enrolled Modules</h2>
-                {enrolledModules.length > 0 ? (
-                  <div className="course-grid">
-                    {enrolledModules.map((module, index) => (
-                      <div
-                        key={index}
-                        className="course-card"
-                        onClick={() => {
-                          const courseId = module.course?._id;
-                          const moduleId = module._id;
-                          navigate(`/student/courses/${courseId}/modules/${moduleId}/${studentId}`);
-                        }}
-                      >
-                        <h3 className="course-title">{module.title}</h3>
-                        <p className="course-instructor">
-                          Course: {module.course?.title || "N/A"}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p>No enrolled modules found.</p>
-                )}
-              </div>
+            <div className="rectangle-content">
+              <h2 className="section-title">Enrolled Modules</h2>
+              {enrolledModules.length > 0 ? (
+                <div className="course-grid">
+                  {enrolledModules.map((module, index) => (
+                    <div
+                      key={index}
+                      className="course-card"
+                      onClick={() => {
+                        const courseId = module.course?._id;
+                        const moduleId = module._id;
+                        navigate(
+                          `/student/courses/${courseId}/modules/${moduleId}/${studentId}`
+                        );
+                      }}
+                    >
+                      <h3 className="course-title">{module.title}</h3>
+                      <p className="course-instructor">
+                        Course: {module.course?.title || "N/A"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>No enrolled modules found.</p>
+              )}
             </div>
+          </div>
         </div>
 
         {/* Right Sidebar */}
@@ -249,7 +257,9 @@ const Dashboard = () => {
                 <li key={`file-${index}`}>
                   <div className="file-info">
                     <span className="file-name">{file.name}</span>
-                    <span className="file-meta">{file.date} • {file.size}</span>
+                    <span className="file-meta">
+                      {file.date} • {file.size}
+                    </span>
                   </div>
                   <button
                     className="file-download"
@@ -270,7 +280,11 @@ const Dashboard = () => {
           {/* Calendar Section */}
           <div className="sidebar-section calendar">
             <h3>Calendar</h3>
-            <Calendar onChange={handleDateClick} value={date} className="react-calendar" />
+            <Calendar
+              onChange={handleDateClick}
+              value={date}
+              className="react-calendar"
+            />
             <div className="upcoming-events">
               <h3>Upcoming Events</h3>
               <div className="event-input">

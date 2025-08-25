@@ -31,18 +31,20 @@ const StudentProfile = () => {
 
         // Fetch Student Profile using userId (_id)
         const studentRes = await axios.get(
-          `http://localhost:5000/api/student/profile/${studentId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/profile/${studentId}`
         );
         const studentData = studentRes.data.studentProfile;
         setStudent(studentData);
         const response = await axios.get(
-          `http://localhost:5000/api/student/enrolled/${studentId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/enrolled/${studentId}`
         );
         setCourse(response.data);
 
         // Handle image preview
         if (studentData?.image) {
-          setPreviewImage(`http://localhost:5000/${studentData.image}`);
+          setPreviewImage(
+            `https://veritas-campus-lms-production.up.railway.app/${studentData.image}`
+          );
         }
       } catch (err) {
         console.error("Error fetching user or student data", err);

@@ -26,86 +26,97 @@ const SupportList = () => {
   const [success, setSuccess] = useState("");
   const [filter, setFilter] = useState("all"); // 'all', 'pending', 'replied'
   const [searchTerm, setSearchTerm] = useState("");
-  
+
   // Debug function to check authentication
   const checkAuth = async () => {
     try {
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token");
+
       if (!token) {
         alert("No authentication token found in localStorage");
         return;
       }
-      
+
       const response = await axios.get(
-        "http://localhost:5000/api/student/support/debug-auth", 
+        "https://veritas-campus-lms-production.up.railway.app/api/student/support/debug-auth",
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      
+
       console.log("Auth debug response:", response.data);
       alert("Authentication check successful. See console for details.");
     } catch (error) {
       console.error("Auth debug error:", error);
       alert(`Authentication check failed: ${error.message}`);
     }
-  };  const fetchSupportRequests = async () => {
+  };
+  const fetchSupportRequests = async () => {
     try {
       setLoading(true);
       console.log("Fetching support requests with isAdmin=false");
-      
+
       // Get auth token from localStorage
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token");
+
       if (!token) {
-        console.log("No authentication token available - user needs to sign in");
+        console.log(
+          "No authentication token available - user needs to sign in"
+        );
         setError("Please sign in to view your support requests");
         setLoading(false);
         return;
       }
-      
+
       let requestConfig = {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        timeout: 10000 // 10 second timeout
+        timeout: 10000, // 10 second timeout
       };
-      
+
       console.log("Using authentication token");
-      
+
       let res;
       try {
         // Try the new simplified authenticated API endpoint for user's own requests
-        res = await axios.get("http://localhost:5000/api/student/support/user", requestConfig);
+        res = await axios.get(
+          "https://veritas-campus-lms-production.up.railway.app/api/student/support/user",
+          requestConfig
+        );
         console.log("Support requests fetched from /user endpoint:", res.data);
       } catch (userEndpointError) {
-        console.log("User endpoint failed, trying fixed endpoint:", userEndpointError.message);
+        console.log(
+          "User endpoint failed, trying fixed endpoint:",
+          userEndpointError.message
+        );
         // Fallback to the fixed endpoint
-        res = await axios.get("http://localhost:5000/api/student/support/fixed", requestConfig);
+        res = await axios.get(
+          "https://veritas-campus-lms-production.up.railway.app/api/student/support/fixed",
+          requestConfig
+        );
         console.log("Support requests fetched from /fixed endpoint:", res.data);
       }
-      
+
       // Ensure we always set an array, even if the response is null or undefined
       setSupportRequests(Array.isArray(res.data) ? res.data : []);
       setError("");
-      
     } catch (error) {
       console.error("Error fetching support requests:", error);
-      
+
       if (error.response) {
         // Server responded with an error status
         const status = error.response.status;
         const errorData = error.response.data;
-        
+
         if (status === 401) {
           // Authentication failed
           console.log("Authentication failed - token may be invalid");
           setError("Your session has expired. Please sign in again.");
-          localStorage.removeItem('token'); // Clear invalid token
-          localStorage.removeItem('userRole'); // Clear user role as well
+          localStorage.removeItem("token"); // Clear invalid token
+          localStorage.removeItem("userRole"); // Clear user role as well
         } else if (status === 403) {
           setError("You don't have permission to view support requests.");
         } else if (status === 404) {
@@ -115,14 +126,22 @@ const SupportList = () => {
           setError("");
         } else if (status === 500) {
           console.error("Server error details:", errorData);
-          setError("Server error occurred. Please try again later or contact support.");
+          setError(
+            "Server error occurred. Please try again later or contact support."
+          );
         } else {
-          setError(`Error ${status}: ${errorData.message || 'Failed to fetch support requests'}`);
+          setError(
+            `Error ${status}: ${
+              errorData.message || "Failed to fetch support requests"
+            }`
+          );
         }
       } else if (error.request) {
         // Request was made but no response received
         console.error("No response received:", error.request);
-        setError("Unable to connect to the server. Please check your connection and try again.");
+        setError(
+          "Unable to connect to the server. Please check your connection and try again."
+        );
       } else {
         // Something else happened
         console.error("Request setup error:", error.message);
@@ -138,36 +157,40 @@ const SupportList = () => {
     try {
       setLoading(true);
       console.log("Fetching support requests using fixed endpoint...");
-      
-      const token = localStorage.getItem('token');
-      
+
+      const token = localStorage.getItem("token");
+
       if (!token) {
         console.log("No authentication token available");
         setError("Please sign in to view your support requests");
         setLoading(false);
         return;
       }
-      
+
       let requestConfig = {
         params: { isAdmin: false },
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        timeout: 10000
+        timeout: 10000,
       };
-      
+
       // Try the fixed endpoint
-      const res = await axios.get("http://localhost:5000/api/student/support/fixed", requestConfig);
+      const res = await axios.get(
+        "https://veritas-campus-lms-production.up.railway.app/api/student/support/fixed",
+        requestConfig
+      );
       console.log("Fixed support requests fetched:", res.data);
-      
+
       setSupportRequests(Array.isArray(res.data) ? res.data : []);
       setError("");
       setSuccess("Successfully loaded support requests using fixed method!");
       setTimeout(() => setSuccess(""), 3000);
-      
     } catch (error) {
       console.error("Error fetching fixed support requests:", error);
-      setError(`Fixed method failed: ${error.response?.data?.message || error.message}`);
+      setError(
+        `Fixed method failed: ${error.response?.data?.message || error.message}`
+      );
     } finally {
       setLoading(false);
     }
@@ -177,25 +200,31 @@ const SupportList = () => {
   const debugDatabase = async () => {
     try {
       console.log("Debugging database...");
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token");
+
       if (!token) {
         alert("No token found. Please sign in first.");
         return;
       }
-      
+
       const response = await axios.get(
-        "http://localhost:5000/api/student/support/debug-db",
+        "https://veritas-campus-lms-production.up.railway.app/api/student/support/debug-db",
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       console.log("Database debug info:", response.data);
-      alert(`Database debug successful! Check console for details.\nTotal requests: ${response.data.totalSupportRequests}\nUser requests: ${response.data.userRequestsById} (by ID) / ${response.data.userRequestsByIdString} (by ID string)`);
+      alert(
+        `Database debug successful! Check console for details.\nTotal requests: ${response.data.totalSupportRequests}\nUser requests: ${response.data.userRequestsById} (by ID) / ${response.data.userRequestsByIdString} (by ID string)`
+      );
     } catch (error) {
       console.error("Database debug failed:", error);
-      alert(`Database debug failed: ${error.response?.data?.message || error.message}`);
+      alert(
+        `Database debug failed: ${
+          error.response?.data?.message || error.message
+        }`
+      );
     }
   };
 
@@ -203,25 +232,31 @@ const SupportList = () => {
   const testConnection = async () => {
     try {
       console.log("Testing connection...");
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token");
+
       if (!token) {
         alert("No token found. Please sign in first.");
         return;
       }
-      
+
       const response = await axios.get(
-        "http://localhost:5000/api/student/support/test-connection",
+        "https://veritas-campus-lms-production.up.railway.app/api/student/support/test-connection",
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       console.log("Connection test successful:", response.data);
-      alert(`Connection test successful! User ID: ${response.data.user?.id}, Total requests in DB: ${response.data.totalSupportRequests}`);
+      alert(
+        `Connection test successful! User ID: ${response.data.user?.id}, Total requests in DB: ${response.data.totalSupportRequests}`
+      );
     } catch (error) {
       console.error("Connection test failed:", error);
-      alert(`Connection test failed: ${error.response?.data?.message || error.message}`);
+      alert(
+        `Connection test failed: ${
+          error.response?.data?.message || error.message
+        }`
+      );
     }
   };
 
@@ -230,21 +265,26 @@ const SupportList = () => {
     try {
       setLoading(true);
       console.log("Fetching support requests using public endpoint...");
-      
-      const res = await axios.get("http://localhost:5000/api/student/support/public");
+
+      const res = await axios.get(
+        "https://veritas-campus-lms-production.up.railway.app/api/student/support/public"
+      );
       console.log("Public support requests fetched:", res.data);
-      
+
       // Filter by current user if we have user info
-      const currentUserId = localStorage.getItem('userId'); // Assuming userId is stored separately
+      const currentUserId = localStorage.getItem("userId"); // Assuming userId is stored separately
       let filteredRequests = res.data;
-      
+
       if (currentUserId) {
-        filteredRequests = res.data.filter(request => request.studentID === currentUserId);
+        filteredRequests = res.data.filter(
+          (request) => request.studentID === currentUserId
+        );
       }
-      
-      setSupportRequests(Array.isArray(filteredRequests) ? filteredRequests : []);
+
+      setSupportRequests(
+        Array.isArray(filteredRequests) ? filteredRequests : []
+      );
       setError("");
-      
     } catch (error) {
       console.error("Error fetching public support requests:", error);
       setError("Failed to fetch support requests using fallback method.");
@@ -258,33 +298,37 @@ const SupportList = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
-    
+
     fetchSupportRequests();
-  }, []);  const handleDelete = async (id) => {
+  }, []);
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this request?")) {
       try {
         console.log("Deleting request with ID:", id);
-        
+
         // Get auth token from localStorage
-        const token = localStorage.getItem('token');
-        
+        const token = localStorage.getItem("token");
+
         if (!token) {
           setError("You must be signed in to delete support requests");
           return;
         }
-        
+
         let requestConfig = {
           params: { isAdmin: false },
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         };
-        
+
         // Make the delete request
-        const response = await axios.delete(`http://localhost:5000/api/student/support/${id}`, requestConfig);
-        
+        const response = await axios.delete(
+          `https://veritas-campus-lms-production.up.railway.app/api/student/support/${id}`,
+          requestConfig
+        );
+
         console.log("Delete response:", response);
         setSuccess("Support request deleted successfully!");
         // Clear success message after 3 seconds
@@ -296,10 +340,10 @@ const SupportList = () => {
         console.error("Delete error:", error);
         console.error("Error response:", error.response);
         setError(
-          error.response?.data?.message || 
-          error.response?.data?.error || 
-          error.message || 
-          "Failed to delete request."
+          error.response?.data?.message ||
+            error.response?.data?.error ||
+            error.message ||
+            "Failed to delete request."
         );
         // Clear error message after 5 seconds
         setTimeout(() => setError(""), 5000);
@@ -396,8 +440,7 @@ const SupportList = () => {
             <Col lg={5} md={6} sm={12}>
               <div className="filter-buttons text-center text-md-start mt-3 mt-md-0">
                 {/* Debug Buttons */}
-                
-                
+
                 {/* Filter Buttons */}
                 <Button
                   variant={filter === "all" ? "primary" : "outline-primary"}
@@ -425,7 +468,10 @@ const SupportList = () => {
 
             <Col lg={3} className="text-center text-lg-end mt-3 mt-lg-0">
               {" "}
-              <Link to="/student/support-request" className="btn create-request-btn">
+              <Link
+                to="/student/support-request"
+                className="btn create-request-btn"
+              >
                 <i className="bi bi-plus-circle me-2"></i>
                 New Request
               </Link>
@@ -477,7 +523,10 @@ const SupportList = () => {
           ) : (
             <p>You haven't submitted any support requests yet.</p>
           )}{" "}
-          <Link to="/student/support-request" className="btn create-request-btn">
+          <Link
+            to="/student/support-request"
+            className="btn create-request-btn"
+          >
             <i className="bi bi-plus-circle me-2"></i>
             Create Your First Request
           </Link>
@@ -501,7 +550,7 @@ const SupportList = () => {
                     <div className="card-img-container">
                       <Card.Img
                         variant="top"
-                        src={`http://localhost:5000/uploads/${request.photo}`}
+                        src={`https://veritas-campus-lms-production.up.railway.app/uploads/${request.photo}`}
                         alt="Issue Evidence"
                         className="support-card-img"
                         onClick={() => handleView(request)}
@@ -661,12 +710,12 @@ const SupportList = () => {
                   <h5 className="section-title">Attached Photo</h5>
                   <div className="photo-container">
                     <img
-                      src={`http://localhost:5000/uploads/${selectedRequest.photo}`}
+                      src={`https://veritas-campus-lms-production.up.railway.app/uploads/${selectedRequest.photo}`}
                       alt="Issue Evidence"
                       className="img-fluid rounded request-photo"
                     />
                     <a
-                      href={`http://localhost:5000/uploads/${selectedRequest.photo}`}
+                      href={`https://veritas-campus-lms-production.up.railway.app/uploads/${selectedRequest.photo}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="view-full-image"
@@ -706,7 +755,8 @@ const SupportList = () => {
           <Button variant="secondary" onClick={() => setShowModal(false)}>
             <i className="bi bi-x-circle me-2"></i>
             Close
-          </Button>          {selectedRequest && (
+          </Button>{" "}
+          {selectedRequest && (
             <Button
               variant="danger"
               onClick={() => {

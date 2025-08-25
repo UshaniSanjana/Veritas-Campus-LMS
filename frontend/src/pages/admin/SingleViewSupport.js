@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../../css/supportCSS.css';
-import Sidebar from '../../components/Sidebar';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../../css/supportCSS.css";
+import Sidebar from "../../components/Sidebar";
 
 const SingleViewSupport = () => {
   const { id } = useParams();
@@ -19,24 +19,32 @@ const SingleViewSupport = () => {
     }
 
     axios
-      .put(`http://localhost:5000/api/adminsupport/reply/${id}`, {
-        message: reply,
-        adminName: adminName,
-      })
+      .put(
+        `https://veritas-campus-lms-production.up.railway.app/api/adminsupport/reply/${id}`,
+        {
+          message: reply,
+          adminName: adminName,
+        }
+      )
       .then((res) => {
         alert("Reply sent!");
         setReply("");
         setRequest(res.data); // update with new data
       })
       .catch((err) => {
-        console.error("Error sending reply:", err.response?.data || err.message);
+        console.error(
+          "Error sending reply:",
+          err.response?.data || err.message
+        );
         alert("Failed to send reply.");
       });
   };
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/adminsupport/getRequestById/${id}`)
+      .get(
+        `https://veritas-campus-lms-production.up.railway.app/api/adminsupport/getRequestById/${id}`
+      )
       .then((res) => setRequest(res.data))
       .catch((err) => {
         console.error("Error fetching request:", err);
@@ -66,33 +74,66 @@ const SingleViewSupport = () => {
 
   return (
     <div className="admin-support-container">
-   
       <div className="view-container">
         <h2 className="title">
           {studentID ? "Student" : "Instructor"} Support Request Details
         </h2>
 
         <div className="view-box">
-          {studentID && <p><strong>Student ID:</strong> {studentID}</p>}
-          <p><strong>Name:</strong> {requesterName}</p>
-          {email && <p><strong>Email:</strong> {email}</p>}
-          {contactNumber && <p><strong>Contact:</strong> {contactNumber}</p>}
-          {requestType && <p><strong>Request Type:</strong> {requestType}</p>}
-          {subject && <p><strong>Subject:</strong> {subject}</p>}
-          <p><strong>Status:</strong> {status || "Pending"}</p>
-          <p><strong>Message / Issue:</strong> {message || issue || "N/A"}</p>
+          {studentID && (
+            <p>
+              <strong>Student ID:</strong> {studentID}
+            </p>
+          )}
+          <p>
+            <strong>Name:</strong> {requesterName}
+          </p>
+          {email && (
+            <p>
+              <strong>Email:</strong> {email}
+            </p>
+          )}
+          {contactNumber && (
+            <p>
+              <strong>Contact:</strong> {contactNumber}
+            </p>
+          )}
+          {requestType && (
+            <p>
+              <strong>Request Type:</strong> {requestType}
+            </p>
+          )}
+          {subject && (
+            <p>
+              <strong>Subject:</strong> {subject}
+            </p>
+          )}
+          <p>
+            <strong>Status:</strong> {status || "Pending"}
+          </p>
+          <p>
+            <strong>Message / Issue:</strong> {message || issue || "N/A"}
+          </p>
 
-            {photo ? (
+          {photo ? (
             <div style={{ margin: "20px 0" }}>
-              <p><strong>Attached Photo:</strong></p>
+              <p>
+                <strong>Attached Photo:</strong>
+              </p>
               <img
-                src={`http://localhost:5000/uploads/${photo}`}
+                src={`https://veritas-campus-lms-production.up.railway.app/uploads/${photo}`}
                 alt="Support Attachment"
-                style={{ width: "200px", borderRadius: "8px", boxShadow: "0 0 5px rgba(0,0,0,0.1)" }}
+                style={{
+                  width: "200px",
+                  borderRadius: "8px",
+                  boxShadow: "0 0 5px rgba(0,0,0,0.1)",
+                }}
               />
             </div>
           ) : (
-            <p><strong>Attached Photo:</strong> None</p>
+            <p>
+              <strong>Attached Photo:</strong> None
+            </p>
           )}
           <div className="reply-section">
             <h3>Reply to Request</h3>
@@ -104,17 +145,30 @@ const SingleViewSupport = () => {
               onChange={(e) => setReply(e.target.value)}
             />
             <div className="button-container">
-              <button className="b-btn" onClick={() => navigate(-1)}>Back</button>
-              <button className="s-btn" onClick={handleReplySubmit}>Send Reply</button>
+              <button className="b-btn" onClick={() => navigate(-1)}>
+                Back
+              </button>
+              <button className="s-btn" onClick={handleReplySubmit}>
+                Send Reply
+              </button>
             </div>
           </div>
 
           {adminReply?.message && (
             <div className="admin-reply-display">
               <h4>Previous Reply</h4>
-              <p><strong>Admin:</strong> {adminReply.adminName || "N/A"}</p>
-              <p><strong>Message:</strong> {adminReply.message}</p>
-              <p><strong>Replied At:</strong> {adminReply.repliedAt ? new Date(adminReply.repliedAt).toLocaleString() : "N/A"}</p>
+              <p>
+                <strong>Admin:</strong> {adminReply.adminName || "N/A"}
+              </p>
+              <p>
+                <strong>Message:</strong> {adminReply.message}
+              </p>
+              <p>
+                <strong>Replied At:</strong>{" "}
+                {adminReply.repliedAt
+                  ? new Date(adminReply.repliedAt).toLocaleString()
+                  : "N/A"}
+              </p>
             </div>
           )}
         </div>

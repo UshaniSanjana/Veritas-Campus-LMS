@@ -1,7 +1,6 @@
-
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './StudentNotificationPage.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./StudentNotificationPage.css";
 
 const StudentNotificationPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -9,12 +8,14 @@ const StudentNotificationPage = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/student/notifications');
+      const response = await axios.get(
+        "https://veritas-campus-lms-production.up.railway.app/api/student/notifications"
+      );
       if (response.data.success) {
         setNotifications(response.data.notifications);
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error("Error fetching notifications:", error);
     } finally {
       setLoading(false);
     }
@@ -27,7 +28,9 @@ const StudentNotificationPage = () => {
   }, []);
 
   if (loading) {
-    return <div className="notifications-container">Loading notifications...</div>;
+    return (
+      <div className="notifications-container">Loading notifications...</div>
+    );
   }
 
   return (
@@ -38,12 +41,17 @@ const StudentNotificationPage = () => {
       ) : (
         <div className="notifications-grid">
           {notifications.map((notification) => (
-            <div key={notification._id} className={`notification-card ${notification.isImportant ? 'important' : ''}`}>
+            <div
+              key={notification._id}
+              className={`notification-card ${
+                notification.isImportant ? "important" : ""
+              }`}
+            >
               {notification.imageUrl && (
                 <div className="notification-image">
-                  <img 
-                    src={`http://localhost:5000${notification.imageUrl}`} 
-                    alt="Notification" 
+                  <img
+                    src={`https://veritas-campus-lms-production.up.railway.app${notification.imageUrl}`}
+                    alt="Notification"
                   />
                 </div>
               )}
@@ -51,9 +59,13 @@ const StudentNotificationPage = () => {
                 <h3>{notification.title}</h3>
                 <p>{notification.message}</p>
                 <div className="notification-meta">
-                  <span>{new Date(notification.createdAt).toLocaleString()}</span>
+                  <span>
+                    {new Date(notification.createdAt).toLocaleString()}
+                  </span>
                   {notification.course && (
-                    <span className="course-tag">{notification.course.name}</span>
+                    <span className="course-tag">
+                      {notification.course.name}
+                    </span>
                   )}
                 </div>
               </div>
@@ -66,4 +78,3 @@ const StudentNotificationPage = () => {
 };
 
 export default StudentNotificationPage;
-

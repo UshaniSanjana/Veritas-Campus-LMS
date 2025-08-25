@@ -1,44 +1,44 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
+import React, { useState, useRef, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import '../css/AddAnnouncement.css';
+import "../css/AddAnnouncement.css";
 
 const UpdateAnnouncement = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    title: '',
+    title: "",
     date: null,
-    hour: '',
-    minute: '',
-    ampm: '',
-    message: '',
-    visibility: 'Public',
+    hour: "",
+    minute: "",
+    ampm: "",
+    message: "",
+    visibility: "Public",
     file: null,
   });
   const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState('');
-  const [error, setError] = useState('');
-  const [fileName, setFileName] = useState('');
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [fileName, setFileName] = useState("");
   const fileInputRef = useRef();
 
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
-        setSuccess('');
+        setSuccess("");
       }, 5000);
       setForm({
-        title: '',
+        title: "",
         date: null,
-        hour: '',
-        minute: '',
-        ampm: '',
-        message: '',
-        visibility: 'Public',
+        hour: "",
+        minute: "",
+        ampm: "",
+        message: "",
+        visibility: "Public",
         file: null,
       });
-      setFileName('');
+      setFileName("");
       return () => clearTimeout(timer);
     }
   }, [success]);
@@ -47,61 +47,67 @@ const UpdateAnnouncement = () => {
     const fetchAnnouncementDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/updateannouncement/${id}`);
+        const response = await fetch(
+          `https://veritas-campus-lms-production.up.railway.app/updateannouncement/${id}`
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch announcement details');
+          throw new Error("Failed to fetch announcement details");
         }
         const data = await response.json();
-        
+
         if (data) {
           // Create a new date object from the UTC date string
           const announcementDate = new Date(data.date);
-          
+
           // Check if the date has a specific time set
-          const hasTime = announcementDate.getUTCHours() !== 0 || announcementDate.getUTCMinutes() !== 0;
-          
-          let hour = '';
-          let minute = '';
-          let ampm = '';
-          
+          const hasTime =
+            announcementDate.getUTCHours() !== 0 ||
+            announcementDate.getUTCMinutes() !== 0;
+
+          let hour = "";
+          let minute = "";
+          let ampm = "";
+
           if (hasTime) {
             // Get hours and minutes in UTC
             let hours = announcementDate.getUTCHours();
             const minutes = announcementDate.getUTCMinutes();
-            
+
             // Convert to 12-hour format
-            ampm = hours >= 12 ? 'PM' : 'AM';
+            ampm = hours >= 12 ? "PM" : "AM";
             hours = hours % 12;
             hours = hours ? hours : 12;
-            hour = hours.toString().padStart(2, '0');
-            minute = minutes.toString().padStart(2, '0');
+            hour = hours.toString().padStart(2, "0");
+            minute = minutes.toString().padStart(2, "0");
           } else {
             // Set default time to 12.00 AM if no time is set
-            hour = '12';
-            minute = '00';
-            ampm = 'AM';
+            hour = "12";
+            minute = "00";
+            ampm = "AM";
           }
 
           // Create a new date object for the date picker
-          const localDate = new Date(announcementDate.getUTCFullYear(), 
-                                  announcementDate.getUTCMonth(), 
-                                  announcementDate.getUTCDate());
+          const localDate = new Date(
+            announcementDate.getUTCFullYear(),
+            announcementDate.getUTCMonth(),
+            announcementDate.getUTCDate()
+          );
 
           setForm({
-            title: data.title || '',
+            title: data.title || "",
             date: localDate,
             hour: hour,
             minute: minute,
             ampm: ampm,
-            message: data.message || '',
-            visibility: data.visibility || 'Public',
+            message: data.message || "",
+            visibility: data.visibility || "Public",
             file: null,
           });
-          setFileName(data.fileName || '');
+          setFileName(data.fileName || "");
         }
       } catch (err) {
-        console.error('Fetch error:', err);
-        setError('Failed to load announcement details. Please try again.');
+        console.error("Fetch error:", err);
+        setError("Failed to load announcement details. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -117,7 +123,7 @@ const UpdateAnnouncement = () => {
         ...prev,
         [name]: files[0],
       }));
-      setFileName(files[0]?.name || '');
+      setFileName(files[0]?.name || "");
     } else {
       setForm((prev) => ({
         ...prev,
@@ -150,7 +156,7 @@ const UpdateAnnouncement = () => {
     const { hour, minute, ampm } = form;
     if (hour || minute || ampm) {
       if (!hour || !minute || !ampm) {
-        setError('Please fill in all time fields');
+        setError("Please fill in all time fields");
         return false;
       }
     }
@@ -164,8 +170,8 @@ const UpdateAnnouncement = () => {
     }
 
     setLoading(true);
-    setSuccess('');
-    setError('');
+    setSuccess("");
+    setError("");
     const formData = new FormData();
 
     let combinedDate = form.date;
@@ -174,47 +180,54 @@ const UpdateAnnouncement = () => {
       const date = new Date(form.date);
       if (form.hour && form.minute && form.ampm) {
         let hour = parseInt(form.hour, 10);
-        if (form.ampm === 'PM' && hour !== 12) hour += 12;
-        if (form.ampm === 'AM' && hour === 12) hour = 0;
+        if (form.ampm === "PM" && hour !== 12) hour += 12;
+        if (form.ampm === "AM" && hour === 12) hour = 0;
 
         // Create UTC date to avoid timezone issues
-        const utcDate = new Date(Date.UTC(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          hour,
-          parseInt(form.minute, 10),
-          0,
-          0
-        ));
-        
+        const utcDate = new Date(
+          Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            hour,
+            parseInt(form.minute, 10),
+            0,
+            0
+          )
+        );
+
         combinedDate = utcDate.toISOString();
       } else {
         // Set to midnight UTC when no time is selected
-        const utcDate = new Date(Date.UTC(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          0,
-          0,
-          0,
-          0
-        ));
+        const utcDate = new Date(
+          Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDate(),
+            0,
+            0,
+            0,
+            0
+          )
+        );
         combinedDate = utcDate.toISOString();
       }
     }
 
-    formData.append('title', form.title);
-    formData.append('date', combinedDate || '');
-    formData.append('message', form.message);
-    formData.append('visibility', form.visibility);
-    if (form.file) formData.append('file', form.file);
+    formData.append("title", form.title);
+    formData.append("date", combinedDate || "");
+    formData.append("message", form.message);
+    formData.append("visibility", form.visibility);
+    if (form.file) formData.append("file", form.file);
 
     try {
-      const res = await fetch(`http://localhost:5000/updateannouncement/${id}`, {
-        method: 'PUT',
-        body: formData,
-      });
+      const res = await fetch(
+        `https://veritas-campus-lms-production.up.railway.app/updateannouncement/${id}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
 
       let data = null;
       try {
@@ -231,10 +244,10 @@ const UpdateAnnouncement = () => {
       } else if (!res.ok) {
         setError(`Server error: ${res.status}`);
       } else {
-        setError('Something went wrong');
+        setError("Something went wrong");
       }
     } catch (err) {
-      setError('Network error');
+      setError("Network error");
     }
 
     setLoading(false);
@@ -243,22 +256,29 @@ const UpdateAnnouncement = () => {
   const handleCancelFile = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      file: null
+      file: null,
     }));
-    setFileName('');
+    setFileName("");
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
   return (
     <div className="add-announcement-container">
       <div className="add-announcement-title">
-        Update Announcement for <span className="course-title">BM3010 - Introduction to Management</span>
+        Update Announcement for{" "}
+        <span className="course-title">
+          BM3010 - Introduction to Management
+        </span>
       </div>
-      <form className="add-announcement-form" onSubmit={handleSubmit} encType="multipart/form-data">
+      <form
+        className="add-announcement-form"
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+      >
         <label htmlFor="title">Title</label>
         <input
           type="text"
@@ -275,7 +295,7 @@ const UpdateAnnouncement = () => {
             <label htmlFor="date">Date</label>
             <DatePicker
               selected={form.date}
-              onChange={date => setForm(prev => ({ ...prev, date }))}
+              onChange={(date) => setForm((prev) => ({ ...prev, date }))}
               dateFormat="yyyy-MM-dd"
               placeholderText="Select date"
               className="custom-datepicker"
@@ -284,7 +304,9 @@ const UpdateAnnouncement = () => {
             />
           </div>
           <div className="time-picker-group">
-            <label htmlFor="time" className="time-label">Time</label>
+            <label htmlFor="time" className="time-label">
+              Time
+            </label>
             <div className="time-picker-row">
               <select
                 name="hour"
@@ -294,8 +316,12 @@ const UpdateAnnouncement = () => {
               >
                 <option value="">HH</option>
                 {Array.from({ length: 12 }, (_, i) => {
-                  const hour = (i + 1).toString().padStart(2, '0');
-                  return <option key={hour} value={hour}>{hour}</option>;
+                  const hour = (i + 1).toString().padStart(2, "0");
+                  return (
+                    <option key={hour} value={hour}>
+                      {hour}
+                    </option>
+                  );
                 })}
               </select>
               <span className="time-separator">.</span>
@@ -307,8 +333,12 @@ const UpdateAnnouncement = () => {
               >
                 <option value="">MM</option>
                 {Array.from({ length: 60 }, (_, i) => {
-                  const min = i.toString().padStart(2, '0');
-                  return <option key={min} value={min}>{min}</option>;
+                  const min = i.toString().padStart(2, "0");
+                  return (
+                    <option key={min} value={min}>
+                      {min}
+                    </option>
+                  );
                 })}
               </select>
               <select
@@ -341,15 +371,12 @@ const UpdateAnnouncement = () => {
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
-          <label
-            className="file-upload-label"
-            style={{ cursor: 'pointer' }}
-          >
+          <label className="file-upload-label" style={{ cursor: "pointer" }}>
             <input
               ref={fileInputRef}
               name="file"
               type="file"
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
               onChange={handleChange}
             />
             <span className="file-upload-plus">+</span>
@@ -367,7 +394,9 @@ const UpdateAnnouncement = () => {
             ) : (
               <>
                 <span>Select a file</span>
-                <span className="file-upload-or">or Drag and drop a file here</span>
+                <span className="file-upload-or">
+                  or Drag and drop a file here
+                </span>
               </>
             )}
           </label>
@@ -380,39 +409,45 @@ const UpdateAnnouncement = () => {
               type="radio"
               name="visibility"
               value="Public"
-              checked={form.visibility === 'Public'}
+              checked={form.visibility === "Public"}
               onChange={handleChange}
-            /> Public
+            />{" "}
+            Public
           </label>
           <label>
             <input
               type="radio"
               name="visibility"
               value="Private"
-              checked={form.visibility === 'Private'}
+              checked={form.visibility === "Private"}
               onChange={handleChange}
-            /> Private
+            />{" "}
+            Private
           </label>
         </div>
 
         <div className="button-container">
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="save-publish-btn"
-          >
-            {loading ? 'Updating...' : 'Update'}
+          <button type="submit" disabled={loading} className="save-publish-btn">
+            {loading ? "Updating..." : "Update"}
           </button>
-        </div>        
+        </div>
         {success && (
           <div className="custom-success-message">
             <span className="success-icon">
               <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
                 <circle cx="16" cy="16" r="16" fill="white" />
-                <path d="M10 17L15 22L22 13" stroke="#388e3c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                <path
+                  d="M10 17L15 22L22 13"
+                  stroke="#388e3c"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </span>
-            <span className="success-text">Updated Announcement Successfully</span>
+            <span className="success-text">
+              Updated Announcement Successfully
+            </span>
           </div>
         )}
         {error && <div className="error-message">{error}</div>}
@@ -421,4 +456,4 @@ const UpdateAnnouncement = () => {
   );
 };
 
-export default UpdateAnnouncement; 
+export default UpdateAnnouncement;

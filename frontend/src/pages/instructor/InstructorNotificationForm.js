@@ -1,32 +1,32 @@
-
-
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './InstructorNotificationForm.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./InstructorNotificationForm.css";
 
 const InstructorNotificationForm = ({ courses = [] }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    message: '',
-    course: '',
+    title: "",
+    message: "",
+    course: "",
     isImportant: false,
-    image: null
+    image: null,
   });
   const [notifications, setNotifications] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch all notifications
   const fetchNotifications = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/instructor/notifications');
+      const response = await axios.get(
+        "https://veritas-campus-lms-production.up.railway.app/api/instructor/notifications"
+      );
       if (response.data.success) {
         setNotifications(response.data.notifications);
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error("Error fetching notifications:", error);
     }
   };
 
@@ -38,64 +38,68 @@ const InstructorNotificationForm = ({ courses = [] }) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      image: e.target.files[0]
+      image: e.target.files[0],
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('message', formData.message);
-      formDataToSend.append('course', formData.course);
-      formDataToSend.append('isImportant', formData.isImportant);
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("message", formData.message);
+      formDataToSend.append("course", formData.course);
+      formDataToSend.append("isImportant", formData.isImportant);
       if (formData.image) {
-        formDataToSend.append('image', formData.image);
+        formDataToSend.append("image", formData.image);
       }
 
       let response;
       if (editingId) {
         response = await axios.put(
-          `http://localhost:5000/api/instructor/notifications/${editingId}`,
+          `https://veritas-campus-lms-production.up.railway.app/api/instructor/notifications/${editingId}`,
           formDataToSend,
           {
             headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
       } else {
         response = await axios.post(
-          'http://localhost:5000/api/instructor/notifications',
+          "https://veritas-campus-lms-production.up.railway.app/api/instructor/notifications",
           formDataToSend,
           {
             headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
       }
 
       if (response.data.success) {
-        setSuccess(editingId ? 'Notification updated successfully!' : 'Notification sent successfully!');
+        setSuccess(
+          editingId
+            ? "Notification updated successfully!"
+            : "Notification sent successfully!"
+        );
         resetForm();
         fetchNotifications();
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Server responded with error');
-      console.error('Submission error:', err);
+      setError(err.response?.data?.error || "Server responded with error");
+      console.error("Submission error:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -103,11 +107,11 @@ const InstructorNotificationForm = ({ courses = [] }) => {
 
   const resetForm = () => {
     setFormData({
-      title: '',
-      message: '',
-      course: '',
+      title: "",
+      message: "",
+      course: "",
       isImportant: false,
-      image: null
+      image: null,
     });
     setEditingId(null);
   };
@@ -116,24 +120,26 @@ const InstructorNotificationForm = ({ courses = [] }) => {
     setFormData({
       title: notification.title,
       message: notification.message,
-      course: notification.course?._id || '',
+      course: notification.course?._id || "",
       isImportant: notification.isImportant,
-      image: null
+      image: null,
     });
     setEditingId(notification._id);
     window.scrollTo(0, 0);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this notification?')) {
+    if (window.confirm("Are you sure you want to delete this notification?")) {
       try {
-        const response = await axios.delete(`http://localhost:5000/api/instructor/notifications/${id}`);
+        const response = await axios.delete(
+          `https://veritas-campus-lms-production.up.railway.app/api/instructor/notifications/${id}`
+        );
         if (response.data.success) {
-          setSuccess('Notification deleted successfully!');
+          setSuccess("Notification deleted successfully!");
           fetchNotifications();
         }
       } catch (err) {
-        setError(err.response?.data?.error || 'Failed to delete notification');
+        setError(err.response?.data?.error || "Failed to delete notification");
       }
     }
   };
@@ -141,7 +147,7 @@ const InstructorNotificationForm = ({ courses = [] }) => {
   return (
     <div className="notification-management">
       <div className="notification-form-container">
-        <h2>{editingId ? 'Edit Notification' : 'Create New Notification'}</h2>
+        <h2>{editingId ? "Edit Notification" : "Create New Notification"}</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Title *</label>
@@ -205,8 +211,16 @@ const InstructorNotificationForm = ({ courses = [] }) => {
           {error && <div className="error-message">{error}</div>}
           {success && <div className="success-message">{success}</div>}
 
-          <button type="submit" className="submit-button" disabled={isSubmitting}>
-            {isSubmitting ? 'Processing...' : (editingId ? 'Update Notification' : 'Send Notification')}
+          <button
+            type="submit"
+            className="submit-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? "Processing..."
+              : editingId
+              ? "Update Notification"
+              : "Send Notification"}
           </button>
           {editingId && (
             <button type="button" className="cancel-button" onClick={resetForm}>
@@ -226,9 +240,9 @@ const InstructorNotificationForm = ({ courses = [] }) => {
               <div key={notification._id} className="notification-item">
                 {notification.imageUrl && (
                   <div className="notification-image">
-                    <img 
-                      src={`http://localhost:5000${notification.imageUrl}`} 
-                      alt="Notification" 
+                    <img
+                      src={`https://veritas-campus-lms-production.up.railway.app${notification.imageUrl}`}
+                      alt="Notification"
                     />
                   </div>
                 )}
@@ -236,9 +250,13 @@ const InstructorNotificationForm = ({ courses = [] }) => {
                   <h4>{notification.title}</h4>
                   <p>{notification.message}</p>
                   <div className="notification-meta">
-                    <span>{new Date(notification.createdAt).toLocaleString()}</span>
+                    <span>
+                      {new Date(notification.createdAt).toLocaleString()}
+                    </span>
                     {notification.course && (
-                      <span className="course-tag">{notification.course.name}</span>
+                      <span className="course-tag">
+                        {notification.course.name}
+                      </span>
                     )}
                     {notification.isImportant && (
                       <span className="important-tag">Important</span>
@@ -246,13 +264,13 @@ const InstructorNotificationForm = ({ courses = [] }) => {
                   </div>
                 </div>
                 <div className="notification-actions">
-                  <button 
+                  <button
                     className="edit-button"
                     onClick={() => handleEdit(notification)}
                   >
                     Edit
                   </button>
-                  <button 
+                  <button
                     className="delete-btn"
                     onClick={() => handleDelete(notification._id)}
                   >

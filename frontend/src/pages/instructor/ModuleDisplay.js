@@ -11,7 +11,9 @@ const ModuleDisplay = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  const API_BASE_URL =
+    process.env.REACT_APP_API_URL ||
+    "https://veritas-campus-lms-production.up.railway.app";
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -24,8 +26,18 @@ const ModuleDisplay = () => {
         const response = await fetch(url);
         if (!response.ok) {
           const text = await response.text();
-          console.log("Response status:", response.status, "Body:", text.substring(0, 100));
-          throw new Error(`HTTP error! Status: ${response.status}, Body: ${text.substring(0, 50)}...`);
+          console.log(
+            "Response status:",
+            response.status,
+            "Body:",
+            text.substring(0, 100)
+          );
+          throw new Error(
+            `HTTP error! Status: ${response.status}, Body: ${text.substring(
+              0,
+              50
+            )}...`
+          );
         }
         const contentType = response.headers.get("content-type");
         console.log("Content-Type:", contentType);
@@ -61,7 +73,9 @@ const ModuleDisplay = () => {
         const errorText = contentType?.includes("application/json")
           ? (await response.json()).message
           : await response.text();
-        throw new Error(`HTTP error! Status: ${response.status}, Body: ${errorText}`);
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Body: ${errorText}`
+        );
       }
       setModules(modules.filter((module) => module._id !== id));
       alert("Module deleted successfully");
@@ -115,7 +129,11 @@ const ModuleDisplay = () => {
               </li>
               {year && (
                 <li className="breadcrumb-item">
-                  <Link to={`/instructor/semesters?year=${encodeURIComponent(year)}`}>
+                  <Link
+                    to={`/instructor/semesters?year=${encodeURIComponent(
+                      year
+                    )}`}
+                  >
                     Year {year}
                   </Link>
                 </li>
@@ -132,7 +150,9 @@ const ModuleDisplay = () => {
         <div className="col-12">
           <h3>
             {year
-              ? `Modules for Year ${year}${semester ? `, Semester ${semester}` : ", All Semesters"}`
+              ? `Modules for Year ${year}${
+                  semester ? `, Semester ${semester}` : ", All Semesters"
+                }`
               : "All Modules"}
           </h3>
         </div>
@@ -148,8 +168,10 @@ const ModuleDisplay = () => {
           <div className="col-12">
             <div className="alert alert-info" role="alert">
               No modules found
-              {year ? ` for Year ${year}${semester ? `, Semester ${semester}` : ""}` : ""}.{" "}
-              <Link to="/add">Add a new module</Link>.
+              {year
+                ? ` for Year ${year}${semester ? `, Semester ${semester}` : ""}`
+                : ""}
+              . <Link to="/add">Add a new module</Link>.
             </div>
           </div>
         </div>
@@ -162,14 +184,19 @@ const ModuleDisplay = () => {
                   <h5 className="card-title">{module.title || "No title"}</h5>
                   <p className="card-text">Week: {module.week || "N/A"}</p>
                   <p className="card-text">
-                    Year: {module.year || "N/A"}, Semester: {module.semester || "N/A"}
+                    Year: {module.year || "N/A"}, Semester:{" "}
+                    {module.semester || "N/A"}
                   </p>
-                  <p className="card-text">{module.description || "No description"}</p>
+                  <p className="card-text">
+                    {module.description || "No description"}
+                  </p>
                   <div className="d-flex gap-2">
                     <Link
                       to={`/instructor/modules/${module._id}`}
                       className="btn btn-primary"
-                      aria-label={`View details for ${module.title || "module"}`}
+                      aria-label={`View details for ${
+                        module.title || "module"
+                      }`}
                     >
                       Enroll Module
                     </Link>

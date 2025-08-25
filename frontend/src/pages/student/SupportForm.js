@@ -23,11 +23,11 @@ const SupportForm = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
-    
+
     // Check for token when component mounts
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
       setError("You must be logged in to submit a support request");
       scrollToError();
@@ -108,22 +108,22 @@ const SupportForm = () => {
 
     try {
       // Get auth token from localStorage
-      const token = localStorage.getItem('token');
-      
+      const token = localStorage.getItem("token");
+
       if (!token) {
         setError("You must be logged in to submit a support request");
         setIsSubmitting(false);
         scrollToError();
         return;
       }
-      
+
       const response = await axios.post(
-        "http://localhost:5000/api/student/support",
+        "https://veritas-campus-lms-production.up.railway.app/api/student/support",
         data,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -152,20 +152,25 @@ const SupportForm = () => {
       }
     } catch (error) {
       console.error("Error submitting support request:", error);
-      
+
       // Provide more specific error messages based on error type
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        setError(error.response.data?.message || `Server error: ${error.response.status}`);
+        setError(
+          error.response.data?.message ||
+            `Server error: ${error.response.status}`
+        );
       } else if (error.request) {
         // The request was made but no response was received
-        setError("No response from server. Please check your internet connection.");
+        setError(
+          "No response from server. Please check your internet connection."
+        );
       } else {
         // Something happened in setting up the request that triggered an Error
         setError(`Error: ${error.message}`);
       }
-      
+
       scrollToError();
       setIsSubmitting(false);
     }

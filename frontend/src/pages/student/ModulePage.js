@@ -190,7 +190,7 @@ const ModulePage = () => {
                       item.fileUrl
                     ) {
                       const cleanedUrl = item.fileUrl.replace(/\\/g, "/");
-                      const filePath = `http://localhost:5000/${cleanedUrl}`;
+                      const filePath = `https://veritas-campus-lms-production.up.railway.app/${cleanedUrl}`;
                       window.open(filePath, "_blank");
                     }
                   }}

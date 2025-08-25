@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-
 const EnrolledCourses = () => {
   const [courses, setCourse] = useState([]);
   const studentId = localStorage.getItem("studentId");
@@ -9,9 +8,8 @@ const EnrolledCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        
         const courses = await axios.get(
-          `http://localhost:5000/api/student/enrolled/${studentId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/enrolled/${studentId}`
         );
         setCourse(courses.data);
       } catch (err) {

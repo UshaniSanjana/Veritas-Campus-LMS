@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './MarksShowing.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./MarksShowing.css";
 
 const MarksShowing = () => {
   const [marks, setMarks] = useState({
     mid: 0,
     quiz: 0,
     assignment: 0,
-    module: 'Computer Science 1'  // Default/fallback module name
+    module: "Computer Science 1", // Default/fallback module name
   });
 
   const maxMarks = {
@@ -19,10 +19,12 @@ const MarksShowing = () => {
   useEffect(() => {
     const fetchMarks = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/student/marks/BSC0123');
+        const res = await axios.get(
+          "https://veritas-campus-lms-production.up.railway.app/api/student/marks/BSC0123"
+        );
         setMarks(res.data);
       } catch (err) {
-        console.error('Failed to fetch marks:', err);
+        console.error("Failed to fetch marks:", err);
       }
     };
 
@@ -30,9 +32,9 @@ const MarksShowing = () => {
   }, []);
 
   const getLevel = (score) => {
-    if (score >= 75) return 'Excellent';
-    if (score >= 50) return 'Very Good';
-    return 'Good';
+    if (score >= 75) return "Excellent";
+    if (score >= 50) return "Very Good";
+    return "Good";
   };
 
   const renderMarkCard = (label, value, max) => {
@@ -41,17 +43,19 @@ const MarksShowing = () => {
       <div className="mark-card">
         <h3>{label}</h3>
         <div className="mark-score">
-          <span>{value}/{max}</span>
+          <span>
+            {value}/{max}
+          </span>
         </div>
         <div className="mark-levels">
-          <p className={level === 'Excellent' ? 'active' : ''}>
-            Excellent {level === 'Excellent' && '⭐'}
+          <p className={level === "Excellent" ? "active" : ""}>
+            Excellent {level === "Excellent" && "⭐"}
           </p>
-          <p className={level === 'Very Good' ? 'active' : ''}>
-            Very Good {level === 'Very Good' && '⭐'}
+          <p className={level === "Very Good" ? "active" : ""}>
+            Very Good {level === "Very Good" && "⭐"}
           </p>
-          <p className={level === 'Good' ? 'active' : ''}>
-            Good {level === 'Good' && '⭐'}
+          <p className={level === "Good" ? "active" : ""}>
+            Good {level === "Good" && "⭐"}
           </p>
         </div>
       </div>
@@ -61,11 +65,16 @@ const MarksShowing = () => {
   return (
     <div className="marks-page">
       <h1>Marks</h1>
-      <h2 className="module-name">Module: {marks.module}</h2> {/* ✅ Added module name here */}
+      <h2 className="module-name">Module: {marks.module}</h2>{" "}
+      {/* ✅ Added module name here */}
       <div className="marks-container">
-        {renderMarkCard('Mid Marks', marks.mid, maxMarks.mid)}
-        {renderMarkCard('Quiz Marks', marks.quiz, maxMarks.quiz)}
-        {renderMarkCard('Assignment Marks', marks.assignment, maxMarks.assignment)}
+        {renderMarkCard("Mid Marks", marks.mid, maxMarks.mid)}
+        {renderMarkCard("Quiz Marks", marks.quiz, maxMarks.quiz)}
+        {renderMarkCard(
+          "Assignment Marks",
+          marks.assignment,
+          maxMarks.assignment
+        )}
       </div>
     </div>
   );

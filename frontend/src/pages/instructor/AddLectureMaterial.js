@@ -1,26 +1,26 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useDropzone } from 'react-dropzone';
-import { Alert, Spinner } from 'react-bootstrap';
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useDropzone } from "react-dropzone";
+import { Alert, Spinner } from "react-bootstrap";
 
 const AddLectureMaterial = () => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     file: null,
-    week: '',
-    visibility: 'Public',
+    week: "",
+    visibility: "Public",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const errorRef = useRef(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'file') {
+    if (name === "file") {
       setFormData({ ...formData, file: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -36,17 +36,18 @@ const AddLectureMaterial = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'application/pdf': [],
-      'application/msword': [],
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
-      'image/*': [],
+      "application/pdf": [],
+      "application/msword": [],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        [],
+      "image/*": [],
     },
     multiple: false,
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsSubmitting(true);
 
     const data = new FormData();
@@ -55,11 +56,14 @@ const AddLectureMaterial = () => {
     });
 
     try {
-      const response = await axios.post('http://localhost:5000/api/instructor/lecturematerial/', formData);
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await axios.post(
+        "https://veritas-campus-lms-production.up.railway.app/api/instructor/lecturematerial/",
+        formData
+      );
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       if (response.data) {
-        navigate('/instructor/added-lecture-materials/:courseId', {
+        navigate("/instructor/added-lecture-materials/:courseId", {
           state: {
             lectureName: formData.title,
             requestId: response.data.data_id,
@@ -67,7 +71,9 @@ const AddLectureMaterial = () => {
         });
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error submitting lecture material');
+      setError(
+        err.response?.data?.message || "Error submitting lecture material"
+      );
       setIsSubmitting(false);
     }
   };
@@ -75,17 +81,35 @@ const AddLectureMaterial = () => {
   return (
     <>
       {isSubmitting && (
-        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-white bg-opacity-75" style={{ zIndex: 1050 }}>
-          <Spinner animation="border" variant="primary" role="status" style={{ width: '3rem', height: '3rem' }} />
-          <div className="mt-3 text-primary fw-medium">Submitting lecture material...</div>
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-white bg-opacity-75"
+          style={{ zIndex: 1050 }}
+        >
+          <Spinner
+            animation="border"
+            variant="primary"
+            role="status"
+            style={{ width: "3rem", height: "3rem" }}
+          />
+          <div className="mt-3 text-primary fw-medium">
+            Submitting lecture material...
+          </div>
         </div>
       )}
       <div className="container my-5">
-        <div className="mx-auto p-4 bg-white rounded shadow" style={{ maxWidth: "900px" }}>
-          <h2 style={{ color: '#55B649' }}>Add New Lecture Material</h2>
+        <div
+          className="mx-auto p-4 bg-white rounded shadow"
+          style={{ maxWidth: "900px" }}
+        >
+          <h2 style={{ color: "#55B649" }}>Add New Lecture Material</h2>
 
           {error && (
-            <Alert ref={errorRef} variant="danger" onClose={() => setError('')} dismissible>
+            <Alert
+              ref={errorRef}
+              variant="danger"
+              onClose={() => setError("")}
+              dismissible
+            >
               {error}
             </Alert>
           )}
@@ -105,7 +129,9 @@ const AddLectureMaterial = () => {
                     disabled={isSubmitting}
                     required
                   />
-                  <label htmlFor="title">Title<span className="text-danger fw-bold">*</span></label>
+                  <label htmlFor="title">
+                    Title<span className="text-danger fw-bold">*</span>
+                  </label>
                 </div>
               </div>
 
@@ -140,16 +166,24 @@ const AddLectureMaterial = () => {
                   style={{ height: "120px" }}
                   required
                 ></textarea>
-                <label htmlFor="description">Description<span className="text-danger fw-bold">*</span></label>
+                <label htmlFor="description">
+                  Description<span className="text-danger fw-bold">*</span>
+                </label>
               </div>
             </div>
 
             <div className="mb-4">
-              <label className="form-label">Upload File <span className="text-danger fw-bold">*</span></label>
+              <label className="form-label">
+                Upload File <span className="text-danger fw-bold">*</span>
+              </label>
               <div
                 {...getRootProps()}
-                className={`border border-2 rounded p-3 text-center bg-light ${isSubmitting ? 'opacity-50' : 'border-secondary hover:border-primary bg-white'}`}
-                style={{ cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
+                className={`border border-2 rounded p-3 text-center bg-light ${
+                  isSubmitting
+                    ? "opacity-50"
+                    : "border-secondary hover:border-primary bg-white"
+                }`}
+                style={{ cursor: isSubmitting ? "not-allowed" : "pointer" }}
               >
                 <input {...getInputProps()} disabled={isSubmitting} />
                 {isDragActive ? (
@@ -157,7 +191,9 @@ const AddLectureMaterial = () => {
                 ) : formData.file ? (
                   <p className="mb-0">{formData.file.name}</p>
                 ) : (
-                  <p className="mb-0">Drag & drop a file here, or click to select</p>
+                  <p className="mb-0">
+                    Drag & drop a file here, or click to select
+                  </p>
                 )}
               </div>
             </div>
@@ -168,7 +204,7 @@ const AddLectureMaterial = () => {
                 className="btn btn-success px-4 py-2 fw-semibold"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Submitting...' : 'Submit'}
+                {isSubmitting ? "Submitting..." : "Submit"}
               </button>
             </div>
           </form>

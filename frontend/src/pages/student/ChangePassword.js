@@ -13,13 +13,13 @@ const ChangePassword = () => {
     const fetchStudent = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/student/userId/${studentId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/userId/${studentId}`
         );
         const userId = res.data.userId;
         console.log(userId);
 
         const userRes = await axios.get(
-          `http://localhost:5000/api/student/user/${userId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/user/${userId}`
         );
         const userData = userRes.data.user;
         console.log(userData);
@@ -37,7 +37,7 @@ const ChangePassword = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/student/changePassword/${studentData._id}`,
+        `https://veritas-campus-lms-production.up.railway.app/api/student/changePassword/${studentData._id}`,
         {
           currentPassword,
           newPassword,

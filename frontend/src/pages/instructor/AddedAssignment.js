@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import '../../css/AddedAssignment.css';
-import { FaEdit, FaTrash, FaDownload, FaFilePdf } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import SuccessModal from '../../components/SuccessModal';
-import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
-import SuccessToast from '../../components/SuccessToast';
-import Button from '../../components/Button';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "../../css/AddedAssignment.css";
+import { FaEdit, FaTrash, FaDownload, FaFilePdf } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import SuccessModal from "../../components/SuccessModal";
+import ConfirmDeleteModal from "../../components/ConfirmDeleteModal";
+import SuccessToast from "../../components/SuccessToast";
+import Button from "../../components/Button";
 
 const AddedAssignment = () => {
   const [assignments, setAssignments] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
@@ -24,34 +24,36 @@ const AddedAssignment = () => {
   const formatDate = (dateString) => {
     // Create date object from the UTC string
     const date = new Date(dateString);
-    
+
     // Get the timezone offset in minutes
     const timezoneOffset = date.getTimezoneOffset();
-    
+
     // Adjust the date by adding the timezone offset to get the original time
-    const adjustedDate = new Date(date.getTime() + (timezoneOffset * 60000));
-    
+    const adjustedDate = new Date(date.getTime() + timezoneOffset * 60000);
+
     const year = adjustedDate.getFullYear();
-    const month = String(adjustedDate.getMonth() + 1).padStart(2, '0');
-    const day = String(adjustedDate.getDate()).padStart(2, '0');
-    const hours = String(adjustedDate.getHours()).padStart(2, '0');
-    const minutes = String(adjustedDate.getMinutes()).padStart(2, '0');
-    const ampm = adjustedDate.getHours() >= 12 ? 'PM' : 'AM';
+    const month = String(adjustedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(adjustedDate.getDate()).padStart(2, "0");
+    const hours = String(adjustedDate.getHours()).padStart(2, "0");
+    const minutes = String(adjustedDate.getMinutes()).padStart(2, "0");
+    const ampm = adjustedDate.getHours() >= 12 ? "PM" : "AM";
     const formattedHours = adjustedDate.getHours() % 12 || 12;
-    
+
     return `${year}-${month}-${day} ${formattedHours}:${minutes} ${ampm}`;
   };
 
   const fetchAssignments = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/instructor/assignments');
-      const assignmentsWithFormattedTime = res.data.map(assignment => ({
+      const res = await axios.get(
+        "https://veritas-campus-lms-production.up.railway.app/api/instructor/assignments"
+      );
+      const assignmentsWithFormattedTime = res.data.map((assignment) => ({
         ...assignment,
-        deadline: formatDate(assignment.deadline)
+        deadline: formatDate(assignment.deadline),
       }));
       setAssignments(assignmentsWithFormattedTime);
     } catch (err) {
-      console.error('Error fetching assignments:', err);
+      console.error("Error fetching assignments:", err);
     }
   };
 
@@ -62,7 +64,9 @@ const AddedAssignment = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/instructor/assignments/${selectedAssignmentId}`);
+      await axios.delete(
+        `https://veritas-campus-lms-production.up.railway.app/api/instructor/assignments/${selectedAssignmentId}`
+      );
       setShowConfirmModal(false);
       setShowSuccessModal(true);
       fetchAssignments();
@@ -70,7 +74,7 @@ const AddedAssignment = () => {
         setShowSuccessModal(false);
       }, 3000);
     } catch (err) {
-      console.error('Error deleting assignment:', err);
+      console.error("Error deleting assignment:", err);
     }
   };
 
@@ -89,7 +93,10 @@ const AddedAssignment = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button text="Add Assignment" onClick={() => navigate('/addassignment')} />
+        <Button
+          text="Add Assignment"
+          onClick={() => navigate("/addassignment")}
+        />
       </div>
 
       <table>
@@ -115,7 +122,7 @@ const AddedAssignment = () => {
                 <td>{assignment.visibility}</td>
                 <td>
                   <a
-                    href={`http://localhost:5000/uploads/${assignment.fileUrl}`}
+                    href={`https://veritas-campus-lms-production.up.railway.app/uploads/${assignment.fileUrl}`}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -123,10 +130,17 @@ const AddedAssignment = () => {
                   </a>
                 </td>
                 <td className="actions">
-                  <a href={`http://localhost:5000/uploads/${assignment.fileUrl}`} download>
+                  <a
+                    href={`https://veritas-campus-lms-production.up.railway.app/uploads/${assignment.fileUrl}`}
+                    download
+                  >
                     <FaDownload color="green" />
                   </a>
-                  <button onClick={() => navigate(`/instructor/edit-assignment/${assignment._id}`)}>
+                  <button
+                    onClick={() =>
+                      navigate(`/instructor/edit-assignment/${assignment._id}`)
+                    }
+                  >
                     <FaEdit color="cornflowerblue" />
                   </button>
                   <button onClick={() => confirmDelete(assignment._id)}>
@@ -144,7 +158,10 @@ const AddedAssignment = () => {
       </table>
 
       <div className="see-performance-container">
-        <Button text="See Performance" onClick={() => navigate('/instructor/performance')} />
+        <Button
+          text="See Performance"
+          onClick={() => navigate("/instructor/performance")}
+        />
       </div>
 
       {showConfirmModal && (

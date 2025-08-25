@@ -19,7 +19,9 @@ const AssignmentSubmission = () => {
 
   const fetchSubmission = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/assignments/${studentName}`);
+      const res = await axios.get(
+        `https://veritas-campus-lms-production.up.railway.app/api/assignments/${studentName}`
+      );
       setSubmittedAt(new Date(res.data.submittedAt));
       setFile({ name: res.data.filePath.split("/").pop() });
       setIsMarkedDone(false); // Reset on fetch
@@ -46,7 +48,10 @@ const AssignmentSubmission = () => {
     formData.append("studentName", studentName);
 
     try {
-      await axios.post("http://localhost:5000/api/assignments/submit", formData);
+      await axios.post(
+        "https://veritas-campus-lms-production.up.railway.app/api/assignments/submit",
+        formData
+      );
       fetchSubmission();
       setFile(null);
       fileInputRef.current.value = null;
@@ -57,7 +62,9 @@ const AssignmentSubmission = () => {
 
   const handleEdit = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/assignments/${studentName}`);
+      await axios.delete(
+        `https://veritas-campus-lms-production.up.railway.app/api/assignments/${studentName}`
+      );
       setFile(null);
       setSubmittedAt(null);
       setIsMarkedDone(false);
@@ -74,7 +81,9 @@ const AssignmentSubmission = () => {
     const diffHours = Math.floor((absDiff / (1000 * 60 * 60)) % 24);
 
     if (!submittedAt) {
-      return `${diffMs >= 0 ? "" : "Overdue by "}${diffDays} days and ${diffHours} hours`;
+      return `${
+        diffMs >= 0 ? "" : "Overdue by "
+      }${diffDays} days and ${diffHours} hours`;
     }
 
     if (submittedAt < dueDate) {
@@ -93,11 +102,16 @@ const AssignmentSubmission = () => {
 
         <div>
           <h5 className="assignment-subheading">Assignment 01</h5>
-          <p className="assignment-dates">Opened: {openDate.toLocaleString()}</p>
+          <p className="assignment-dates">
+            Opened: {openDate.toLocaleString()}
+          </p>
           <p className="assignment-dates">Due: {dueDate.toLocaleString()}</p>
 
           {submittedAt && !isMarkedDone && (
-            <button className="mark-as-done-btn" onClick={() => setIsMarkedDone(true)}>
+            <button
+              className="mark-as-done-btn"
+              onClick={() => setIsMarkedDone(true)}
+            >
               Mark as done
             </button>
           )}
@@ -132,7 +146,9 @@ const AssignmentSubmission = () => {
               </tr>
               <tr>
                 <td>Submission Comments</td>
-                <td>{submittedAt ? "Submitted successfully." : "No comments"}</td>
+                <td>
+                  {submittedAt ? "Submitted successfully." : "No comments"}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -161,7 +177,11 @@ const AssignmentSubmission = () => {
                     </button>
                   )}
                 </div>
-                <button className="submit-btn" onClick={handleSubmit} disabled={!file}>
+                <button
+                  className="submit-btn"
+                  onClick={handleSubmit}
+                  disabled={!file}
+                >
                   Submit Assignment
                 </button>
                 <p>You have not made a submission yet</p>
@@ -185,13 +205,3 @@ const AssignmentSubmission = () => {
 };
 
 export default AssignmentSubmission;
-
-
-
-
-
-
-
-
-
-

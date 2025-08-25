@@ -5,7 +5,6 @@ import "../../css/supportCSS.css";
 import { MdDownload } from "react-icons/md";
 import html2pdf from "html2pdf.js";
 
-
 // Section component
 const Section = ({ title, requests, onStatusChange, showUserId }) => {
   const navigate = useNavigate();
@@ -51,26 +50,25 @@ const Section = ({ title, requests, onStatusChange, showUserId }) => {
                 </td>
                 <td>
                   <div className="action">
-                  <button
-                    className="v-btn"
-                    onClick={() =>
-                      navigate(`/admin/singleViewSupport/${req._id}`)
-                    }
-                  >
-                    View
-                  </button>
-                  <select
-                    value={req.status || "Pending"}
-                    onChange={(e) => onStatusChange(req._id, e.target.value)}
-                    className="select"
-                  >
-                    <option>Pending</option>
-                    <option>In Progress</option>
-                    <option>Resolved</option>
-                  </select>
+                    <button
+                      className="v-btn"
+                      onClick={() =>
+                        navigate(`/admin/singleViewSupport/${req._id}`)
+                      }
+                    >
+                      View
+                    </button>
+                    <select
+                      value={req.status || "Pending"}
+                      onChange={(e) => onStatusChange(req._id, e.target.value)}
+                      className="select"
+                    >
+                      <option>Pending</option>
+                      <option>In Progress</option>
+                      <option>Resolved</option>
+                    </select>
                   </div>
                 </td>
-                
               </tr>
             ))
           )}
@@ -93,21 +91,28 @@ const AdminSupport = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/adminsupport/students")
+      .get(
+        "https://veritas-campus-lms-production.up.railway.app/api/adminsupport/students"
+      )
       .then((res) => setStudentRequests(res.data))
       .catch((err) => console.error(err));
 
     axios
-      .get("http://localhost:5000/api/adminsupport/instructors")
+      .get(
+        "https://veritas-campus-lms-production.up.railway.app/api/adminsupport/instructors"
+      )
       .then((res) => setInstructorRequests(res.data))
       .catch((err) => console.error(err));
   }, []);
 
   const handleStatusChange = (id, newStatus) => {
     axios
-      .put(`http://localhost:5000/api/adminsupport/updateStatus/${id}`, {
-        status: newStatus,
-      })
+      .put(
+        `https://veritas-campus-lms-production.up.railway.app/api/adminsupport/updateStatus/${id}`,
+        {
+          status: newStatus,
+        }
+      )
       .then((res) => {
         alert(`Status updated to ${newStatus}`);
 
@@ -147,7 +152,6 @@ const AdminSupport = () => {
 
   return (
     <div className="admin-support-container">
-      
       <div className="body">
         <h1 className="title">Support Requests</h1>
 

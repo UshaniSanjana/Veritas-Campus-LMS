@@ -11,7 +11,7 @@ const Progress = () => {
     const fetchCourse = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/course/${moduleId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/course/${moduleId}`
         );
         setCourse(res.data);
       } catch (err) {
@@ -26,7 +26,7 @@ const Progress = () => {
     const getProgress = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/progress/${studentId}/${moduleId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/progress/${studentId}/${moduleId}`
         );
         setProgress(res.data || 25);
       } catch (err) {

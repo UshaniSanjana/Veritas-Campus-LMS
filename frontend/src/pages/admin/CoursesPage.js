@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import '../../css/courses.css';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import "../../css/courses.css";
 
 const CoursesPage = () => {
   const [courses, setCourses] = useState([]);
@@ -9,11 +9,13 @@ const CoursesPage = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/adminCourseStats/stats');
+      const response = await axios.get(
+        "https://veritas-campus-lms-production.up.railway.app/api/adminCourseStats/stats"
+      );
       setCourses(response.data);
     } catch (error) {
-      console.error('Error fetching courses:', error);
-      alert('Failed to load courses.');
+      console.error("Error fetching courses:", error);
+      alert("Failed to load courses.");
     } finally {
       setLoading(false);
     }
@@ -23,7 +25,9 @@ const CoursesPage = () => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/adminCourseStats/stats/${id}`);
+      await axios.delete(
+        `https://veritas-campus-lms-production.up.railway.app/api/adminCourseStats/stats/${id}`
+      );
       alert("Course deleted successfully.");
       fetchCourses();
     } catch (error) {
@@ -63,13 +67,18 @@ const CoursesPage = () => {
             <tbody>
               {courses.length === 0 ? (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: 'center' }}>No courses found.</td>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No courses found.
+                  </td>
                 </tr>
               ) : (
-                courses.map(course => (
+                courses.map((course) => (
                   <tr key={course._id}>
                     <td>
-                      <Link to={`/admin/courses/${course._id}`} className="course-link">
+                      <Link
+                        to={`/admin/courses/${course._id}`}
+                        className="course-link"
+                      >
                         {course.title}
                       </Link>
                     </td>
@@ -77,8 +86,20 @@ const CoursesPage = () => {
                     <td>{course.numStudents ?? 0}</td>
                     <td>{course.numModules ?? 0}</td>
                     <td>
-                      <Link to={`/admin/courses/edit/${course._id}`} className="btn-edit" title="Edit Course">✏️</Link>
-                      <button onClick={() => handleDeleteClick(course._id)} className="btn-delete" title="Delete Course">🗑️</button>
+                      <Link
+                        to={`/admin/courses/edit/${course._id}`}
+                        className="btn-edit"
+                        title="Edit Course"
+                      >
+                        ✏️
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteClick(course._id)}
+                        className="btn-delete"
+                        title="Delete Course"
+                      >
+                        🗑️
+                      </button>
                     </td>
                   </tr>
                 ))

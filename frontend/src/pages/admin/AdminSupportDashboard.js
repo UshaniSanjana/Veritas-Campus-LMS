@@ -13,7 +13,7 @@ import {
   Alert,
   Spinner,
 } from "react-bootstrap";
-import './AdminSupportDashboard.css'; // Uncomment this line to use the CSS
+import "./AdminSupportDashboard.css"; // Uncomment this line to use the CSS
 
 const AdminSupportDashboard = () => {
   const [supportRequests, setSupportRequests] = useState([]);
@@ -39,7 +39,7 @@ const AdminSupportDashboard = () => {
       try {
         // Primary endpoint - dedicated admin endpoint (no auth required)
         const res = await axios.get(
-          "http://localhost:5000/api/student/support/admin",
+          "https://veritas-campus-lms-production.up.railway.app/api/student/support/admin",
           {
             params: { isAdmin: true },
             timeout: 10000,
@@ -61,7 +61,7 @@ const AdminSupportDashboard = () => {
         // Fallback to the primary endpoint with auth
         try {
           const res = await axios.get(
-            "http://localhost:5000/api/student/support",
+            "https://veritas-campus-lms-production.up.railway.app/api/student/support",
             {
               params: { isAdmin: true },
               timeout: 10000,
@@ -83,7 +83,7 @@ const AdminSupportDashboard = () => {
           // Try the fixed endpoint
           try {
             const res = await axios.get(
-              "http://localhost:5000/api/student/support/fixed",
+              "https://veritas-campus-lms-production.up.railway.app/api/student/support/fixed",
               {
                 params: { isAdmin: true },
                 timeout: 10000,
@@ -103,7 +103,7 @@ const AdminSupportDashboard = () => {
             // Last resort - try public endpoint (for debugging)
             try {
               const res = await axios.get(
-                "http://localhost:5000/api/student/support/public",
+                "https://veritas-campus-lms-production.up.railway.app/api/student/support/public",
                 {
                   timeout: 10000,
                 }
@@ -207,11 +207,11 @@ const AdminSupportDashboard = () => {
 
       console.log(
         "Sending reply to:",
-        `http://localhost:5000/api/student/support/${selectedRequest._id}/reply`
+        `https://veritas-campus-lms-production.up.railway.app/api/student/support/${selectedRequest._id}/reply`
       );
 
       const response = await axios.post(
-        `http://localhost:5000/api/student/support/${selectedRequest._id}/reply`,
+        `https://veritas-campus-lms-production.up.railway.app/api/student/support/${selectedRequest._id}/reply`,
         {
           message: replyMessage.trim(),
           adminName: adminName.trim(),
@@ -315,7 +315,7 @@ const AdminSupportDashboard = () => {
         try {
           console.log("Trying admin delete endpoint...");
           await axios.delete(
-            `http://localhost:5000/api/student/support/${id}/admin`,
+            `https://veritas-campus-lms-production.up.railway.app/api/student/support/${id}/admin`,
             {
               params: { isAdmin: true },
               timeout: 10000,
@@ -331,7 +331,7 @@ const AdminSupportDashboard = () => {
           try {
             console.log("Trying regular delete endpoint with admin flag...");
             await axios.delete(
-              `http://localhost:5000/api/student/support/${id}`,
+              `https://veritas-campus-lms-production.up.railway.app/api/student/support/${id}`,
               {
                 params: { isAdmin: true },
                 timeout: 10000,
@@ -426,7 +426,7 @@ const AdminSupportDashboard = () => {
     const testRequest = supportRequests[0];
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/student/support/${testRequest._id}/reply`,
+        `https://veritas-campus-lms-production.up.railway.app/api/student/support/${testRequest._id}/reply`,
         {
           message: "Test reply from admin dashboard",
           adminName: "Test Admin",
@@ -468,7 +468,7 @@ const AdminSupportDashboard = () => {
     try {
       // Test admin delete endpoint
       const response = await axios.delete(
-        `http://localhost:5000/api/student/support/${testRequest._id}/admin`,
+        `https://veritas-campus-lms-production.up.railway.app/api/student/support/${testRequest._id}/admin`,
         {
           params: { isAdmin: true },
         }

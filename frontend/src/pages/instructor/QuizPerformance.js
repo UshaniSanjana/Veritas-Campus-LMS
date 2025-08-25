@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { useParams, Link } from "react-router-dom";
 
 // Define colors for each metric
-const COLORS = ['#7AC144', '#00C49F', '#FFBB28', '#FF4C4C'];
+const COLORS = ["#7AC144", "#00C49F", "#FFBB28", "#FF4C4C"];
 
 const QuizPerformance = () => {
   const { id } = useParams();
@@ -16,9 +16,11 @@ const QuizPerformance = () => {
   useEffect(() => {
     // Fetch performance data from backend
     axios
-      .get(`http://localhost:5000/api/instructor/quiz/${id}/performance`)
-      .then(res => setPerformance(res.data))
-      .catch(err => console.error('Error fetching performance:', err));
+      .get(
+        `https://veritas-campus-lms-production.up.railway.app/api/instructor/quiz/${id}/performance`
+      )
+      .then((res) => setPerformance(res.data))
+      .catch((err) => console.error("Error fetching performance:", err));
   }, [id]);
 
   if (!performance) {
@@ -27,21 +29,21 @@ const QuizPerformance = () => {
 
   // Prepare metrics for pie charts
   const metrics = [
-    { name: 'Accuracy', value: performance.accuracy },
-    { name: 'Completed', value: performance.completedCount },
-    { name: 'Submissions', value: performance.submissions },
-    { name: 'Passed', value: performance.passCount }
+    { name: "Accuracy", value: performance.accuracy },
+    { name: "Completed", value: performance.completedCount },
+    { name: "Submissions", value: performance.submissions },
+    { name: "Passed", value: performance.passCount },
   ];
 
   // Download section as PDF
   const handleDownload = async () => {
     const element = printRef.current;
     const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
     pdf.save(`quiz-${id}-performance.pdf`);
   };
 
@@ -51,9 +53,13 @@ const QuizPerformance = () => {
       <div className="px-4 py-3 bg-light">
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb mb-0">
-            <li className="breadcrumb-item"><Link to="/">Home</Link></li>
+            <li className="breadcrumb-item">
+              <Link to="/">Home</Link>
+            </li>
             <li className="breadcrumb-item">Programmes</li>
-            <li className="breadcrumb-item active" aria-current="page">Quiz Performance</li>
+            <li className="breadcrumb-item active" aria-current="page">
+              Quiz Performance
+            </li>
           </ol>
         </nav>
       </div>
@@ -66,12 +72,19 @@ const QuizPerformance = () => {
 
         {/* Info Row */}
         <div className="row mb-4">
-          <div className="col-md-4"><strong>Quiz Type:</strong> {performance.quizType}</div>
-          <div className="col-md-4"><strong>Question Count:</strong> {performance.questionCount}</div>
+          <div className="col-md-4">
+            <strong>Quiz Type:</strong> {performance.quizType}
+          </div>
+          <div className="col-md-4">
+            <strong>Question Count:</strong> {performance.questionCount}
+          </div>
           <div className="col-md-4 d-flex justify-content-md-end">
             <strong>Started Date:</strong>&nbsp;
             <span className="badge bg-light text-dark">
-              {new Date(performance.startDate).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
+              {new Date(performance.startDate).toLocaleString("en-US", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
             </span>
           </div>
         </div>
@@ -86,7 +99,10 @@ const QuizPerformance = () => {
                   <Pie
                     data={[
                       { name: m.name, value: m.value },
-                      { name: 'Remaining', value: performance.totalQuestions - m.value }
+                      {
+                        name: "Remaining",
+                        value: performance.totalQuestions - m.value,
+                      },
                     ]}
                     startAngle={90}
                     endAngle={-270}
@@ -115,7 +131,7 @@ const QuizPerformance = () => {
             </tr>
           </thead>
           <tbody>
-            {performance.overview.map(row => (
+            {performance.overview.map((row) => (
               <tr key={row.studentId}>
                 <td>{row.studentId}</td>
                 <td>{row.studentName}</td>

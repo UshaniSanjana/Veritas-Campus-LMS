@@ -15,16 +15,17 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        
         const studentRes = await axios.get(
-          `http://localhost:5000/api/student/profile/${studentId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/profile/${studentId}`
         );
 
         const student = studentRes.data.studentProfile;
         setStudentData(student); // store student data in state
 
         setPreviewImage(
-          student.image ? `http://localhost:5000/${student.image}` : ""
+          student.image
+            ? `https://veritas-campus-lms-production.up.railway.app/${student.image}`
+            : ""
         );
       } catch (error) {
         console.error("Failed to fetch student", error);
@@ -51,7 +52,7 @@ const EditProfile = () => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/editStudent/${studentData._id}`,
+        `https://veritas-campus-lms-production.up.railway.app/api/editStudent/${studentData._id}`,
         formData,
         {
           headers: {

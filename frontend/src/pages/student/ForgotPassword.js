@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
-import './ForgotPassword.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import "./ForgotPassword.css";
+import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
   const checkEmailExists = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/check-user?email=${email}`);
+      const response = await fetch(
+        `https://veritas-campus-lms-production.up.railway.app/api/auth/check-user?email=${email}`
+      );
       if (!response.ok) {
-        alert('Email does not exist in the database');
+        alert("Email does not exist in the database");
         return false;
       }
       return true;
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       return false;
     }
   };
@@ -26,21 +28,24 @@ function ForgotPassword() {
     if (!emailExists) return;
 
     try {
-      sessionStorage.setItem('email', email);
-      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+      sessionStorage.setItem("email", email);
+      const response = await fetch(
+        "https://veritas-campus-lms-production.up.railway.app/api/auth/forgot-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
       const data = await response.json();
       if (response.ok) {
-        console.log('OTP sent:', data);
-        navigate('/Entercode', { state: { email } });
+        console.log("OTP sent:", data);
+        navigate("/Entercode", { state: { email } });
       } else {
         alert(data.message);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
@@ -49,8 +54,10 @@ function ForgotPassword() {
       <div className="forgot-form-wrapper">
         <h2 className="forgot-title">Forgot Password?</h2>
         <h3 className="forgot-subtitle">
-          Don't worry! Resetting your password is easy.<br />
-          Just type in the email you registered to <b>Veritas International Campus</b>
+          Don't worry! Resetting your password is easy.
+          <br />
+          Just type in the email you registered to{" "}
+          <b>Veritas International Campus</b>
         </h3>
         <form onSubmit={handleSubmit} className="forgot-form">
           <input
@@ -60,11 +67,14 @@ function ForgotPassword() {
             onChange={(e) => setEmail(e.target.value)}
             className="forgot-input"
             required
-
           />
-          <button type="submit" className="forgot-button">Submit</button>
+          <button type="submit" className="forgot-button">
+            Submit
+          </button>
         </form>
-        <p className="back-link" onClick={() => navigate('/signin')}>Back to Sign In</p>
+        <p className="back-link" onClick={() => navigate("/signin")}>
+          Back to Sign In
+        </p>
       </div>
     </div>
   );

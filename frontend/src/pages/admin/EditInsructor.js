@@ -1,18 +1,18 @@
 // EditInstructorForm.jsx - Corrected Version
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 function EditInstructorForm() {
   const navigate = useNavigate();
   const { id } = useParams(); // Get instructor ID from URL params
-  
+
   const [formData, setFormData] = useState({
-    name: '', // Changed from firstName/lastName to just name
-    email: '',
-    contactNumber: '', // Changed from phone to phonenumber
-    department: '',
-    assignedCourse: '',
+    name: "", // Changed from firstName/lastName to just name
+    email: "",
+    contactNumber: "", // Changed from phone to phonenumber
+    department: "",
+    assignedCourse: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -23,38 +23,38 @@ function EditInstructorForm() {
 
   // Available courses for each department
   const coursesByDepartment = {
-    'Diploma in Human Resource Management': [
-      'Introduction to HR Management',
-      'Recruitment and Selection',
-      'Employee Relations',
-      'Performance Management',
-      'HR Analytics',
-      'Compensation and Benefits'
+    "Diploma in Human Resource Management": [
+      "Introduction to HR Management",
+      "Recruitment and Selection",
+      "Employee Relations",
+      "Performance Management",
+      "HR Analytics",
+      "Compensation and Benefits",
     ],
-    'Diploma in Business Administration': [
-      'Business Fundamentals',
-      'Marketing Management',
-      'Operations Management',
-      'Strategic Management',
-      'Business Ethics',
-      'Entrepreneurship'
+    "Diploma in Business Administration": [
+      "Business Fundamentals",
+      "Marketing Management",
+      "Operations Management",
+      "Strategic Management",
+      "Business Ethics",
+      "Entrepreneurship",
     ],
-    'Diploma in English': [
-      'English Literature',
-      'Creative Writing',
-      'Academic Writing',
-      'Business Communication',
-      'Grammar and Composition',
-      'Public Speaking'
+    "Diploma in English": [
+      "English Literature",
+      "Creative Writing",
+      "Academic Writing",
+      "Business Communication",
+      "Grammar and Composition",
+      "Public Speaking",
     ],
-    'Diploma in Internal Sales & Marketing': [
-      'Sales Fundamentals',
-      'Digital Marketing',
-      'Customer Relationship Management',
-      'Sales Psychology',
-      'Market Research',
-      'Brand Management'
-    ]
+    "Diploma in Internal Sales & Marketing": [
+      "Sales Fundamentals",
+      "Digital Marketing",
+      "Customer Relationship Management",
+      "Sales Psychology",
+      "Market Research",
+      "Brand Management",
+    ],
   };
 
   // Get available courses based on selected department
@@ -68,22 +68,26 @@ function EditInstructorForm() {
       try {
         setIsLoading(true);
         setApiError(null); // Clear any previous errors
-        
-        console.log('Fetching instructor with ID:', id); // Debug log
-        
+
+        console.log("Fetching instructor with ID:", id); // Debug log
+
         // Try multiple possible API endpoints
         let response;
         try {
-          response = await axios.get(`http://localhost:5000/api/instructors/${id}`);
+          response = await axios.get(
+            `https://veritas-campus-lms-production.up.railway.app/api/instructors/${id}`
+          );
         } catch (error) {
           // If first endpoint fails, try the original one
-          console.log('First endpoint failed, trying alternative...');
-          response = await axios.get(`http://localhost:5000/api/instructors/${id}`);
+          console.log("First endpoint failed, trying alternative...");
+          response = await axios.get(
+            `https://veritas-campus-lms-production.up.railway.app/api/instructors/${id}`
+          );
         }
-        
-        console.log('API Response:', response); // Debug log
-        console.log('Response data:', response.data); // Debug log
-        
+
+        console.log("API Response:", response); // Debug log
+        console.log("Response data:", response.data); // Debug log
+
         // Handle different response structures
         let instructorData;
         if (response.data.data) {
@@ -93,34 +97,46 @@ function EditInstructorForm() {
         } else {
           instructorData = response.data;
         }
-        
-        console.log('Instructor data to set:', instructorData); // Debug log
-        
+
+        console.log("Instructor data to set:", instructorData); // Debug log
+
         // Map the API data to form data structure
         const dataToSet = {
-          name: instructorData.name || '',
-          email: instructorData.email || '',
-          contactNumber: instructorData.contactNumber || instructorData.contactNumber || instructorData.phone || '',
-          department: instructorData.department || '',
-          assignedCourse: instructorData.assignedCourse || instructorData.assigned_course || '',
+          name: instructorData.name || "",
+          email: instructorData.email || "",
+          contactNumber:
+            instructorData.contactNumber ||
+            instructorData.contactNumber ||
+            instructorData.phone ||
+            "",
+          department: instructorData.department || "",
+          assignedCourse:
+            instructorData.assignedCourse ||
+            instructorData.assigned_course ||
+            "",
         };
-        
-        console.log('Data being set to form:', dataToSet); // Debug log
+
+        console.log("Data being set to form:", dataToSet); // Debug log
         setFormData(dataToSet);
-        
       } catch (error) {
-        console.error('Error fetching instructor:', error);
-        console.error('Error response:', error.response); // More detailed error logging
-        
+        console.error("Error fetching instructor:", error);
+        console.error("Error response:", error.response); // More detailed error logging
+
         if (error.response) {
           // Server responded with error status
-          setApiError(`Failed to load instructor: ${error.response.data?.message || error.response.statusText} (Status: ${error.response.status})`);
+          setApiError(
+            `Failed to load instructor: ${
+              error.response.data?.message || error.response.statusText
+            } (Status: ${error.response.status})`
+          );
         } else if (error.request) {
           // Request was made but no response received
-          setApiError('No response from server. Please check if the backend is running on http://localhost:5000');
+          setApiError(
+            "No response from server. Please check if the backend is running on https://veritas-campus-lms-production.up.railway.app"
+          );
         } else {
           // Something else happened
-          setApiError('Failed to load instructor data. Please try again.');
+          setApiError("Failed to load instructor data. Please try again.");
         }
       } finally {
         setIsLoading(false);
@@ -128,24 +144,26 @@ function EditInstructorForm() {
     };
 
     if (id) {
-      console.log('Component mounted with ID:', id); // Debug log
+      console.log("Component mounted with ID:", id); // Debug log
       fetchInstructor();
     } else {
-      console.error('No instructor ID provided in URL params');
-      setApiError('No instructor ID provided. Please select an instructor to edit.');
+      console.error("No instructor ID provided in URL params");
+      setApiError(
+        "No instructor ID provided. Please select an instructor to edit."
+      );
       setIsLoading(false);
     }
   }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // If department changes, reset assigned course
-    if (name === 'department') {
+    if (name === "department") {
       setFormData({
         ...formData,
         [name]: value,
-        assignedCourse: '', // Reset course when department changes
+        assignedCourse: "", // Reset course when department changes
       });
     } else {
       setFormData({
@@ -153,106 +171,114 @@ function EditInstructorForm() {
         [name]: value,
       });
     }
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors({
         ...errors,
-        [name]: '',
+        [name]: "",
       });
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Validate name
     if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
+      newErrors.name = "Name must be at least 2 characters";
     }
-    
+
     // Validate email
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
-    
+
     // Validate phone number
     if (!formData.contactNumber.trim()) {
-      newErrors.contactNumber = 'Phone number is required';
+      newErrors.contactNumber = "Phone number is required";
     } else {
-      const cleanPhone = formData.contactNumber.replace(/[^0-9]/g, '');
+      const cleanPhone = formData.contactNumber.replace(/[^0-9]/g, "");
       if (cleanPhone.length < 10) {
-        newErrors.contactNumber = 'Phone number must be at least 10 digits';
+        newErrors.contactNumber = "Phone number must be at least 10 digits";
       } else if (cleanPhone.length > 15) {
-        newErrors.contactNumber = 'Phone number is too long';
+        newErrors.contactNumber = "Phone number is too long";
       }
     }
-    
+
     // Validate department
     if (!formData.department.trim()) {
-      newErrors.department = 'Department is required';
+      newErrors.department = "Department is required";
     }
-    
+
     // Validate assigned course
     if (!formData.assignedCourse.trim()) {
-      newErrors.assignedCourse = 'Assigned course is required';
+      newErrors.assignedCourse = "Assigned course is required";
     }
-    
+
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    
+
     setIsSubmitting(true);
     setApiError(null);
-    
+
     try {
-      console.log('Submitting data:', formData); // Debug log
-      
+      console.log("Submitting data:", formData); // Debug log
+
       // Try multiple possible API endpoints for update
       let response;
       try {
-        response = await axios.put(`http://localhost:5000/api/instructors/${id}`, formData, {
-          headers: {
-            'Content-Type': 'application/json'
+        response = await axios.put(
+          `https://veritas-campus-lms-production.up.railway.app/api/instructors/${id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
       } catch (error) {
         // If first endpoint fails, try the original one
-        console.log('First update endpoint failed, trying alternative...');
-        response = await axios.put(`http://localhost:5000/api/instructors/${id}`, formData, {
-          headers: {
-            'Content-Type': 'application/json'
+        console.log("First update endpoint failed, trying alternative...");
+        response = await axios.put(
+          `https://veritas-campus-lms-production.up.railway.app/api/instructors/${id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
       }
-      
-      console.log('Update response:', response); // Debug log
+
+      console.log("Update response:", response); // Debug log
       setShowSuccess(true);
-      
+
       // Show success message briefly before navigating
       setTimeout(() => {
         // Navigate to the ManageInstructors page after successful submission
-        navigate('/admin/allinstrutors');
+        navigate("/admin/allinstrutors");
       }, 2000);
     } catch (error) {
-      console.error('Error updating instructor:', error);
-      console.error('Error response:', error.response); // More detailed error logging
-      
+      console.error("Error updating instructor:", error);
+      console.error("Error response:", error.response); // More detailed error logging
+
       setApiError(
-        error.response?.data?.message || 
-        'An error occurred while updating the instructor. Please try again.'
+        error.response?.data?.message ||
+          "An error occurred while updating the instructor. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -262,191 +288,191 @@ function EditInstructorForm() {
   // Styles
   const styles = {
     container: {
-      backgroundColor: '#f8f9fa',
-      minHeight: '100vh',
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif',
-      color: '#333',
+      backgroundColor: "#f8f9fa",
+      minHeight: "100vh",
+      padding: "20px",
+      fontFamily: "Arial, sans-serif",
+      color: "#333",
     },
     formCard: {
-      backgroundColor: '#ffffff',
-      borderRadius: '8px',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-      padding: '30px',
-      maxWidth: '700px',
-      margin: '0 auto',
+      backgroundColor: "#ffffff",
+      borderRadius: "8px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      padding: "30px",
+      maxWidth: "700px",
+      margin: "0 auto",
     },
     header: {
-      marginBottom: '30px',
-      textAlign: 'center',
+      marginBottom: "30px",
+      textAlign: "center",
     },
     headerTitle: {
-      fontSize: '28px',
-      fontWeight: 'bold',
-      color: '#2c3e50',
-      margin: '0',
+      fontSize: "28px",
+      fontWeight: "bold",
+      color: "#2c3e50",
+      margin: "0",
     },
     subtitle: {
-      fontSize: '16px',
-      color: '#7f8c8d',
-      marginTop: '8px',
+      fontSize: "16px",
+      color: "#7f8c8d",
+      marginTop: "8px",
     },
     requiredNote: {
-      backgroundColor: '#fff3cd',
-      border: '1px solid #ffeaa7',
-      padding: '12px 16px',
-      borderRadius: '6px',
-      marginBottom: '25px',
-      fontSize: '14px',
-      color: '#856404',
+      backgroundColor: "#fff3cd",
+      border: "1px solid #ffeaa7",
+      padding: "12px 16px",
+      borderRadius: "6px",
+      marginBottom: "25px",
+      fontSize: "14px",
+      color: "#856404",
     },
     formGroup: {
-      display: 'flex',
-      flexDirection: 'column',
-      marginBottom: '20px',
+      display: "flex",
+      flexDirection: "column",
+      marginBottom: "20px",
     },
     label: {
-      marginBottom: '8px',
-      fontWeight: '600',
-      fontSize: '14px',
-      color: '#2c3e50',
+      marginBottom: "8px",
+      fontWeight: "600",
+      fontSize: "14px",
+      color: "#2c3e50",
     },
     asterisk: {
-      color: '#e74c3c',
-      marginLeft: '2px',
+      color: "#e74c3c",
+      marginLeft: "2px",
     },
     input: {
-      padding: '12px',
-      border: '2px solid #e9ecef',
-      borderRadius: '6px',
-      fontSize: '14px',
-      width: '100%',
-      boxSizing: 'border-box',
-      transition: 'border-color 0.3s ease',
-      backgroundColor: '#fff',
+      padding: "12px",
+      border: "2px solid #e9ecef",
+      borderRadius: "6px",
+      fontSize: "14px",
+      width: "100%",
+      boxSizing: "border-box",
+      transition: "border-color 0.3s ease",
+      backgroundColor: "#fff",
     },
     inputFocused: {
-      borderColor: '#3498db',
-      outline: 'none',
-      boxShadow: '0 0 0 3px rgba(52, 152, 219, 0.1)',
+      borderColor: "#3498db",
+      outline: "none",
+      boxShadow: "0 0 0 3px rgba(52, 152, 219, 0.1)",
     },
     select: {
-      padding: '12px',
-      border: '2px solid #e9ecef',
-      borderRadius: '6px',
-      fontSize: '14px',
-      backgroundColor: '#fff',
-      width: '100%',
-      boxSizing: 'border-box',
-      transition: 'border-color 0.3s ease',
-      cursor: 'pointer',
+      padding: "12px",
+      border: "2px solid #e9ecef",
+      borderRadius: "6px",
+      fontSize: "14px",
+      backgroundColor: "#fff",
+      width: "100%",
+      boxSizing: "border-box",
+      transition: "border-color 0.3s ease",
+      cursor: "pointer",
     },
     buttonContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      gap: '15px',
-      marginTop: '30px',
+      display: "flex",
+      justifyContent: "center",
+      gap: "15px",
+      marginTop: "30px",
     },
     submitButton: {
-      backgroundColor: '#27ae60',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '14px 28px',
-      fontSize: '16px',
-      fontWeight: '600',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      minWidth: '120px',
+      backgroundColor: "#27ae60",
+      color: "white",
+      border: "none",
+      borderRadius: "6px",
+      padding: "14px 28px",
+      fontSize: "16px",
+      fontWeight: "600",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      minWidth: "120px",
     },
     submitButtonHover: {
-      backgroundColor: '#219a52',
-      transform: 'translateY(-2px)',
+      backgroundColor: "#219a52",
+      transform: "translateY(-2px)",
     },
     cancelButton: {
-      backgroundColor: '#95a5a6',
-      color: 'white',
-      border: 'none',
-      borderRadius: '6px',
-      padding: '14px 28px',
-      fontSize: '16px',
-      fontWeight: '600',
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      minWidth: '120px',
+      backgroundColor: "#95a5a6",
+      color: "white",
+      border: "none",
+      borderRadius: "6px",
+      padding: "14px 28px",
+      fontSize: "16px",
+      fontWeight: "600",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      minWidth: "120px",
     },
     cancelButtonHover: {
-      backgroundColor: '#7f8c8d',
-      transform: 'translateY(-2px)',
+      backgroundColor: "#7f8c8d",
+      transform: "translateY(-2px)",
     },
     errorMessage: {
-      color: '#e74c3c',
-      fontSize: '12px',
-      marginTop: '5px',
-      fontWeight: '500',
+      color: "#e74c3c",
+      fontSize: "12px",
+      marginTop: "5px",
+      fontWeight: "500",
     },
     loadingContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '400px',
-      fontSize: '18px',
-      color: '#7f8c8d',
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "400px",
+      fontSize: "18px",
+      color: "#7f8c8d",
     },
     loadingSpinner: {
-      border: '4px solid #f3f3f3',
-      borderTop: '4px solid #3498db',
-      borderRadius: '50%',
-      width: '40px',
-      height: '40px',
-      animation: 'spin 1s linear infinite',
-      marginBottom: '20px',
+      border: "4px solid #f3f3f3",
+      borderTop: "4px solid #3498db",
+      borderRadius: "50%",
+      width: "40px",
+      height: "40px",
+      animation: "spin 1s linear infinite",
+      marginBottom: "20px",
     },
     successMessage: {
-      backgroundColor: '#d4edda',
-      border: '1px solid #c3e6cb',
-      padding: '12px 16px',
-      borderRadius: '6px',
-      marginBottom: '20px',
-      color: '#155724',
-      textAlign: 'center',
-      fontWeight: '500',
+      backgroundColor: "#d4edda",
+      border: "1px solid #c3e6cb",
+      padding: "12px 16px",
+      borderRadius: "6px",
+      marginBottom: "20px",
+      color: "#155724",
+      textAlign: "center",
+      fontWeight: "500",
     },
     errorAlert: {
-      backgroundColor: '#f8d7da',
-      border: '1px solid #f5c6cb',
-      padding: '12px 16px',
-      borderRadius: '6px',
-      marginBottom: '20px',
-      color: '#721c24',
-      textAlign: 'center',
-      fontWeight: '500',
+      backgroundColor: "#f8d7da",
+      border: "1px solid #f5c6cb",
+      padding: "12px 16px",
+      borderRadius: "6px",
+      marginBottom: "20px",
+      color: "#721c24",
+      textAlign: "center",
+      fontWeight: "500",
     },
     formRow: {
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: '20px',
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "20px",
     },
     sectionTitle: {
-      fontSize: '18px',
-      fontWeight: 'bold',
-      color: '#2c3e50',
-      marginBottom: '15px',
-      marginTop: '25px',
-      paddingBottom: '8px',
-      borderBottom: '2px solid #ecf0f1',
+      fontSize: "18px",
+      fontWeight: "bold",
+      color: "#2c3e50",
+      marginBottom: "15px",
+      marginTop: "25px",
+      paddingBottom: "8px",
+      borderBottom: "2px solid #ecf0f1",
     },
     debugInfo: {
-      backgroundColor: '#e8f4f8',
-      border: '1px solid #bee5eb',
-      padding: '15px',
-      borderRadius: '6px',
-      marginBottom: '20px',
-      fontSize: '12px',
-      color: '#0c5460',
-      fontFamily: 'monospace',
-    }
+      backgroundColor: "#e8f4f8",
+      border: "1px solid #bee5eb",
+      padding: "15px",
+      borderRadius: "6px",
+      marginBottom: "20px",
+      fontSize: "12px",
+      color: "#0c5460",
+      fontFamily: "monospace",
+    },
   };
 
   if (isLoading) {
@@ -456,7 +482,7 @@ function EditInstructorForm() {
           <div style={styles.loadingContainer}>
             <div style={styles.loadingSpinner}></div>
             <p>Loading instructor data...</p>
-            <p style={{ fontSize: '14px', marginTop: '10px' }}>
+            <p style={{ fontSize: "14px", marginTop: "10px" }}>
               Fetching instructor ID: {id}
             </p>
           </div>
@@ -491,17 +517,16 @@ function EditInstructorForm() {
           }
         `}
       </style>
-      
+
       <div style={styles.formCard}>
         <div style={styles.header}>
           <h1 style={styles.headerTitle}>Edit Instructor</h1>
           <p style={styles.subtitle}>Update instructor information</p>
         </div>
 
-        
-        
         <div style={styles.requiredNote}>
-          <strong>Note:</strong> All fields marked with an asterisk (*) are required.
+          <strong>Note:</strong> All fields marked with an asterisk (*) are
+          required.
         </div>
 
         {showSuccess && (
@@ -510,16 +535,12 @@ function EditInstructorForm() {
           </div>
         )}
 
-        {apiError && (
-          <div style={styles.errorAlert}>
-            ❌ {apiError}
-          </div>
-        )}
-        
+        {apiError && <div style={styles.errorAlert}>❌ {apiError}</div>}
+
         <form onSubmit={handleSubmit}>
           {/* Personal Information */}
           <h3 style={styles.sectionTitle}>Personal Information</h3>
-          
+
           <div style={styles.formGroup}>
             <label style={styles.label}>
               Full Name<span style={styles.asterisk}>*</span>
@@ -532,7 +553,11 @@ function EditInstructorForm() {
               className="form-input"
               style={{
                 ...styles.input,
-                borderColor: errors.name ? '#e74c3c' : formData.name ? '#27ae60' : '#e9ecef',
+                borderColor: errors.name
+                  ? "#e74c3c"
+                  : formData.name
+                  ? "#27ae60"
+                  : "#e9ecef",
               }}
               placeholder="Enter full name"
             />
@@ -541,7 +566,7 @@ function EditInstructorForm() {
 
           {/* Contact Information */}
           <h3 style={styles.sectionTitle}>Contact Information</h3>
-          
+
           <div style={styles.formRow}>
             <div style={styles.formGroup}>
               <label style={styles.label}>
@@ -555,13 +580,19 @@ function EditInstructorForm() {
                 className="form-input"
                 style={{
                   ...styles.input,
-                  borderColor: errors.email ? '#e74c3c' : formData.email ? '#27ae60' : '#e9ecef',
+                  borderColor: errors.email
+                    ? "#e74c3c"
+                    : formData.email
+                    ? "#27ae60"
+                    : "#e9ecef",
                 }}
                 placeholder="Enter email address"
               />
-              {errors.email && <p style={styles.errorMessage}>{errors.email}</p>}
+              {errors.email && (
+                <p style={styles.errorMessage}>{errors.email}</p>
+              )}
             </div>
-            
+
             <div style={styles.formGroup}>
               <label style={styles.label}>
                 Phone Number<span style={styles.asterisk}>*</span>
@@ -574,17 +605,23 @@ function EditInstructorForm() {
                 className="form-input"
                 style={{
                   ...styles.input,
-                  borderColor: errors.contactNumber ? '#e74c3c' : formData.contactNumber ? '#27ae60' : '#e9ecef',
+                  borderColor: errors.contactNumber
+                    ? "#e74c3c"
+                    : formData.contactNumber
+                    ? "#27ae60"
+                    : "#e9ecef",
                 }}
                 placeholder="Enter phone number"
               />
-              {errors.contactNumber && <p style={styles.errorMessage}>{errors.contactNumber}</p>}
+              {errors.contactNumber && (
+                <p style={styles.errorMessage}>{errors.contactNumber}</p>
+              )}
             </div>
           </div>
 
           {/* Professional Information */}
           <h3 style={styles.sectionTitle}>Professional Information</h3>
-          
+
           <div style={styles.formGroup}>
             <label style={styles.label}>
               Department<span style={styles.asterisk}>*</span>
@@ -596,18 +633,30 @@ function EditInstructorForm() {
               className="form-input"
               style={{
                 ...styles.select,
-                borderColor: errors.department ? '#e74c3c' : formData.department ? '#27ae60' : '#e9ecef',
+                borderColor: errors.department
+                  ? "#e74c3c"
+                  : formData.department
+                  ? "#27ae60"
+                  : "#e9ecef",
               }}
             >
               <option value="">Select Department</option>
-              <option value="Diploma in Human Resource Management">Diploma in Human Resource Management</option>
-              <option value="Diploma in Business Administration">Diploma in Business Administration</option>
+              <option value="Diploma in Human Resource Management">
+                Diploma in Human Resource Management
+              </option>
+              <option value="Diploma in Business Administration">
+                Diploma in Business Administration
+              </option>
               <option value="Diploma in English">Diploma in English</option>
-              <option value="Diploma in Internal Sales & Marketing">Diploma in Internal Sales & Marketing</option>
+              <option value="Diploma in Internal Sales & Marketing">
+                Diploma in Internal Sales & Marketing
+              </option>
             </select>
-            {errors.department && <p style={styles.errorMessage}>{errors.department}</p>}
+            {errors.department && (
+              <p style={styles.errorMessage}>{errors.department}</p>
+            )}
           </div>
-          
+
           <div style={styles.formGroup}>
             <label style={styles.label}>
               Assigned Course<span style={styles.asterisk}>*</span>
@@ -619,33 +668,43 @@ function EditInstructorForm() {
               className="form-input"
               style={{
                 ...styles.select,
-                borderColor: errors.assignedCourse ? '#e74c3c' : formData.assignedCourse ? '#27ae60' : '#e9ecef',
+                borderColor: errors.assignedCourse
+                  ? "#e74c3c"
+                  : formData.assignedCourse
+                  ? "#27ae60"
+                  : "#e9ecef",
               }}
               disabled={!formData.department}
             >
               <option value="">
-                {!formData.department ? 'Select department first' : 'Select assigned course'}
+                {!formData.department
+                  ? "Select department first"
+                  : "Select assigned course"}
               </option>
-              {getAvailableCourses().map(course => (
+              {getAvailableCourses().map((course) => (
                 <option key={course} value={course}>
                   {course}
                 </option>
               ))}
             </select>
-            {errors.assignedCourse && <p style={styles.errorMessage}>{errors.assignedCourse}</p>}
+            {errors.assignedCourse && (
+              <p style={styles.errorMessage}>{errors.assignedCourse}</p>
+            )}
             {!formData.department && (
-              <p style={{ fontSize: '12px', color: '#7f8c8d', marginTop: '5px' }}>
+              <p
+                style={{ fontSize: "12px", color: "#7f8c8d", marginTop: "5px" }}
+              >
                 Please select a department to see available courses
               </p>
             )}
           </div>
-          
+
           <div style={styles.buttonContainer}>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="cancel-btn"
               style={styles.cancelButton}
-              onClick={() => navigate('/allinstrutors')}
+              onClick={() => navigate("/allinstrutors")}
               disabled={isSubmitting}
             >
               Cancel
@@ -657,10 +716,10 @@ function EditInstructorForm() {
               style={{
                 ...styles.submitButton,
                 opacity: isSubmitting ? 0.7 : 1,
-                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                cursor: isSubmitting ? "not-allowed" : "pointer",
               }}
             >
-              {isSubmitting ? '⏳ Updating...' : '✅ Update Instructor'}
+              {isSubmitting ? "⏳ Updating..." : "✅ Update Instructor"}
             </button>
           </div>
         </form>

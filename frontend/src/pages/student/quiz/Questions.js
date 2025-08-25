@@ -16,7 +16,7 @@ const Questions = () => {
     const fetchQuizes = async () => {
       setLoading(true);
       const res = await axios.get(
-        `http://localhost:5000/api/student/quizzes/module/${moduleId}`
+        `https://veritas-campus-lms-production.up.railway.app/api/student/quizzes/module/${moduleId}`
       );
       console.log(res.data);
 
@@ -78,7 +78,7 @@ const Questions = () => {
 
     try {
       await axios.post(
-        `http://localhost:5000/api/quizAnswers/${quizes._id}`,
+        `https://veritas-campus-lms-production.up.railway.app/api/quizAnswers/${quizes._id}`,
         payload
       );
       alert("Quiz submitted successfully!");

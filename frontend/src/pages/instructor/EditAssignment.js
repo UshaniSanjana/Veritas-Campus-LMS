@@ -1,10 +1,10 @@
 // src/pages/instructor/EditAssignment.js
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../../css/EditAssignment.css';
-import SuccessModal from '../../components/SuccessModal';
-import Button from '../../components/Button';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../../css/EditAssignment.css";
+import SuccessModal from "../../components/SuccessModal";
+import Button from "../../components/Button";
 
 const EditAssignment = () => {
   const { id } = useParams();
@@ -12,29 +12,33 @@ const EditAssignment = () => {
   const [showModal, setShowModal] = useState(false);
 
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    deadline: '',
-    visibility: 'Public',
+    title: "",
+    description: "",
+    deadline: "",
+    visibility: "Public",
     file: null,
-    fileUrl: '',
+    fileUrl: "",
   });
 
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/instructor/assignments/${id}`);
+        const res = await axios.get(
+          `https://veritas-campus-lms-production.up.railway.app/api/instructor/assignments/${id}`
+        );
         const { title, description, deadline, visibility, fileUrl } = res.data;
         setFormData({
           title,
           description,
-          deadline: deadline ? new Date(deadline).toISOString().slice(0, 16) : '',
+          deadline: deadline
+            ? new Date(deadline).toISOString().slice(0, 16)
+            : "",
           visibility,
           file: null,
-          fileUrl
+          fileUrl,
         });
       } catch (error) {
-        console.error('Failed to load assignment:', error);
+        console.error("Failed to load assignment:", error);
       }
     };
 
@@ -43,7 +47,7 @@ const EditAssignment = () => {
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
-    if (type === 'file') {
+    if (type === "file") {
       setFormData({ ...formData, file: e.target.files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -54,38 +58,43 @@ const EditAssignment = () => {
     e.preventDefault();
 
     const data = new FormData();
-    data.append('title', formData.title);
-    data.append('description', formData.description);
-    data.append('visibility', formData.visibility);
-    
+    data.append("title", formData.title);
+    data.append("description", formData.description);
+    data.append("visibility", formData.visibility);
+
     // Convert local time to UTC
     const localDate = new Date(formData.deadline);
-    const utcDate = new Date(Date.UTC(
-      localDate.getFullYear(),
-      localDate.getMonth(),
-      localDate.getDate(),
-      localDate.getHours(),
-      localDate.getMinutes()
-    ));
-    
-    data.append('deadline', utcDate.toISOString());
+    const utcDate = new Date(
+      Date.UTC(
+        localDate.getFullYear(),
+        localDate.getMonth(),
+        localDate.getDate(),
+        localDate.getHours(),
+        localDate.getMinutes()
+      )
+    );
+
+    data.append("deadline", utcDate.toISOString());
 
     if (formData.file) {
-      data.append('file', formData.file);
+      data.append("file", formData.file);
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/instructor/assignments/${id}`, data);
+      await axios.put(
+        `https://veritas-campus-lms-production.up.railway.app/api/instructor/assignments/${id}`,
+        data
+      );
       setShowModal(true);
     } catch (error) {
-      console.error('Update failed:', error);
-      alert('Update failed');
+      console.error("Update failed:", error);
+      alert("Update failed");
     }
   };
 
   const handleViewAll = () => {
     setShowModal(false);
-    navigate('/instructor/added-assignment');
+    navigate("/instructor/added-assignment");
   };
 
   return (
@@ -122,7 +131,7 @@ const EditAssignment = () => {
               type="radio"
               name="visibility"
               value="Public"
-              checked={formData.visibility === 'Public'}
+              checked={formData.visibility === "Public"}
               onChange={handleChange}
             />
             Public
@@ -132,7 +141,7 @@ const EditAssignment = () => {
               type="radio"
               name="visibility"
               value="Private"
-              checked={formData.visibility === 'Private'}
+              checked={formData.visibility === "Private"}
               onChange={handleChange}
             />
             Private
@@ -143,7 +152,7 @@ const EditAssignment = () => {
           <div className="current-file">
             <p>Current File:</p>
             <a
-              href={`http://localhost:5000/uploads/${formData.fileUrl}`}
+              href={`https://veritas-campus-lms-production.up.railway.app/uploads/${formData.fileUrl}`}
               target="_blank"
               rel="noopener noreferrer"
               className="file-preview"

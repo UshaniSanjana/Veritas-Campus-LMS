@@ -14,18 +14,18 @@ export const StudentModules = () => {
     const fetchAllCourses = async () => {
       try {
         const studentData = await axios.get(
-          `http://localhost:5000/api/student/${studentId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/${studentId}`
         );
 
         const courseData = await axios.post(
-          `http://localhost:5000/api/student/course`,
+          `https://veritas-campus-lms-production.up.railway.app/api/student/course`,
           {
             title: studentData.data.student.course,
           }
         );
 
         const allModules = await axios.get(
-          `http://localhost:5000/api/student/courses/${courseData.data._id}/modules`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/courses/${courseData.data._id}/modules`
         );
 
         const moduleIds = allModules.data;
@@ -33,7 +33,9 @@ export const StudentModules = () => {
         const moduleDetails = await Promise.all(
           moduleIds.map((id) =>
             axios
-              .get(`http://localhost:5000/api/instructor/${id}`)
+              .get(
+                `https://veritas-campus-lms-production.up.railway.app/api/instructor/${id}`
+              )
               .then((res) => res.data)
           )
         );
@@ -41,7 +43,7 @@ export const StudentModules = () => {
         setCourses(moduleDetails);
 
         const allEnrolled = await axios.get(
-          `http://localhost:5000/api/student/enrolled/${studentId}`
+          `https://veritas-campus-lms-production.up.railway.app/api/student/enrolled/${studentId}`
         );
 
         setEnrolledCourses(allEnrolled.data);
@@ -64,14 +66,17 @@ export const StudentModules = () => {
         "studentId:",
         studentId
       );
-      await axios.post(`http://localhost:5000/api/enroll/${moduleId}`, {
-        studentId,
-        code,
-      });
+      await axios.post(
+        `https://veritas-campus-lms-production.up.railway.app/api/enroll/${moduleId}`,
+        {
+          studentId,
+          code,
+        }
+      );
       alert("Enrolled successfully!");
 
       const allEnrolled = await axios.get(
-        `http://localhost:5000/api/enrolled/${studentId}`
+        `https://veritas-campus-lms-production.up.railway.app/api/enrolled/${studentId}`
       );
       setEnrolledCourses(allEnrolled.data);
       setSelectedCourse(null);

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import '../../css/course.css';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import "../../css/course.css";
 
 const CourseDetailsPage = () => {
   const { id } = useParams();
@@ -11,11 +11,13 @@ const CourseDetailsPage = () => {
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/adminCourseStats/details/${id}`);
+        const response = await axios.get(
+          `https://veritas-campus-lms-production.up.railway.app/api/adminCourseStats/details/${id}`
+        );
         setCourseData(response.data);
       } catch (error) {
-        console.error('Error fetching course details:', error);
-        alert('Failed to load course details.');
+        console.error("Error fetching course details:", error);
+        alert("Failed to load course details.");
       } finally {
         setLoading(false);
       }
