@@ -7,7 +7,7 @@ exports.getStudentProfile = async (req, res) => {
     const { id } = req.params; // This should be the User's _id (userId)
 
     // Step 2: Find student profile by userId
-    const student = await Student.findOne(id);
+    const student = await Student.findById(id);
     if (!student) {
       return res.status(404).json({ message: "Student profile not found" });
     }
