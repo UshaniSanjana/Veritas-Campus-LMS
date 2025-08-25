@@ -1,26 +1,26 @@
-const express = require('express');
-const router = express.Router();
-const {
+import { Router } from "express";
+const router = Router();
+import {
   createInstructor,
   getAllInstructors,
   getInstructorById,
   updateInstructor,
-  deleteInstructor
-} = require('../controllers/admin/instructorController');
+  deleteInstructor,
+} from "../controllers/admin/instructorController";
 
 // Create instructor
-router.post('/', createInstructor);
+router.post("/", createInstructor);
 
 // Get all instructors
-router.get('/', getAllInstructors);
+router.get("/", getAllInstructors);
 
 // Get instructor by ID
-router.get('/:id', getInstructorById);
+router.get("/:id", getInstructorById);
 
 // Update instructor
-router.put('/:id', updateInstructor);
+router.put("/:id", updateInstructor);
 
 // Delete instructor
-router.delete('/:id', deleteInstructor);
+router.delete("/:id", deleteInstructor);
 
-module.exports = router;
+export default router;
