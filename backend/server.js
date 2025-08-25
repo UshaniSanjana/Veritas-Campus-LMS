@@ -44,7 +44,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000", // local dev
-      "https://veritas-campus-lms-hzqe.vercel.app", // your frontend
+      "https://veritas-campus-lms-ywm1.vercel.app", // your frontend
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -65,7 +65,7 @@ app.use("/api/adminReport", adminReportRoutes);
 app.use("/api/adminCourseStats", courseStatsRoutes);
 app.use("/api/adminDashboard", adminDashboardRoutes);
 app.use("/api/quizAnswers", quizAnswersRoute);
-app.use("/api", studentRoutes);
+app.use("/api/student", studentRoutes);
 app.use("/api/instructors", instructorRoutesV2);
 
 // Instructor routes
