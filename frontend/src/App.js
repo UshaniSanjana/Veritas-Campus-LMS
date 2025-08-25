@@ -12,7 +12,7 @@ import PublicLayout from "./layouts/PublicLayout";
 import InstructorLayout from "./layouts/InstructorLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import StudentLayout from "./layouts/AdminLayout";
-import LayoutAnnouncement from "./pages/admin/Layout_Announcement";
+// import LayoutAnnouncement from "./pages/admin/Layout_Announcement";
 
 //Common Components
 import Footer from "./components/Footer";
@@ -43,8 +43,8 @@ import SendNotification from "./pages/admin/SendNotification";
 import Settings from "./pages/admin/Settings";
 import ViewAnnouncements from "./pages/admin/ViewAnnouncements";
 //import Layout_Announcement from "./pages/admin/Layout_Announcement";
-import EditAnnouncement from "./components/EditeAnnouncemet";
-import EditNotification from "./components/EditNotification";
+// import EditAnnouncement from "./components/EditeAnnouncemet";
+// import EditNotification from "./components/EditNotification";
 
 import SingleViewSupport from "./pages/admin/SingleViewSupport";
 import AdminReportPage from "./pages/admin/AdminReportPage";
@@ -160,7 +160,7 @@ function App() {
           <Route path="send-notification" element={<SendNotification />} />
           <Route path="settings" element={<Settings />} />
           <Route path="announcements" element={<ViewAnnouncements />} />
-          <Route path="" element={<LayoutAnnouncement />}>
+          {/* <Route path="" element={<LayoutAnnouncement />}>
             <Route
               path="edit-announcement/:id"
               element={<EditAnnouncement />}
@@ -169,7 +169,7 @@ function App() {
               path="edit-notification/:id"
               element={<EditNotification />}
             />
-          </Route>
+          </Route> */}
         </Route>
 
         {/* Instructor Routes */}
