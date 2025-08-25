@@ -1,5 +1,5 @@
 import React from "react";
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./index.css";
 
 //Bootstrap
@@ -12,12 +12,10 @@ import PublicLayout from "./layouts/PublicLayout";
 import InstructorLayout from "./layouts/InstructorLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import StudentLayout from "./layouts/AdminLayout";
-import Layout_Announcement from "./pages/admin/Layout_Announcement";
+import LayoutAnnouncement from "./pages/admin/Layout_Announcement";
 
 //Common Components
 import Footer from "./components/Footer";
-import ScrollToTop from "./components/ScrollToTop";
-import InstrcutorNavbar from "./components/instructorNavbar";
 
 // Static Pages
 import Home from "./pages/static/Home";
@@ -52,12 +50,12 @@ import SingleViewSupport from "./pages/admin/SingleViewSupport";
 import AdminReportPage from "./pages/admin/AdminReportPage";
 import AdminSupport from "./pages/admin/AdminSupport";
 
-import AddInstructor from './pages/admin/AddInstructor';
-import ManageInstrutors from './pages/admin/ManageInstrutors';
-import EditInsructor from './pages/admin/EditInsructor';
-import QuizExam from './pages/admin/QuizExam';
-import Quizes from './pages/admin/Quizes';
-import Exams from './pages/admin/Exams';
+import AddInstructor from "./pages/admin/AddInstructor";
+import ManageInstrutors from "./pages/admin/ManageInstrutors";
+import EditInsructor from "./pages/admin/EditInsructor";
+import QuizExam from "./pages/admin/QuizExam";
+import Quizes from "./pages/admin/Quizes";
+import Exams from "./pages/admin/Exams";
 
 // Student Pages
 import SupportForm from "./pages/student/SupportForm";
@@ -91,7 +89,6 @@ import UserProfilePage from "./pages/instructor/UserProfilePage";
 import ResetPasswordPage from "./pages/instructor/ResetPasswordPage";
 import PasswordChangedSuccessfulPage from "./pages/instructor/PasswordChangedSuccessfulPage";
 import AddModulePage from "./pages/instructor/AddModulePage";
-import AssignmentDisplayPage from "./pages/instructor/AssignmentDisplayPage";
 import AddAssignmentPage from "./pages/instructor/AddAssignmentPage";
 import EditAssignmentPage from "./pages/instructor/EditAssignmentPage";
 
@@ -120,14 +117,14 @@ import UpdateLectureMaterial from "./pages/instructor/UpdateLectureMaterial";
 import SupportFormInstructor from "./pages/instructor/SupportForm";
 import SupportListInstructor from "./pages/instructor/SupportList";
 import InstructorSupportDesk from "./pages/instructor/Supportdesk";
-import SupportRequest from "./pages/static/SuccessfullyRequest"
+import SupportRequest from "./pages/static/SuccessfullyRequest";
 
 function App() {
   return (
     <div>
       <Routes>
-        <Route element={<PublicLayout/>}>
-          <Route path="/signin" element={<SignIn/>}/>
+        <Route element={<PublicLayout />}>
+          <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<Home />} />
           <Route path="/whoweare" element={<WhoWeAre />} />
@@ -135,11 +132,14 @@ function App() {
           <Route path="/news" element={<News />} />
           <Route path="/contactus" element={<ContactUs />} />
           <Route path="/supportdesk" element={<SupportDesk />} />
-          <Route  path="/successfully-request" element={<SuccessfullyRequest />} />
+          <Route
+            path="/successfully-request"
+            element={<SuccessfullyRequest />}
+          />
         </Route>
 
         {/*Admin Routes*/}
-        <Route path="/admin" element={<AdminLayout/>}>
+        <Route path="/admin" element={<AdminLayout />}>
           <Route path="admin-dashboard" element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="singleViewSupport/:id" element={<SingleViewSupport />} />
@@ -160,55 +160,124 @@ function App() {
           <Route path="send-notification" element={<SendNotification />} />
           <Route path="settings" element={<Settings />} />
           <Route path="announcements" element={<ViewAnnouncements />} />
-          <Route path="" element={<Layout_Announcement />}>
-            <Route path="edit-announcement/:id" element={<EditAnnouncement />} />
-            <Route path="edit-notification/:id" element={<EditNotification />} />
+          <Route path="" element={<LayoutAnnouncement />}>
+            <Route
+              path="edit-announcement/:id"
+              element={<EditAnnouncement />}
+            />
+            <Route
+              path="edit-notification/:id"
+              element={<EditNotification />}
+            />
           </Route>
         </Route>
 
         {/* Instructor Routes */}
         <Route path="/instructor" element={<InstructorLayout />}>
-          <Route path="dashboard" element={<InstructorDashboard/>} />
+          <Route path="dashboard" element={<InstructorDashboard />} />
 
           <Route path="/instructor/addquiz" element={<AddQuiz />} />
           <Route path="/instructor/quizlist" element={<QuizList />} />
           <Route path="/instructor/updatequiz/:id" element={<UpdateQuiz />} />
           <Route path="performance/:id" element={<QuizPerformance />} />
 
-          <Route path="/instructor/addannouncement" element={<AddAnnouncement />} />
-          <Route path="/instructor/addedannouncement" element={<AddedAnnouncement />} />
-          <Route path="/instructor/updateannouncement/:id" element={<UpdateAnnouncement />} />
+          <Route
+            path="/instructor/addannouncement"
+            element={<AddAnnouncement />}
+          />
+          <Route
+            path="/instructor/addedannouncement"
+            element={<AddedAnnouncement />}
+          />
+          <Route
+            path="/instructor/updateannouncement/:id"
+            element={<UpdateAnnouncement />}
+          />
 
           <Route path="/instructor/addassignment" element={<AddAssignment />} />
-          <Route path="/instructor/added-assignment" element={<AddedAssignment />} />
-          <Route path="/instructor/edit-assignment/:id" element={<EditAssignment />} />
+          <Route
+            path="/instructor/added-assignment"
+            element={<AddedAssignment />}
+          />
+          <Route
+            path="/instructor/edit-assignment/:id"
+            element={<EditAssignment />}
+          />
 
           <Route path="/instructor/modules" element={<ModuleDisplay />} />
           <Route path="/instructor/add" element={<AddModulePage />} />
-          <Route path="/instructor/modules/edit/:id" element={<UpdateModulePage />} />
-          <Route path="/instructor/diploma-years" element={<DiplomaYearDisplay />} />
+          <Route
+            path="/instructor/modules/edit/:id"
+            element={<UpdateModulePage />}
+          />
+          <Route
+            path="/instructor/diploma-years"
+            element={<DiplomaYearDisplay />}
+          />
           <Route path="/instructor/semester" element={<SemesterDisplay />} />
           <Route path="/instructor/years" element={<YearDisplayPage />} />
-          <Route path="/instructor/semesters" element={<SemesterDisplayPage />} />
-          <Route path="/instructor/modules/:moduleId" element={<InstructorModuleDisplayPage />} />
-          <Route path="/instructor/modules/:moduleId/assignments/add" element={<AddAssignmentPage />} />
-          <Route path="instructor/modules/:moduleId/assignments/:assignmentId/edit" element={<EditAssignmentPage />} />
-          <Route path="instructor/assignments/:assignmentId/performance" element={<AssignmentPerformancePage />} />
+          <Route
+            path="/instructor/semesters"
+            element={<SemesterDisplayPage />}
+          />
+          <Route
+            path="/instructor/modules/:moduleId"
+            element={<InstructorModuleDisplayPage />}
+          />
+          <Route
+            path="/instructor/modules/:moduleId/assignments/add"
+            element={<AddAssignmentPage />}
+          />
+          <Route
+            path="instructor/modules/:moduleId/assignments/:assignmentId/edit"
+            element={<EditAssignmentPage />}
+          />
+          <Route
+            path="instructor/assignments/:assignmentId/performance"
+            element={<AssignmentPerformancePage />}
+          />
 
           <Route path="/instructor/profile" element={<UserProfilePage />} />
-          <Route path="/instructor/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/instructor/password-changed-successful" element={<PasswordChangedSuccessfulPage />} />
+          <Route
+            path="/instructor/reset-password"
+            element={<ResetPasswordPage />}
+          />
+          <Route
+            path="/instructor/password-changed-successful"
+            element={<PasswordChangedSuccessfulPage />}
+          />
 
           {/*<Route path="sucess-request" element={<SucessRequest />} />*/}
-          <Route path="/instructor/instructor-support-list" element={<SupportListInstructor />} />
-          <Route path="/instructor/supportform" element={<SupportFormInstructor />} />
-          <Route path="/instructor/instructor-supportdesk" element={<InstructorSupportDesk />} />
-          <Route path="/instructor/successfully-request" element={<SupportRequest />} />
-          
+          <Route
+            path="/instructor/instructor-support-list"
+            element={<SupportListInstructor />}
+          />
+          <Route
+            path="/instructor/supportform"
+            element={<SupportFormInstructor />}
+          />
+          <Route
+            path="/instructor/instructor-supportdesk"
+            element={<InstructorSupportDesk />}
+          />
+          <Route
+            path="/instructor/successfully-request"
+            element={<SupportRequest />}
+          />
+
           {/* Lecture material page */}
-          <Route path="/instructor/add-lecture-material/:courseId" element={<AddLectureMaterial />} />
-          <Route path="/instructor/added-lecture-materials/:courseId" element={<AddedLectureMaterials />} />
-          <Route path="/instructor/update-lecture-material/:id" element={<UpdateLectureMaterial />} />
+          <Route
+            path="/instructor/add-lecture-material/:courseId"
+            element={<AddLectureMaterial />}
+          />
+          <Route
+            path="/instructor/added-lecture-materials/:courseId"
+            element={<AddedLectureMaterials />}
+          />
+          <Route
+            path="/instructor/update-lecture-material/:id"
+            element={<UpdateLectureMaterial />}
+          />
         </Route>
 
         {/* Student Routes */}
@@ -216,7 +285,10 @@ function App() {
           <Route path="support-request" element={<SupportFormStudent />} />
           <Route path="support-list" element={<SupportListStudent />} />
           <Route path="supportdesk" element={<SupportDesk />} />
-          <Route path="successfully-request" element={<SuccessfullyRequest />} />
+          <Route
+            path="successfully-request"
+            element={<SuccessfullyRequest />}
+          />
           <Route path="mycourses" element={<StudentModules />} />
           <Route path="studentProfile" element={<StudentProfile />} />
           <Route path="enrolledcourses" element={<EnrolledCourses />} />
@@ -234,7 +306,7 @@ function App() {
           <Route path="support-list" element={<SupportList />} />
         </Route>
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
